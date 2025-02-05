@@ -1,0 +1,2 @@
+class Transporte:
+    pass

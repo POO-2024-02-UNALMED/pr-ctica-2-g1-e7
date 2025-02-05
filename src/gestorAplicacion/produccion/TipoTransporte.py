@@ -1,0 +1,2 @@
+class TipoTransporte:
+    pass
