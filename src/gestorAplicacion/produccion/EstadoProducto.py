@@ -1,6 +1,6 @@
-class EstadoProducto:
-    def __init__(self, nombre):
-        self.nombre = nombre
+# estados_producto.py
+from enum import Enum
 
-    def __str__(self):
-        return self.nombre
+class EstadosProducto(Enum):
+    DISPONIBLE = "DISPONIBLE"
+    DEVUELTO = "DEVUELTO"
