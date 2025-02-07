@@ -41,7 +41,7 @@ class Producto:
         elif len(args) == 6:
             self.nombre = args[0]
             self.precio = args[1]
-            self.estado = args[2]  # Se espera que sea una instancia de EstadosProducto
+            self.estado = args[2]  
             self.tipo = args[3]
             self.categoria = args[4]
             self.peso = args[5]
@@ -72,3 +72,30 @@ class Producto:
             # Constructor vacío
             self.id = Producto.totalCreados
             Producto.totalCreados += 1
+
+    @staticmethod
+    def mostrarMotivosDeDevolucion() -> str:
+        """
+        Método que devuelve una lista de motivos de devolución en formato enumerado.
+        """
+        return "\n".join(f"{i + 1}. {motivo}" for i, motivo in enumerate(Producto.motivosDevolucion))
+     
+    @staticmethod
+    def obtenerMotivoDeDevolucion(index: int) -> str:
+        """
+        Método que devuelve un motivo de devolución basado en el índice proporcionado.
+        """
+        if index < 1 or index > len(Producto.motivosDevolucion):
+            return "Motivo no válido."
+        return Producto.motivosDevolucion[index - 1]
+    
+
+
+
+
+
+    #getters y setters: 
+    def setMotivoDevolucion(self, motivoDevolucion): 
+        self.motivoDevolucion=motivoDevolucion
+    def getPrecio(self): 
+        return self.precio

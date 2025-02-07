@@ -29,3 +29,14 @@ class Fabrica:
         else:
             # Constructor vacío
             pass
+    
+    @staticmethod
+    def descontarDineroCuenta(producto: Producto) -> float:
+        """
+        Funcionalidad a la que pertenece: Devoluciones
+        Método que se encarga de descontar el dinero de la cuenta bancaria de la fábrica cuando se realiza una devolución 
+        y retorna el precio del producto que se va a devolver.
+        """
+        precio = producto.precio
+        Fabrica.cuentaBancaria.setSaldo(Fabrica.cuentaBancaria.getSaldo() - precio)
+        return precio

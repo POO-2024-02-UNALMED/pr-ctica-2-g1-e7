@@ -1,5 +1,9 @@
-
-class Tienda:
+from gestion import Cliente, Factura
+from . import EstadoProducto
+from .Producto import Producto
+from gestion import IMostrarProductos
+from typing import List
+class Tienda(IMostrarProductos):
     numTiendas = 0
 
     def __init__(self, nombre=None, vendedor=None, cuentaBancaria=None,
@@ -24,3 +28,21 @@ class Tienda:
         else:
             # Constructor vacío
             pass
+
+    def devolverProducto(self, factura: Factura, producto: Producto) -> 'Cliente':
+        """
+        Funcionalidad a la que pertenece: Devoluciones
+        Método que se encarga de procesar la devolución de un producto.
+        """
+        self.listaProducto.append(producto)
+        producto.estado = EstadoProducto.DEVUELTO
+        return factura.cliente 
+
+    
+    def mostrarProductos(self, producto: Producto) -> List[Producto]:
+        """
+        Sobreescribe el método por defecto de la clase abstracta IMostrarProducto
+        Método que muestra la lista de productos omitiendo el producto dado.
+        """
+        return [p for p in self.listaProducto if p.producto_id != producto.producto_id]
+    

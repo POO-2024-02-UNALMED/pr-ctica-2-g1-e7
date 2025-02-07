@@ -1,6 +1,7 @@
 from datetime import date
 import Cliente
-from produccion import Tienda, Transporte, Producto
+from produccion import Tienda, Transporte, Producto, EstadoProducto
+from .IMostrarProductos import mostrarProductosFactura 
 
 class Factura:
     # Variables de clase (atributos estáticos)
@@ -12,7 +13,7 @@ class Factura:
         self.cliente = cliente
         self.transporte = transporte
         self.listaProductos = lista_productos
-        self.precio_envio = precio_envio
+        self.precioEnvio = precio_envio
 
         # Si ya existen más de dos facturas, se ordenan por fecha.
         if len(Factura.lista_facturas) > 2:
@@ -28,22 +29,12 @@ class Factura:
         # Se agrega la factura a la lista de facturas
         Factura.lista_facturas.append(self)
 
-    def calcular_total(self):
-        """
-        Método para calcular el total de la factura.
-        Se asume que cada producto en 'lista_productos' tiene un atributo 'precio'.
-        Esta implementación suma el precio de cada producto y le añade el precio de envío.
-        Modifica la lógica según las reglas de negocio reales.
-        """
-        total_productos = sum(getattr(producto, 'precio', 0) for producto in self.lista_productos)
-        return total_productos + self.precio_envio
-
+    
     @classmethod
     def ordenar_facturas_por_fecha(cls):
         """
         Método que ordena la lista de facturas (lista_facturas) utilizando
         el algoritmo de la burbuja, comparando la propiedad 'fecha'.
-        Se asume que 'fecha' es un objeto comparable (por ejemplo, datetime.date).
         """
         n = len(cls.lista_facturas)
         for i in range(n - 1):
@@ -63,16 +54,31 @@ class Factura:
     
     @classmethod
     def seleccionarFactura(cls,num:int):
-        return cls.lista_facturas[num-1] 
+        return cls.listaFacturas[num-1] 
 
-    def mostrarProductos(self): 
-        for producto in self.listaProductos: 
-            
-
-
-
-
+    def mostrarProductosFactura(self): 
+        return mostrarProductosFactura(self)
+    
+    def todosDevueltos(self) -> bool:
+        """
+        Funcionalidad a la que pertenece: Devoluciones
+        Método que se encarga de verificar si todos los productos de una factura han sido devueltos o no.
+        """
+        return all(p.estado == EstadoProducto.DEVUELTO for p in self.listaProductos)
+    
+    def seleccionarProducto(self, n: int):
+        """
+        Método que selecciona un producto de la lista basado en el índice proporcionado.
+        """
+        if 1 <= n <= len(self.listaProductos):
+            return self.listaProductos[n - 1]
+        return None 
+    #Manejar con una excepcion cuando el entero pasado está por fuera del rango establecido. !!
+    
+    
+    
     #getters y setters
     def getCliente(self): 
         return self.cliente
-
+    def getListaProductos(self): 
+        return self.listaProductos
