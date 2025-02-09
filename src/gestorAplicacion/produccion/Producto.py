@@ -1,4 +1,3 @@
-
 from EstadoProducto import EstadosProducto
 
 class Producto:

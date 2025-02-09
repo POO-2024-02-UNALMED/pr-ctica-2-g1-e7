@@ -1,5 +1,5 @@
-from datetime import date
-import Cliente
+from datetime import datetime
+from gestion.Cliente import Cliente
 from produccion import Tienda, Transporte, Producto, EstadoProducto
 from .IMostrarProductos import mostrarProductosFactura 
 
@@ -8,7 +8,7 @@ class Factura:
     totalCreadas = 0
     listaFacturas = []
 
-    def __init__(self, tienda, cliente, transporte, lista_productos, precio_envio, fecha: date):
+    def __init__(self, tienda: Tienda, cliente: Cliente, transporte: Transporte, lista_productos: list, precio_envio: float, fecha: datetime):
         self.tienda = tienda
         self.cliente = cliente
         self.transporte = transporte
@@ -75,10 +75,145 @@ class Factura:
         return None 
     #Manejar con una excepcion cuando el entero pasado está por fuera del rango establecido. !!
     
+    #Métodos para la funcionalidad estadística
+
+    def convertirStrAFecha(self, fecha: str) -> datetime:
+        """
+        Método que convierte una cadena de texto en una fecha.
+        """
+        return datetime.strptime(fecha, "%d-%m-%y %H:%M:%S")
     
+    def getFechaMinima(self) -> datetime:
+        """
+        Método que obtiene la fecha mínima de la factura.
+        """
+        return min(p.fecha for p in self.listaProductos)
     
+    def getFechaMaxima(self) -> datetime:
+        """
+        Método que obtiene la fecha máxima de la factura.
+        """
+        return max(p.fecha for p in self.listaProductos)
+    
+    def getFacturasEntreFechas(self, fecha_min: datetime, fecha_max: datetime):
+        """
+        Método que obtiene las facturas que se encuentran entre dos fechas.
+        """
+        return [f for f in Factura.lista_facturas if fecha_min <= f.fecha <= fecha_max]
+    
+    def getListaFechas(self, fecha_min: datetime, fecha_max: datetime):
+        """
+        Método que obtiene una lista de fechas entre dos fechas.
+        """
+        return [f.fecha for f in Factura.lista_facturas if fecha_min <= f.fecha <= fecha_max]
+    
+    def gananciasDiscretas(self, fecha_min: datetime, fecha_max: datetime):
+        """
+        Método que calcula las ganancias entre dos fechas.
+        """
+        facturas = self.getFacturasEntreFechas(fecha_min, fecha_max)
+        ganancias: list[list[datetime, float]] = []
+        for f in facturas:
+            ganancias.append([f.fecha, f.total])
+        return ganancias
+    
+    def gananciaTotal(self, fecha_min: datetime, fecha_max: datetime):
+        """
+        Método que calcula la ganancia total entre dos fechas.
+        """
+        facturas = self.getFacturasEntreFechas(fecha_min, fecha_max)
+        return sum(f.total for f in facturas)
+    
+    def promedioDeGanancias(self, fecha_min: datetime, fecha_max: datetime):
+        """
+        Método que calcula el promedio de ganancias entre dos fechas.
+        """
+        facturas = self.getFacturasEntreFechas(fecha_min, fecha_max)
+        return sum(f.total for f in facturas) / len(facturas)
+    
+    def aumentosPorcentuales(self, fecha_min: datetime, fecha_max: datetime):
+        """
+        Método que calcula los aumentos porcentuales entre dos fechas.
+        """
+        facturas = self.getFacturasEntreFechas(fecha_min, fecha_max)
+        aumentos = []
+        for i in range(1, len(facturas)):
+            aumento = (facturas[i].total - facturas[i - 1].total) / facturas[i - 1].total * 100
+            aumentos.append([facturas[i].fecha, aumento])
+        return aumentos
+    
+    def modaProductos(self):
+        """
+        Método que calcula la moda de los productos.
+        """
+        productos = [p.nombre for p in self.listaProductos]
+        moda = max(set(productos), key=productos.count)
+        return moda
+    
+    def modaClientes(self):
+        """
+        Método que calcula la moda de los clientes.
+        """
+        clientes = [f.cliente.nombre for f in Factura.lista_facturas]
+        moda = max(set(clientes), key=clientes.count)
+        return moda
+    
+    def modaTiendas(self):
+        """
+        Método que calcula la moda de las tiendas.
+        """
+        tiendas = [f.tienda.nombre for f in Factura.lista_facturas]
+        moda = max(set(tiendas), key=tiendas.count)
+        return moda
+    
+        
+    def __str__(self):
+        factura = []
+        total_precio = 0
+        total_peso = 0
+        precio_envio = self.precioEnvio
+
+        # Borde superior
+        factura.append("=====================================\n")
+        factura.append("|                                   |\n")
+        factura.append(f"| {self.tienda.getNombre():<33} |\n")
+        factura.append("|                                   |\n")
+        factura.append("=====================================\n")
+
+        # Encabezado del cliente y detalles
+        factura.append(f"| ID Factura: {self.id:<24} |\n")
+        factura.append(f"| Cliente: {self.cliente.getNombre():<26} |\n")
+        factura.append(f"| Cédula: {self.cliente.getCedula():<26} |\n")
+        factura.append(f"| Fecha: {self.fecha:<28} |\n")
+        factura.append(f"| Transporte: {self.transporte.getTipoTransporte().getNombre():<22} |\n")
+        factura.append("========================================================\n")
+
+        # Encabezado de los productos
+        factura.append("| Producto                     | Precio    | Peso (kg) |\n")
+        factura.append("|------------------------------|-----------|-----------|\n")
+
+        # Detalles de los productos
+        for producto in self.listaProductos:
+            if producto is not None:
+                factura.append(f"| {producto.getNombre():<28} | ${producto.getPrecio():<8.2f} | {producto.getPeso():<8.2f} |\n")
+                total_precio += producto.getPrecio()
+                total_peso += producto.getPeso()
+
+        # Totales
+        total_precio += precio_envio
+        factura.append("|------------------------------|-----------|-----------|\n")
+        factura.append(f"| Envío                       | ${precio_envio:<8.2f} | {'N/A':<8} |\n")
+        factura.append(f"| Total                       | ${total_precio:<8.2f} | {total_peso:<8.2f} |\n")
+        factura.append("=======================================================\n")
+
+        return ''.join(factura)
+
     #getters y setters
     def getCliente(self): 
         return self.cliente
     def getListaProductos(self): 
         return self.listaProductos
+
+
+if __name__ == "__main__":
+    print(Factura(Tienda("Tienda 1"), Cliente("Juan", "123456"), Transporte("Transporte 1"), [Producto("Producto 1", 100, 1), Producto("Producto2", 200, 2)], 10, datetime.now()))
