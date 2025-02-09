@@ -17,3 +17,9 @@ class Transporte:
             # Constructor vacío
             self.listaTransportes = []
             self.listaDeProductos = []
+    def abastecerProducto(self, tiendaSeleccionada, productosSeleccionados):
+        """
+        Carga productos en el transporte y asigna la tienda de destino.
+        """
+        self.listaDeProductos.extend(productosSeleccionados)
+        self.tienda = tiendaSeleccionada
