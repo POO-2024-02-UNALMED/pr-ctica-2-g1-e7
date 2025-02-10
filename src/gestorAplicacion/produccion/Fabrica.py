@@ -41,6 +41,21 @@ class Fabrica:
         Fabrica.cuentaBancaria.setSaldo(Fabrica.cuentaBancaria.getSaldo() - precio)
         return precio
     
+    @staticmethod
+    def calcular_excedente(productos: List['Producto'], valor: float) -> float:
+        """
+        Funcionalidad: Devoluciones
+        Método que calcula el excedente que debe pagar el cliente (si debe hacerlo) al realizar un cambio de productos.
+
+        :param productos: Lista de productos seleccionados.
+        :param valor: Valor máximo permitido para el cambio.
+        :return: El monto del excedente que el cliente debe pagar, o 0 si no hay excedente.
+        """
+        subtotal = sum(producto.precio for producto in productos)
+        if subtotal <= valor:
+            return 0
+        return subtotal - valor
+    
     """Funcionalidad a la que pertenece: Abastecer tiendas
     Metodo que se encarga de mostrar las tiendas disponibles y los productos que tienen en stock"""
     def mostrar_tiendas(lista_tienda):

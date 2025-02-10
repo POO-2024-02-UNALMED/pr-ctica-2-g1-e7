@@ -45,6 +45,43 @@ class Tienda(IMostrarProductos):
         Método que muestra la lista de productos omitiendo el producto dado.
         """
         return [p for p in self.listaProducto if p.producto_id != producto.producto_id]
+    from typing import List
+
+class Tienda:
+    def __init__(self):
+        self.listaProducto = []
+
+    def agregar_productos_para_cambio(self, precio_cambio: float, seleccion_productos: List[int], productos_disponibles: List['Producto']) -> List['Producto']:
+        """
+        Funcionalidad: Devoluciones
+        Método principal para gestionar los productos seleccionados para un cambio.
+
+        :param precio_cambio: El valor máximo permitido para el cambio.
+        :param seleccion_productos: Lista de índices seleccionados por el cliente.
+        :param productos_disponibles: Lista de productos disponibles.
+        :return: Lista de productos seleccionados para el cambio.
+        """
+        productos_seleccionados = []
+        subtotal = 0.0
+
+        for indice in seleccion_productos:
+            # Validar índice y obtener el producto correspondiente
+            if indice < 1 or indice > len(productos_disponibles):
+                continue  # Ignorar índices inválidos
+
+            producto_seleccionado = productos_disponibles[indice - 1]
+
+            # Agregar el producto al carrito sin verificar duplicados
+            productos_seleccionados.append(producto_seleccionado)
+            subtotal += producto_seleccionado.precio
+
+            # Verificar si el subtotal supera el precio permitido
+            if subtotal > precio_cambio:
+                break
+
+        return productos_seleccionados
+
+    
     def productosPorCategoria(self, productos, conteoTemporal=None):
         """
         Muestra los productos por categoría en formato: (cantidad actual/capacidad máxima).
