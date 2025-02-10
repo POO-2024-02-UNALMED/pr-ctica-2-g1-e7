@@ -1,6 +1,6 @@
 from datetime import datetime
-from gestion.Cliente import Cliente
-from produccion import Tienda, Transporte, Producto, EstadoProducto
+from .Cliente import Cliente
+from produccion import Tienda, Producto, Transporte, EstadoProducto
 from .IMostrarProductos import mostrarProductosFactura 
 
 class Factura:
@@ -213,7 +213,3 @@ class Factura:
         return self.cliente
     def getListaProductos(self): 
         return self.listaProductos
-
-
-if __name__ == "__main__":
-    print(Factura(Tienda("Tienda 1"), Cliente("Juan", "123456"), Transporte("Transporte 1"), [Producto("Producto 1", 100, 1), Producto("Producto2", 200, 2)], 10, datetime.now()))
