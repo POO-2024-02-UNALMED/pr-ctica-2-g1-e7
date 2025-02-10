@@ -4,30 +4,99 @@ from .Producto import Producto
 from gestion import IMostrarProductos
 from typing import List
 class Tienda(IMostrarProductos):
-    numTiendas = 0
+
+    numTiendas = 0  # Contador de tiendas
 
     def __init__(self, nombre=None, vendedor=None, cuentaBancaria=None,
                  capacidadMaximaMaterial=None, capacidadMaximaConsumible=None,
                  capacidadMaximaLimpieza=None):
-        if (nombre is not None and vendedor is not None and cuentaBancaria is not None and 
-            capacidadMaximaMaterial is not None and capacidadMaximaConsumible is not None and 
-            capacidadMaximaLimpieza is not None):
-            self.nombre = nombre
-            self.vendedor = vendedor
-            # Se asigna la tienda al vendedor (se asume que vendedor posee el método setTienda)
-            self.vendedor.setTienda(self)
-            self.cuentaBancaria = cuentaBancaria
+        
+        if all(param is not None for param in [nombre, vendedor, cuentaBancaria,
+                                               capacidadMaximaMaterial, capacidadMaximaConsumible,
+                                               capacidadMaximaLimpieza]):
+            self._nombre = nombre
+            self._vendedor = vendedor
+            self._cuentaBancaria = cuentaBancaria
+            self._capacidadMaximaMaterial = capacidadMaximaMaterial
+            self._capacidadMaximaConsumible = capacidadMaximaConsumible
+            self._capacidadMaximaLimpieza = capacidadMaximaLimpieza
+            
+            # Se asigna la tienda al vendedor si tiene el método
+            if hasattr(vendedor, "setTienda"):
+                vendedor.setTienda(self)
+            
             Tienda.numTiendas += 1
-            self.listaProducto = []  # Cada tienda tiene su propia lista de productos
-            self.productosPorCategoria = []  # Lista de [Producto, Categoria]
-            self.categorias = []
-            self.conteoCategorias = []  # Conteo de productos por categoría
-            self.capacidadMaximaMaterial = capacidadMaximaMaterial
-            self.capacidadMaximaConsumible = capacidadMaximaConsumible
-            self.capacidadMaximaLimpieza = capacidadMaximaLimpieza
+
+            self._listaProducto = []
+            self._productosPorCategoria = []
+            self._categorias = []
+            self._conteoCategorias = []
+
+
+    # Getters
+    def getNombre(self):
+        return self._nombre
+
+    def getVendedor(self):
+        return self._vendedor
+
+    def getCuentaBancaria(self):
+        return self._cuentaBancaria
+
+    def getListaProducto(self):
+        return self._listaProducto
+
+    def getProductosPorCategoria(self):
+        return self._productosPorCategoria
+
+    def getCategorias(self):
+        return self._categorias
+
+    def getConteoCategorias(self):
+        return self._conteoCategorias
+
+    # Setters
+    def setNombre(self, nuevoNombre):
+        if isinstance(nuevoNombre, str):
+            self._nombre = nuevoNombre
         else:
-            # Constructor vacío
-            pass
+            raise ValueError("El nombre debe ser una cadena")
+
+    def setVendedor(self, nuevoVendedor):
+        self._vendedor = nuevoVendedor
+
+    def setCuentaBancaria(self, nuevaCuenta):
+        if isinstance(nuevaCuenta, str):
+            self._cuentaBancaria = nuevaCuenta
+        else:
+            raise ValueError("La cuenta bancaria debe ser una cadena")
+
+    def setListaProducto(self, nuevaLista):
+        if isinstance(nuevaLista, list):
+            self._listaProducto = nuevaLista
+        else:
+            raise ValueError("La lista de productos debe ser una lista")
+
+    def setProductosPorCategoria(self, nuevaLista):
+        if isinstance(nuevaLista, list):
+            self._productosPorCategoria = nuevaLista
+        else:
+            raise ValueError("La lista de productos por categoría debe ser una lista")
+
+    def setCategorias(self, nuevaLista):
+        if isinstance(nuevaLista, list):
+            self._categorias = nuevaLista
+        else:
+            raise ValueError("La lista de categorías debe ser una lista")
+
+    def setConteoCategorias(self, nuevaLista):
+        if isinstance(nuevaLista, list):
+            self._conteoCategorias = nuevaLista
+        else:
+            raise ValueError("La lista de conteo de categorías debe ser una lista")
+    
+
+
 
     def devolverProducto(self, factura: Factura, producto: Producto) -> 'Cliente':
         """
@@ -46,6 +115,58 @@ class Tienda(IMostrarProductos):
         """
         return [p for p in self.listaProducto if p.producto_id != producto.producto_id]
     from typing import List
+    # Método de la funcionalidad enviarPedidos:
+    # Crea una lista con los productos disponibles en la tienda y la cantidad de cada uno.
+    # Si un producto ya existe en la lista, incrementa su contador; de lo contrario, lo agrega como un nuevo elemento.
+    def listaProductosTienda(self):
+        listaProductos = []
+        
+        for producto in self._listaProducto:
+            encontrado = False
+            if not listaProductos:
+                listaProductos.append([producto, 1])
+            else:
+                for listaAux in listaProductos:
+                    if listaAux[0].nombre == producto.nombre:
+                        listaAux[1] += 1
+                        encontrado = True
+                        break
+                
+                if not encontrado:
+                    listaProductos.append([producto, 1])
+        
+        return listaProductos
+
+    # Método de la funcionalidad enviarPedidos:
+    # Muestra la lista de productos disponibles en la tienda, incluyendo su nombre, precio, cantidad y peso.
+    # Si la lista está vacía, devuelve un mensaje indicando que no hay productos registrados.
+    def mostrarListaProductosTienda(self, listaProductos):
+        if not listaProductos:
+            return "Actualmente no hay productos registrados en el sistema."
+
+        texto = []
+        for i, listaAux in enumerate(listaProductos, start=1):
+            producto, cantidad = listaAux
+            texto.append(f"{i}. Producto: {producto.nombre}")
+            texto.append(f" - Precio: {producto.precio}")
+            texto.append(f" - Cantidad: {cantidad}")
+            texto.append(f" - Peso: {producto.peso}\n")
+
+        return "\n".join(texto).strip()
+
+    # Método de la funcionalidad enviarPedidos:
+    # Elimina de la tienda los productos cuyos nombres coincidan con los de la lista recibida.
+    def eliminarProductosPorNombre(self, listaEliminar):
+        self._listaProducto = [producto for producto in self._listaProducto if producto.nombre not in {p.nombre for p in listaEliminar}]
+
+    # Método de la funcionalidad enviarPedidos:
+    # Genera una factura con los productos seleccionados para el pedido, junto con el cliente, el transporte y el precio de envío.
+    # Devuelve la factura en formato de texto.
+    def enviarPedido(self, listaProductosPedidos, transporteSeleccionado, clienteSeleccionado, precioEnvio, dia):
+        factura = Factura(self, clienteSeleccionado, transporteSeleccionado, listaProductosPedidos, precioEnvio, dia)
+        return str(factura)
+
+    
 
 class Tienda:
     def __init__(self):

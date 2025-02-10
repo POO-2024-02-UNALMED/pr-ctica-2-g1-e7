@@ -23,3 +23,16 @@ class Transporte:
         """
         self.listaDeProductos.extend(productosSeleccionados)
         self.tienda = tiendaSeleccionada
+    # Método estático perteneciente a la funcionalidad enviarPedidos:
+    # Calcula y devuelve el peso total de una lista de productos, sumando solo los productos con peso positivo.
+    # Si un producto tiene un peso inválido (no positivo), muestra un mensaje de error.
+    @staticmethod
+    def calcularTotalPeso(listaProductosPedidos):
+        totalPeso = 0
+        for producto in listaProductosPedidos:
+            peso = producto.peso
+            if peso > 0:  # Validamos que el peso sea positivo
+                totalPeso += peso
+            else:
+                print(f"\nError: Peso inválido para el producto {producto.nombre}")
+        return totalPeso

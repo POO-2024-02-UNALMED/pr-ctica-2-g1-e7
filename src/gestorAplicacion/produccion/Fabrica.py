@@ -73,6 +73,19 @@ class Fabrica:
                 resultado += f"    {producto}\n"
 
         return resultado
+    # Método perteneciente a la funcionalidad enviarPedidos:
+    # Verifica si hay tiendas registradas y, si es así, devuelve una lista numerada con sus nombres.
+    # Si no hay tiendas, indica que no hay ninguna registrada.
+    @staticmethod
+    def mostrarTiendasSinProductos():
+        if not listaTienda:
+            return "No hay tiendas registradas."
+
+        texto = ""
+        for i, tienda in enumerate(listaTienda, start=1):
+            texto += f"{i}. Tienda: {tienda.nombre}\n"
+
+        return texto.strip()
 #faltaria el mostrar tiendas pero sin mostrar los productos(Yhan pa jose luis)
 
     """Funcionalidad a la que pertenece: Abastecer tiendas
