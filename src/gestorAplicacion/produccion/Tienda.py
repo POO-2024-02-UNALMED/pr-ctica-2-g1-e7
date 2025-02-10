@@ -10,88 +10,87 @@ class Tienda(IMostrarProductos):
     def __init__(self, nombre=None, vendedor=None, cuentaBancaria=None,
                  capacidadMaximaMaterial=None, capacidadMaximaConsumible=None,
                  capacidadMaximaLimpieza=None):
-        
+
         if all(param is not None for param in [nombre, vendedor, cuentaBancaria,
                                                capacidadMaximaMaterial, capacidadMaximaConsumible,
                                                capacidadMaximaLimpieza]):
-            self._nombre = nombre
-            self._vendedor = vendedor
-            self._cuentaBancaria = cuentaBancaria
-            self._capacidadMaximaMaterial = capacidadMaximaMaterial
-            self._capacidadMaximaConsumible = capacidadMaximaConsumible
-            self._capacidadMaximaLimpieza = capacidadMaximaLimpieza
-            
+            self.__nombre = nombre
+            self.__vendedor = vendedor
+            self.__cuentaBancaria = cuentaBancaria
+            self.__capacidadMaximaMaterial = capacidadMaximaMaterial
+            self.__capacidadMaximaConsumible = capacidadMaximaConsumible
+            self.__capacidadMaximaLimpieza = capacidadMaximaLimpieza
+
             # Se asigna la tienda al vendedor si tiene el método
             if hasattr(vendedor, "setTienda"):
                 vendedor.setTienda(self)
-            
+
             Tienda.numTiendas += 1
 
-            self._listaProducto = []
-            self._productosPorCategoria = []
-            self._categorias = []
-            self._conteoCategorias = []
-
+            self.__listaProducto = []
+            self.__productosPorCategoria = []
+            self.__categorias = []
+            self.__conteoCategorias = []
 
     # Getters
     def getNombre(self):
-        return self._nombre
+        return self.__nombre
 
     def getVendedor(self):
-        return self._vendedor
+        return self.__vendedor
 
     def getCuentaBancaria(self):
-        return self._cuentaBancaria
+        return self.__cuentaBancaria
 
     def getListaProducto(self):
-        return self._listaProducto
+        return self.__listaProducto
 
     def getProductosPorCategoria(self):
-        return self._productosPorCategoria
+        return self.__productosPorCategoria
 
     def getCategorias(self):
-        return self._categorias
+        return self.__categorias
 
     def getConteoCategorias(self):
-        return self._conteoCategorias
+        return self.__conteoCategorias
 
     # Setters
     def setNombre(self, nuevoNombre):
         if isinstance(nuevoNombre, str):
-            self._nombre = nuevoNombre
+            self.__nombre = nuevoNombre
         else:
             raise ValueError("El nombre debe ser una cadena")
 
     def setVendedor(self, nuevoVendedor):
-        self._vendedor = nuevoVendedor
+        self.__vendedor = nuevoVendedor
 
     def setCuentaBancaria(self, nuevaCuenta):
         if isinstance(nuevaCuenta, str):
-            self._cuentaBancaria = nuevaCuenta
+            self.__cuentaBancaria = nuevaCuenta
         else:
             raise ValueError("La cuenta bancaria debe ser una cadena")
 
     def setListaProducto(self, nuevaLista):
         if isinstance(nuevaLista, list):
-            self._listaProducto = nuevaLista
+            self.__listaProducto = nuevaLista
         else:
             raise ValueError("La lista de productos debe ser una lista")
 
     def setProductosPorCategoria(self, nuevaLista):
         if isinstance(nuevaLista, list):
-            self._productosPorCategoria = nuevaLista
+            self.__productosPorCategoria = nuevaLista
         else:
             raise ValueError("La lista de productos por categoría debe ser una lista")
 
     def setCategorias(self, nuevaLista):
         if isinstance(nuevaLista, list):
-            self._categorias = nuevaLista
+            self.__categorias = nuevaLista
         else:
             raise ValueError("La lista de categorías debe ser una lista")
 
     def setConteoCategorias(self, nuevaLista):
         if isinstance(nuevaLista, list):
-            self._conteoCategorias = nuevaLista
+            self.__conteoCategorias = nuevaLista
         else:
             raise ValueError("La lista de conteo de categorías debe ser una lista")
     

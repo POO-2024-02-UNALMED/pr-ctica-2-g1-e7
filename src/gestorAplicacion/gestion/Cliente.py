@@ -5,16 +5,17 @@ class Cliente:
 
     def __init__(self, nombre=None, edad=None, cedula=None, cuentaBancaria=None):
         if all(param is not None for param in [nombre, edad, cedula, cuentaBancaria]):
-            self._nombre = nombre
-            self._edad = edad
-            self._cedula = cedula
-            self._cuentaBancaria = cuentaBancaria
-            self._listaFacturas = []  
-            self._listaProductos = []  
-            self._id = Cliente.totalCreados
+            self.__nombre = nombre
+            self.__edad = edad
+            self.__cedula = cedula
+            self.__cuentaBancaria = cuentaBancaria
+            self.__listaFacturas = []  
+            self.__listaProductos = []  
+            self.__id = Cliente.totalCreados
             Cliente.totalCreados += 1
             Cliente.listaClientes.append(self)
-    
+
+
     # Método de la funcionalidad enviarPedidos:
     # Retorna una lista de clientes numerada, facilitando la selección por parte del usuario.
     # Formato de salida: "1. NombreCliente"
@@ -26,48 +27,49 @@ class Cliente:
         texto = ""
         for i, cliente in enumerate(Cliente.listaClientes, start=1):
             texto += f"{i}. {cliente.getNombre()}\n"
-        return texto
+
     # Getters
     def getNombre(self):
-        return self._nombre
+        return self.__nombre
 
     def getEdad(self):
-        return self._edad
+        return self.__edad
 
     def getCedula(self):
-        return self._cedula
+        return self.__cedula
 
     def getCuentaBancaria(self):
-        return self._cuentaBancaria
+        return self.__cuentaBancaria
 
     def getListaFacturas(self):
-        return self._listaFacturas
+        return self.__listaFacturas
 
     def getListaProductos(self):
-        return self._listaProductos
+        return self.__listaProductos
 
     def getId(self):
-        return self._id
+        return self.__id
 
     # Setters
     def setNombre(self, nombre):
-        self._nombre = nombre
+        self.__nombre = nombre
 
     def setEdad(self, edad):
-        self._edad = edad
+        self.__edad = edad
 
     def setCedula(self, cedula):
-        self._cedula = cedula
+        self.__cedula = cedula
 
     def setCuentaBancaria(self, cuentaBancaria):
-        self._cuentaBancaria = cuentaBancaria
+        self.__cuentaBancaria = cuentaBancaria
 
     def setListaFacturas(self, listaFacturas):
-        self._listaFacturas = listaFacturas
+        self.__listaFacturas = listaFacturas
 
     def setListaProductos(self, listaProductos):
-        self._listaProductos = listaProductos
-
+        self.__listaProductos = listaProductos
+    
+   
     
     def removerProducto(self, producto: Producto):
         """
