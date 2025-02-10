@@ -1,5 +1,4 @@
 from Persona import Persona
-# Se asume que la clase Tienda está definida en otro módulo, si llegas a necesitarla
 
 class Vendedor(Persona):
     listaVendedores = []  # Lista de todos los vendedores

@@ -13,3 +13,9 @@ class CuentaBancaria:
         Método que se encarga de reembolsar el dinero a la cuenta bancaria del cliente cuando se realiza una devolución.
         """
         cliente.getCuentaBancaria().añadirDinero(total)
+    def transferirDinero(self, valor: float, cuentaDestino: 'CuentaBancaria'):
+        """
+        Método que transfiere dinero de esta cuenta a la cuenta de destino.
+        """
+        self.saldo -= valor
+        cuentaDestino.añadirDinero(valor)
