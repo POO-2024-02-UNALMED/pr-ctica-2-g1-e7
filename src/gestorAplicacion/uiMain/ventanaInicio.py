@@ -1,3 +1,5 @@
+#interfaz de inicio 
+
 import tkinter as tk
 
 ventanaPrincipal = tk.Tk()

@@ -1,4 +1,4 @@
-from Persona import Persona
+from .Persona import Persona
 from produccion import Tienda
 
 class Vendedor(Persona):
