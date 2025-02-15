@@ -90,9 +90,6 @@ class Producto:
     
 
 
-
-
-
     #getters y setters: 
     def setMotivoDevolucion(self, motivoDevolucion): 
         self.motivoDevolucion=motivoDevolucion
