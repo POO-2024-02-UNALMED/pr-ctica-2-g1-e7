@@ -1,61 +1,86 @@
-#interfaz de inicio 
-
 import tkinter as tk
-from tkinter import messagebox
 
-ventanaPrincipal = tk.Tk()
-ventanaPrincipal.geometry("500x300")
+# Datos de los desarrolladores
+indice_desarrollador = 0
+nombres_desarrolladores = ["Carlos", "Andres", "Juan", "Yhan"]
+descripciones = [
+    "Carlos Ernesto Galvis González \n19 años \nEstudiante de Ingeniería de Sistemas \nDeportista",
+    "Andrés Felipe Guerra Amaris \n18 años \nIngeniería de sistemas e informática  \nNacido en Bucaramanga",
+    "Juan Esteban Herrera Navarro \n22 años \nEstudiante ingeniería de sistemas \nTrabajador nato.",
+    "Yhan Carlos Jaramillo Diaz \n17 años \nEstudiante de Ingeniería de Sistemas \nTrabajador",
+    "Jose Luis"
+]
+fotos_desarrolladores_paths = [
+    "src/gestorAplicacion/uiMain/imagenes/collageCarlos.png",
+    "src/gestorAplicacion/uiMain/imagenes/collageAndres.png",
+    "src/gestorAplicacion/uiMain/imagenes/collageJuan.png",
+    "src/gestorAplicacion/uiMain/imagenes/collageYhan.png"
+]
 
-#Menú
+def cambiar_desarrollador():
+    global indice_desarrollador
+    indice_desarrollador = (indice_desarrollador + 1) % len(nombres_desarrolladores)
+    descripcion_label.config(text=descripciones[indice_desarrollador])
+    actualizar_foto()
 
-barraMenu = tk.Menu(ventanaPrincipal)
-ventanaPrincipal.config(menu=barraMenu)
+def actualizar_foto():
+    ruta_imagen = fotos_desarrolladores_paths[indice_desarrollador]
+    imagen = tk.PhotoImage(file=ruta_imagen)
+    imagen.place(relx=0, rely=0, relwidth=1, relheight=1)
+    imagen = imagen.subsample(2, 2)  # Ajustar tamaño
+    foto_label.config(image=imagen)
+    foto_label.image = imagen  # Mantener referencia
 
-menu1 = tk.Menu(barraMenu)
-barraMenu.add_cascade(label="Inicio", menu=menu1)
-menu1.add_command(label="Salir de la aplicación", command=ventanaPrincipal.quit)
-menu1.add_separator()
+# Crear ventana principal
+ventana = tk.Tk()
+ventana.geometry("800x600")
+ventana.title("Ventana Principal")
 
-def info():
-    messagebox.showinfo("Información", "Este sistema fue desarrollado por el grupo JJAYC, \n")
+# Marcos principales
+top_frame = tk.Frame(ventana)
+top_frame.pack(fill="both", expand=True)
+bottom_frame = tk.Frame(ventana)
+bottom_frame.pack(fill="both", expand=True)
 
-menu1.add_command(label="Descripción del sistema", command=info)
-
-#Frame superior
-
-frame_superior = tk.Frame(ventanaPrincipal)
-frame_superior.pack(fill="both", expand=True)
-
-etiqueta1 = tk.Label(
-    frame_superior,
-    text="Bienvenido al sistema de distribución JJAYC,\n"
+# P3 - Saludo
+p3_frame = tk.Frame(top_frame, bg="lightgreen", width=200, height=100)
+p3_frame.pack(side="left", fill="both", expand=True)
+tk.Label(p3_frame, text="¡Bienvenido al sistema!\n\n Bienvenido al sistema de distribución JJAYC,\n"
          "el sistema donde podrás manejar tu negocio,\n"
          "pudiendo abastecer tiendas, enviar pedidos,\n"
          "manejar devoluciones, pagar a tus trabajadores\n"
-         "y revisar las estadísticas de la empresa.",
-    bg="lightgreen",
-    justify="left"
-)
-etiqueta1.pack(side="left", fill="both", expand=True, padx=10, pady=10)  
+         "y revisar las estadísticas de la empresa.", font=("Arial", 12, "bold")).pack()
 
-etiqueta2 = tk.Label(
-    frame_superior,
-    text="Aca van las fotos",
-    bg="lightblue",
-    justify="center"
-)
-etiqueta2.pack(side="right", fill="both", expand=True, padx=10, pady=10)
+# P5 - Hoja de Vida (Derecha superior)
+p5_frame = tk.Frame(top_frame, bg="lightblue", width=200, height=100)
+p5_frame.pack(side="right", fill="both", expand=True)
+descripcion_label = tk.Label(p5_frame, text=descripciones[indice_desarrollador], font=("Arial", 10))
+descripcion_label.pack()
+descripcion_label.bind("<Button-1>", lambda e: cambiar_desarrollador())
 
-#Frame inferior
+# P4 - Imagen del sistema (Izquierda inferior)
+p4_frame = tk.Frame(bottom_frame, bg="gray",)
+p4_frame.pack(side="left", fill="both", expand=True)
 
-frame_inferior = tk.Frame(ventanaPrincipal)
-frame_inferior.pack(fill="both", expand=True)   
+foto = tk.PhotoImage(file="src/gestorAplicacion/uiMain/imagenes/fotosDistribuidora.png")
+imagen = foto.subsample(2, 2)
+foto_negocio = tk.Label(p4_frame, image= imagen)
+foto_negocio.place(relx=0, rely=0, relwidth=1, relheight=1)
+foto_negocio.pack(expand=True, )
+
+boton_para_continuar = tk.Button(text="Continuar con el programa", anchor= "n" )
+boton_para_continuar.pack()
 
 
-boton1 = tk.Button(frame_inferior, text="Presione para utilizar\nel sistema")
-boton1.pack(side="left", fill="both", expand=True, padx=10, pady=10)
+# P6 - Foto del desarrollador (Abajo derecha)
+p6_frame = tk.Frame(bottom_frame, bg="gray")
+p6_frame.pack(side="right", fill="both", expand=True)
 
-etiqueta3 = tk.Label(frame_inferior, text="Aca van las fotos de los \ndesarrolladores", bg="lightblue")
-etiqueta3.pack(side="right", fill="both", expand=True, padx=10, pady=10)
+foto_label = tk.Label(p6_frame)
+foto_label.pack(expand=True)
+foto_label.bind("<Button-1>", lambda e: cambiar_desarrollador())
 
-ventanaPrincipal.mainloop()
+# Inicializar con la primera imagen
+actualizar_foto()
+
+ventana.mainloop()
