@@ -1,7 +1,7 @@
 import time
-import sys
+
 from gestorAplicacion.produccion.Fabrica import Fabrica  # Importar la clase Fabrica
-"""from gestorAplicacion.produccion.Tienda import Tienda    # Importar la clase Tienda
+from gestorAplicacion.produccion.Tienda import Tienda    # Importar la clase Tienda
 from gestorAplicacion.produccion.Producto import Producto  # Importar la clase Producto
 from gestorAplicacion.produccion.TipoTransporte import TipoTransporte  # Importar la clase TipoTransporte
 from gestorAplicacion.produccion.Transporte import Transporte  # Importar la clase Transporte

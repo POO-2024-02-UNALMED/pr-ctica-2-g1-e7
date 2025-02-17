@@ -1,4 +1,4 @@
-from gestion.Persona import Persona
+from gestorAplicacion.gestion.Persona import Persona
 class Conductor(Persona):
     lista_conductores = []
     
