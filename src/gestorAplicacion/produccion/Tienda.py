@@ -174,7 +174,7 @@ class Tienda():
     #def __init__(self):
         #self.listaProducto = []
 
-    def agregar_productos_para_cambio(self, precio_cambio: float, seleccion_productos: List[int], productos_disponibles):
+def agregar_productos_para_cambio(self, precio_cambio: float, seleccion_productos: List[int], productos_disponibles):
         from Producto import Producto
         """
         Funcionalidad: Devoluciones
@@ -206,7 +206,7 @@ class Tienda():
         return productos_seleccionados
 
     
-    def productosPorCategoria(self, productos, conteoTemporal=None):
+def productosPorCategoria(self, productos, conteoTemporal=None):
         from Producto import Producto
         productos: List[Producto] = productos
         """
@@ -259,10 +259,10 @@ class Tienda():
 
             resultado += " productos\n"
         return resultado
-    def getCantidadActualPorCategoria(self, categoria):
+def getCantidadActualPorCategoria(self, categoria):
         cantidad = sum(1 for producto in self.listaProducto if producto.getCategoria() == categoria)
         return cantidad
-    def cantidadProductos(self):
+def cantidadProductos(self):
         """
         Muestra los productos de la tienda de forma ordenada (producto: cantidad).
         """
@@ -277,7 +277,7 @@ class Tienda():
 
         return resultado
 
-    def descargarProducto(self, transporteSeleccionado):
+def descargarProducto(self, transporteSeleccionado):
         """
         Descarga los productos transportados a la tienda y vacía la lista del transporte.
         """
