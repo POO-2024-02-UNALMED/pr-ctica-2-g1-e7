@@ -21,18 +21,19 @@ def enviar_pedidos():
 
             # Bucle para confirmar la selección del cliente
             while confirmacionCliente == 0:
-                try:
-                    seleccion = int(input("» "))
-                    if seleccion == 0:  # Opción para salir
-                        print("\nSaliendo...")
-                        time.sleep(2)
-                        return  # Salir del método
-                    elif 0 < seleccion <= len(Cliente.listaClientes):
-                        break  # Cliente seleccionado correctamente
-                    else:
-                        print("\nNúmero fuera de rango. Por favor, elija un cliente válido.")
-                except ValueError:
-                    print("\nEntrada inválida. Por favor, ingrese un número.")
+                while(True):
+                    try:
+                        seleccion = int(input("» "))
+                        if seleccion == 0:  # Opción para salir
+                            print("\nSaliendo...")
+                            time.sleep(2)
+                            return  # Salir del método
+                        elif 0 < seleccion <= len(Cliente.listaClientes):
+                            break  # Cliente seleccionado correctamente
+                        else:
+                            print("\nNúmero fuera de rango. Por favor, elija un cliente válido.")
+                    except ValueError:
+                        print("\nEntrada inválida. Por favor, ingrese un número.")
 
                 # Confirmación de cliente
                 print(f"\nHa seleccionado el cliente: {Cliente.listaClientes[seleccion - 1].getNombre()}")#llamar el metodo lista clientes

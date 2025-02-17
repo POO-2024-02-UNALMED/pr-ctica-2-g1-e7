@@ -1,11 +1,12 @@
 import time
+import sys
+from gestorAplicacion.produccion.Fabrica import Fabrica  # Importar la clase Fabrica
+"""from gestorAplicacion.produccion.Tienda import Tienda    # Importar la clase Tienda
+from gestorAplicacion.produccion.Producto import Producto  # Importar la clase Producto
+from gestorAplicacion.produccion.TipoTransporte import TipoTransporte  # Importar la clase TipoTransporte
+from gestorAplicacion.produccion.Transporte import Transporte  # Importar la clase Transporte
+from gestorAplicacion.gestion.Conductor import Conductor  # Importar la clase Conductor"""
 
-from gestorAplicacion.produccion.Fabrica import Fabrica
-from gestorAplicacion.produccion.Tienda import Tienda
-from gestorAplicacion.produccion.Producto import Producto
-from gestorAplicacion.produccion.TipoTransporte import TipoTransporte
-from gestorAplicacion.produccion.Transporte import Transporte
-from gestorAplicacion.gestion.Conductor import Conductor
 def main():
     salir = False
     while not salir:
