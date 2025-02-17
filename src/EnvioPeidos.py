@@ -27,7 +27,7 @@ def enviar_pedidos():
                         print("\nSaliendo...")
                         time.sleep(2)
                         return  # Salir del método
-                    elif 0 < seleccion <= len(listaClientes):#llamar el metodo lista clientes
+                    elif 0 < seleccion <= len(Cliente.listaClientes):
                         break  # Cliente seleccionado correctamente
                     else:
                         print("\nNúmero fuera de rango. Por favor, elija un cliente válido.")
@@ -35,13 +35,13 @@ def enviar_pedidos():
                     print("\nEntrada inválida. Por favor, ingrese un número.")
 
                 # Confirmación de cliente
-                print(f"\nHa seleccionado el cliente: {listaClientes[seleccion - 1].getNombre()}")#llamar el metodo lista clientes
+                print(f"\nHa seleccionado el cliente: {Cliente.listaClientes[seleccion - 1].getNombre()}")#llamar el metodo lista clientes
                 print("\nPara confirmar, ingrese '1'. Para regresar al menú anterior, ingrese '0'.")
 
                 while True:
                     eleccion = input("\n» ")
                     if eleccion == "1":  # Confirmar cliente
-                        clienteSeleccionado = listaClientes[seleccion - 1]#llamar el metodo lista clientes
+                        clienteSeleccionado = Cliente.listaClientes[seleccion - 1]#llamar el metodo lista clientes
                         print(f"\nCliente confirmado: {clienteSeleccionado.getNombre()}")
                         confirmacionCliente = 1  # Confirmación de selección
                         break
