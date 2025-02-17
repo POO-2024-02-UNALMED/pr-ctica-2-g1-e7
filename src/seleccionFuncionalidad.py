@@ -37,13 +37,6 @@ menu_archivo.add_separator()
 menu_archivo.add_command(label="Salir", command=salir)
 menubar.add_cascade(label="Archivo", menu=menu_archivo)
 
-
-
-# Menú Ayuda
-menu_ayuda = tk.Menu(menubar, tearoff=0)
-menu_ayuda.add_command(label="Acerca de", command=mostrar_autores)
-menubar.add_cascade(label="Ayuda", menu=menu_ayuda)
-
 # Asignar menú a la ventana
 ventana.config(menu=menubar)
 
@@ -98,6 +91,11 @@ def mostrar_abastecimiento():
     tk.Button(frame_interaccion, text="Confirmar Envío", command=lambda: messagebox.showinfo("Éxito", "Abastecimiento confirmado")).pack(pady=10)
     tk.Button(frame_interaccion, text="Volver al Menú", command=mostrar_menu).pack()
 
+# Funcionalidad Estadísticas
+
+def mostrar_estadisticas():
+    pass
+
 # Función para volver a la interfaz principal
 def mostrar_menu():
     limpiar_frame_interaccion()  # Limpiar antes de volver al menú
@@ -119,7 +117,13 @@ menu_procesos.add_command(label="Opción 1")
 menu_procesos.add_command(label="Opción 2")
 menu_procesos.add_command(label="Opción 3")
 menu_procesos.add_command(label="Opción 4", command=mostrar_abastecimiento)
-menu_procesos.add_command(label="Opción 5")
+menu_procesos.add_command(label="Estadísticas", command=mostrar_estadisticas)
 menubar.add_cascade(label="Procesos y Consultas", menu=menu_procesos)
+
+# Menú Ayuda
+menu_ayuda = tk.Menu(menubar, tearoff=0)
+menu_ayuda.add_command(label="Acerca de", command=mostrar_autores)
+menubar.add_cascade(label="Ayuda", menu=menu_ayuda)
+
 
 ventana.mainloop()

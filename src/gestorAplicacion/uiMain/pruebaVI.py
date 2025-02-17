@@ -52,7 +52,7 @@ frame_de_abajo = tk.Frame(ventana)
 frame_de_abajo.pack(fill="both", expand=True)
 
 # P3 Saludo
-p3_frame = tk.Frame(frame_de_arriba, bg="lightgreen", width=200, height=100)
+p3_frame = tk.Frame(frame_de_arriba, bg="lightgreen", width=100, height=100)
 p3_frame.pack(side="left", fill="both", expand=True)
 tk.Label(p3_frame, text="¡Bienvenido al sistema!\n\n Bienvenido al sistema de distribución JJAYC,\n"
          "el sistema donde podrás manejar tu negocio,\n"
@@ -92,4 +92,21 @@ foto_label.bind("<Button-1>", lambda e: cambiar_desarrollador())
 # Inicializar con la primera imagen
 actualizar_foto()
 
+def centrar_ventana(vent):
+    """
+    Basado en https://stackoverflow.com/a/10018670.
+    """
+    vent.update_idletasks()
+    width = vent.winfo_width()
+    frm_width = vent.winfo_rootx() - vent.winfo_x()
+    win_width = width + 2*frm_width
+    height = vent.winfo_height()
+    titlebar_height = vent.winfo_rooty() - vent.winfo_y()
+    win_height = height + titlebar_height + frm_width
+    x = vent.winfo_screenwidth()//2 - win_width//2
+    y = vent.winfo_screenheight()//2 - win_height//2
+    vent.geometry('{}x{}+{}+{}'.format(width, height, x, y))
+    vent.deiconify()
+
+centrar_ventana(ventana)
 ventana.mainloop()
