@@ -1,4 +1,4 @@
-from Persona import Persona
+from gestorAplicacion.gestion.Persona import Persona
 
 class Vendedor(Persona):
     lista_vendedores = []
@@ -8,6 +8,7 @@ class Vendedor(Persona):
         self.tienda = None
         self.meta_vendedor = []
         Vendedor.lista_vendedores.append(self)
+
     
     def mostrar_metas(self) -> str:
         texto = []
@@ -47,3 +48,5 @@ class Vendedor(Persona):
     
     def aumentar_indice_meta(self):
         self.set_indice_meta(self.get_indice_meta() + 1)
+
+
