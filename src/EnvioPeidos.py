@@ -1,13 +1,17 @@
 import time
+import datetime
+from gestorAplicacion.produccion.Tienda import Tienda
+from gestorAplicacion.produccion.Fabrica import Fabrica
+from gestorAplicacion.produccion.Transporte import Transporte
+from gestorAplicacion.produccion.TipoTransporte import TipoTransporte
+from gestorAplicacion.gestion.Cliente import Cliente
 
-# Asumimos que existen clases y métodos similares a los de Java
-# Cliente, Fabrica, Tienda, Producto, Conductor, TipoTransporte
 
 def enviar_pedidos():
     while True:
         print("\nEligió la opción de envio de pedidos. \n\nSeleccione al cliente que realizó el pedido. Oprima 0 para salir.")
         print("\n0. Salir")
-        print(mostrarCliente)#llamar el metodo mostrar clientes
+        print(Cliente.mostrarClientes())
         seleccion = -1
         
         # Selección de cliente
@@ -173,5 +177,118 @@ def enviar_pedidos():
                         print("\nNúmero fuera de rango. Por favor, elija un producto válido.")
                 except ValueError:
                     print("\nEntrada inválida. Por favor, ingrese un número.")
+                 # Calcular el peso total de los productos seleccionados
+                total_peso = 0.0
+                for producto in lista_productos_pedidos:
+                    peso = producto.getPeso()
+                    if peso > 0:  # Validamos que el peso sea positivo
+                        total_peso += peso
+                    else:
+                        print("\nError: Peso inválido para el producto " + producto.getNombre())
 
+                # Determinar los tipos de transporte posibles según el peso total
+                lista_posible_transporte = TipoTransporte.crearTipoTransporteSegunCarga(total_peso)
+                lista_transporte_filtrada = []
 
+                # Filtrar los transportes disponibles que coinciden con los de los conductores
+                for conductor in Conductor.getListaConductores():
+                    conductor_tipo_transporte = conductor.getTransporte().getTipoTransporte()
+                    for posible_transporte in lista_posible_transporte:
+                        if conductor_tipo_transporte == posible_transporte:
+                            lista_transporte_filtrada.append(conductor.getTransporte().getTipoTransporte())
+
+                # Verificar si el envío es gratis
+                envio_gratis = Transporte.enviarGratis(lista_productos_pedidos)
+
+                # Solicitar al cliente que seleccione el tipo de transporte
+                print("\nPor favor, elija el transporte que desea utilizar para su envío:")
+                print("\nOpciones de transporte disponibles:")
+                print("0. Salir")
+                print(TipoTransporte.mostrarTipoTransporteSegunCarga(lista_transporte_filtrada, envio_gratis))
+
+                # Bucle para pedir la opción de transporte hasta que sea válida
+                while True:
+                    try:
+                        print("\n» ", end="")
+                        opcion = int(input())
+                        if opcion == 0:
+                            print("\nSaliendo...")
+                            time.sleep(1)  # Pausa de 1000 milisegundos (1 segundo)
+                            return
+                        elif opcion > 0 and opcion <= len(lista_transporte_filtrada):
+                            tipo_transporte_seleccionado = lista_transporte_filtrada[opcion - 1]
+                            break
+                        else:
+                            print("\nNúmero fuera de rango. Por favor, elija un transporte válido.")
+                    except Exception:
+                        print("\nEntrada inválida. Por favor, ingrese un número.")
+
+                # Determinar el transporte seleccionado
+                transporte_seleccionado = None
+                for conductor in Conductor.getListaConductores():
+                    if conductor.getTransporte().getTipoTransporte() == tipo_transporte_seleccionado:
+                        transporte_seleccionado = conductor.getTransporte()
+
+                # Mostrar detalles del transporte seleccionado
+                if envio_gratis:
+                    print("\nHa escogido el transporte: " + transporte_seleccionado.getTipoTransporte().getNombre() +
+                          "\n- Precio: 0.0")
+                else:
+                    print("\nHa escogido el transporte: " + transporte_seleccionado.getTipoTransporte().getNombre() +
+                          "\n- Precio: " + str(transporte_seleccionado.getTipoTransporte().getPrecioEnvio()) + "\n")
+
+                # Solicitar y validar la fecha de la venta
+                formato_fecha = "%d/%m/%Y"
+                fecha_valida = False
+                fecha_venta = None
+
+                print("\nPor favor, ingrese el día en que se realiza la venta (formato: DD/MM/AAAA). Asegúrese de que la fecha sea válida.")
+                while not fecha_valida:
+                    print("\nIngrese una fecha:  »", end="")
+                    entrada = input()
+                    try:
+                        # Convierte la fecha en formato String a datetime object
+                        fecha_venta = datetime.datetime.strptime(entrada, formato_fecha)
+                        print("\nLa fecha ingresada es válida: " + fecha_venta.strftime(formato_fecha))
+                        fecha_valida = True
+                    except ValueError:
+                        print("\nLa fecha ingresada no es válida o no cumple con el formato DD/MM/AAAA. Intente nuevamente.")
+
+                # Generar la factura
+                print("\nGenerando Factura...")
+                time.sleep(1)  # Pausa de 1000 milisegundos (1 segundo)
+                print("\n¡Factura creada con éxito! A continuación, se mostrará la factura:\n")
+                print(tienda_seleccionada.enviarPedido(lista_productos_pedidos,
+                                                       transporte_seleccionado,
+                                                       cliente_seleccionado,
+                                                       transporte_seleccionado.getTipoTransporte().getPrecioEnvio(),
+                                                       fecha_venta))
+
+                # Aumentar la carga de trabajo del vendedor y conductor
+                tienda_seleccionada.getVendedor().aumentarCargaTrabajo()
+                transporte_seleccionado.getConductor().aumentarCargaTrabajo()
+
+                # Aumentar el indice de meta para el vendedor y conductor
+                tienda_seleccionada.getVendedor().aumentarIndiceMeta()
+                transporte_seleccionado.getConductor().aumentarIndiceMeta(total_peso)
+
+                # Eliminar los productos vendidos del inventario
+                tienda_seleccionada.eliminarProductosPorNombre(lista_productos_pedidos)
+
+                # Mensaje final
+                print("¡Genial! 🎉 Los productos han sido enviados con éxito.")
+                print("Si desea volver al menú principal, ingrese 1.")
+                opcion_salir = 0
+
+                while opcion_salir != 1:
+                    print("\n» ", end="")
+                    opcion_salir = int(input())
+                    if opcion_salir == 1:
+                        print("Volviendo al menú principal...")
+                        time.sleep(2)  # Pausa de 2000 milisegundos (2 segundos)
+                        return  # Sale del método, pero no del ciclo principal
+                    else:
+                        print("Opción no válida. ¡Intenta de nuevo! 🤔")
+                        print("Si desea volver al menú principal, ingrese 1.")
+
+enviar_pedidos()

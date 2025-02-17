@@ -170,9 +170,9 @@ class Tienda():
 
     
 
-class Tienda:
-    def __init__(self):
-        self.listaProducto = []
+#class Tienda:
+    #def __init__(self):
+        #self.listaProducto = []
 
     def agregar_productos_para_cambio(self, precio_cambio: float, seleccion_productos: List[int], productos_disponibles):
         from Producto import Producto
@@ -286,6 +286,6 @@ class Tienda:
         transporteSeleccionado.getListaDeProductos().clear()  # Vaciar la lista de productos del transporte
         
 
-from Producto import Producto
-tienda = Tienda()
-tienda.productosPorCategoria([Producto("Martillo", 10, "Herramientas"), Producto("Silla", 20, "Muebles"), Producto("Escoba", 30, "Aseo")])
+#from .Producto import Producto
+#tienda = Tienda()
+#tienda.productosPorCategoria([Producto("Martillo", 10, "Herramientas"), Producto("Silla", 20, "Muebles"), Producto("Escoba", 30, "Aseo")])
