@@ -1,6 +1,4 @@
 
-from TipoTransporte import TipoTransporte
-
 class Transporte:
     montoEnvioGratis = 100000
 

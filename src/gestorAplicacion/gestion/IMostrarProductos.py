@@ -1,8 +1,6 @@
 from abc import ABC
 from typing import List, Optional
-from produccion.Producto import Producto
-from .Factura import Factura
-from produccion.EstadoProducto import EstadosProducto
+from Factura import Factura
 
 class IMostrarProductos(ABC):
     def mostrarProductos(self, productoOmitir):
@@ -13,6 +11,7 @@ class IMostrarProductos(ABC):
 
     @staticmethod
     def mostrarProductosFactura(factura: 'Factura') -> str:
+        from produccion.EstadoProducto import EstadosProducto
         if not factura or not factura.listaProductos:
             return "La factura no tiene productos."
         
@@ -24,7 +23,9 @@ class IMostrarProductos(ABC):
         return "\n".join(texto)
 
     @staticmethod
-    def mostrarProductosLista(listaProductos: List['Producto']) -> str:
+    def mostrarProductosLista(listaProductos) -> str:
+        from produccion.Producto import Producto
+        listaProductos: list[Producto] = listaProductos
         if not listaProductos:
             return "No hay productos registrados o disponibles."
         

@@ -1,14 +1,11 @@
 from datetime import datetime
-from .Cliente import Cliente
-from produccion import Tienda, Producto, Transporte, EstadoProducto
-from .IMostrarProductos import mostrarProductosFactura 
 
 class Factura:
     # Variables de clase (atributos estáticos)
     totalCreadas = 0
     listaFacturas = []
 
-    def __init__(self, tienda: Tienda, cliente: Cliente, transporte: Transporte, lista_productos: list, precio_envio: float, fecha: datetime):
+    def __init__(self, tienda, cliente, transporte, lista_productos: list, precio_envio: float, fecha: datetime):
         self.tienda = tienda
         self.cliente = cliente
         self.transporte = transporte
@@ -57,9 +54,11 @@ class Factura:
         return cls.listaFacturas[num-1] 
 
     def mostrarProductosFactura(self): 
+        from gestion.IMostrarProductos import mostrarProductosFactura
         return mostrarProductosFactura(self)
     
     def todosDevueltos(self) -> bool:
+        from gestorAplicacion.produccion.EstadoProducto import EstadoProducto
         """
         Funcionalidad a la que pertenece: Devoluciones
         Método que se encarga de verificar si todos los productos de una factura han sido devueltos o no.
@@ -151,6 +150,7 @@ class Factura:
         return moda
     
     def modaClientes(self):
+        from gestion.Cliente import Cliente
         """
         Método que calcula la moda de los clientes.
         """

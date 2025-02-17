@@ -1,9 +1,5 @@
-from gestion import Cliente, Factura
-from . import EstadoProducto
-from .Producto import Producto
-from gestion import IMostrarProductos
 from typing import List
-class Tienda(IMostrarProductos):
+class Tienda():
 
     numTiendas = 0  # Contador de tiendas
 
@@ -97,7 +93,12 @@ class Tienda(IMostrarProductos):
 
 
 
-    def devolverProducto(self, factura: Factura, producto: Producto) -> 'Cliente':
+    def devolverProducto(self, factura, producto):
+        from Producto import Producto
+        producto: Producto = producto
+        from gestion.Factura import Factura
+        from produccion.EstadoProducto import EstadoProducto
+        factura: Factura = factura
         """
         Funcionalidad a la que pertenece: Devoluciones
         Método que se encarga de procesar la devolución de un producto.
@@ -107,7 +108,7 @@ class Tienda(IMostrarProductos):
         return factura.cliente 
 
     
-    def mostrarProductos(self, producto: Producto) -> List[Producto]:
+    def mostrarProductos(self, producto):
         """
         Sobreescribe el método por defecto de la clase abstracta IMostrarProducto
         Método que muestra la lista de productos omitiendo el producto dado.
@@ -156,12 +157,14 @@ class Tienda(IMostrarProductos):
     # Método de la funcionalidad enviarPedidos:
     # Elimina de la tienda los productos cuyos nombres coincidan con los de la lista recibida.
     def eliminarProductosPorNombre(self, listaEliminar):
+        
         self._listaProducto = [producto for producto in self._listaProducto if producto.nombre not in {p.nombre for p in listaEliminar}]
 
     # Método de la funcionalidad enviarPedidos:
     # Genera una factura con los productos seleccionados para el pedido, junto con el cliente, el transporte y el precio de envío.
     # Devuelve la factura en formato de texto.
     def enviarPedido(self, listaProductosPedidos, transporteSeleccionado, clienteSeleccionado, precioEnvio, dia):
+        from gestion.Factura import Factura
         factura = Factura(self, clienteSeleccionado, transporteSeleccionado, listaProductosPedidos, precioEnvio, dia)
         return str(factura)
 
@@ -171,7 +174,8 @@ class Tienda:
     def __init__(self):
         self.listaProducto = []
 
-    def agregar_productos_para_cambio(self, precio_cambio: float, seleccion_productos: List[int], productos_disponibles: List['Producto']) -> List['Producto']:
+    def agregar_productos_para_cambio(self, precio_cambio: float, seleccion_productos: List[int], productos_disponibles):
+        from Producto import Producto
         """
         Funcionalidad: Devoluciones
         Método principal para gestionar los productos seleccionados para un cambio.
@@ -203,12 +207,14 @@ class Tienda:
 
     
     def productosPorCategoria(self, productos, conteoTemporal=None):
+        from Producto import Producto
+        productos: List[Producto] = productos
         """
         Muestra los productos por categoría en formato: (cantidad actual/capacidad máxima).
         Si `conteoTemporal` se proporciona, se usa en lugar del conteo normal.
         """
         # Limpiar listas antes de procesar
-        self.categorias.clear()
+        self.categorias = []
 
         # Lista de todas las categorías posibles
         todasLasCategorias = ["Herramientas", "Muebles", "Aseo"]
@@ -219,7 +225,7 @@ class Tienda:
         
         # Si `conteoTemporal` no se proporciona, inicializar `conteoCategorias`
         if conteoTemporal is None:
-            self.conteoCategorias.clear()
+            self.conteoCategorias = []
             self.conteoCategorias = [0] * len(self.categorias)
 
             # Contar productos por categoría
@@ -279,3 +285,7 @@ class Tienda:
         self.listaProducto.extend(productosTransportados)
         transporteSeleccionado.getListaDeProductos().clear()  # Vaciar la lista de productos del transporte
         
+
+from Producto import Producto
+tienda = Tienda()
+tienda.productosPorCategoria([Producto("Martillo", 10, "Herramientas"), Producto("Silla", 20, "Muebles"), Producto("Escoba", 30, "Aseo")])

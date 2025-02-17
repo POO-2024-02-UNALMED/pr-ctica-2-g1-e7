@@ -1,9 +1,8 @@
-from produccion import Fabrica
-from gestion import Persona
+from Persona import Persona
 class Operario(Persona):
     lista_operarios = []
     
-    def __init__(self, nombre: str, cedula: int, edad: int, cuenta_bancaria, fabrica: Fabrica):
+    def __init__(self, nombre: str, cedula: int, edad: int, cuenta_bancaria, fabrica):
         super().__init__(nombre, cedula, edad, cuenta_bancaria)
         self.fabrica = fabrica
         self.meta_operario = []
@@ -26,7 +25,7 @@ class Operario(Persona):
         self.get_cuenta_bancaria().anadir_dinero(valor)
         self.set_cantidad_trabajo(0)
     
-    def set_fabrica(self, fabrica: Fabrica):
+    def set_fabrica(self, fabrica):
         self.fabrica = fabrica
     
     def get_fabrica(self):

@@ -1,12 +1,12 @@
-from gestion import Persona
-from produccion import Transporte
+from Persona import Persona
 
 class Conductor(Persona):
     lista_conductores = []
     
-    def __init__(self, nombre: str, cedula: int, edad: int, cuenta_bancaria, fabrica, transporte: Transporte, licencia: str = None):
+    def __init__(self, nombre: str, cedula: int, edad: int, cuenta_bancaria, fabrica, transporte, licencia: str = None):
+        from produccion.Transporte import Transporte
         super().__init__(nombre, cedula, edad, cuenta_bancaria)
-        self.transporte = transporte
+        self.transporte: Transporte = transporte
         self.fabrica = fabrica
         self.meta_conductor = []
         self.licencia = licencia
@@ -33,7 +33,7 @@ class Conductor(Persona):
     def get_transporte(self):
         return self.transporte
     
-    def set_transporte(self, transporte: Transporte):
+    def set_transporte(self, transporte):
         self.transporte = transporte
     
     def get_fabrica(self):

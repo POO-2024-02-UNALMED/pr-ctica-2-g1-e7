@@ -1,5 +1,3 @@
-from EstadoProducto import EstadosProducto
-
 class Producto:
     totalCreados = 0
     listaProductos = []

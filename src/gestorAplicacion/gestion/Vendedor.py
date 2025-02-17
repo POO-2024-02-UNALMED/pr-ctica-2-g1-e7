@@ -1,5 +1,4 @@
-from .Persona import Persona
-from produccion import Tienda
+from Persona import Persona
 
 class Vendedor(Persona):
     lista_vendedores = []
@@ -27,7 +26,7 @@ class Vendedor(Persona):
         self.get_cuenta_bancaria().anadir_dinero(valor)
         self.set_cantidad_trabajo(0)
     
-    def set_tienda(self, tienda: Tienda):
+    def set_tienda(self, tienda):
         self.tienda = tienda
     
     def get_tienda(self):

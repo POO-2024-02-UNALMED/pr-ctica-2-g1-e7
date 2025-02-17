@@ -1,4 +1,3 @@
-from produccion import Producto
 class Cliente:
     listaClientes = []      # Variable de clase: lista de todos los clientes
     totalCreados = 0        # Variable de clase: contador de clientes creados
@@ -71,7 +70,8 @@ class Cliente:
     
    
     
-    def removerProducto(self, producto: Producto):
+    def removerProducto(self, producto):
+        from produccion.Producto import Producto
         """
         Funcionalidad a la que pertenece: Devoluciones
         Método que remueve un producto de la lista de productos del cliente.

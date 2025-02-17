@@ -1,10 +1,8 @@
 # fabrica.py
 
-from gestion.CuentaBancaria import CuentaBancaria
-from gestion.Operario import Operario
 from Producto import Producto
 from Tienda import Tienda
-from gestion.IMostrarProductos import IMostrarProductos
+
 class Fabrica:
     # Variables de clase (similares a los atributos estáticos en Java)
     cuentaBancaria = None
@@ -42,7 +40,7 @@ class Fabrica:
         return precio
     
     @staticmethod
-    def calcular_excedente(productos: List['Producto'], valor: float) -> float:
+    def calcular_excedente(productos: list['Producto'], valor: float) -> float:
         """
         Funcionalidad: Devoluciones
         Método que calcula el excedente que debe pagar el cliente (si debe hacerlo) al realizar un cambio de productos.
@@ -78,11 +76,11 @@ class Fabrica:
     # Si no hay tiendas, indica que no hay ninguna registrada.
     @staticmethod
     def mostrarTiendasSinProductos():
-        if not listaTienda:
+        if not Fabrica.listaTienda:
             return "No hay tiendas registradas."
 
         texto = ""
-        for i, tienda in enumerate(listaTienda, start=1):
+        for i, tienda in enumerate(Fabrica.listaTienda, start=1):
             texto += f"{i}. Tienda: {tienda.nombre}\n"
 
         return texto.strip()
@@ -91,6 +89,7 @@ class Fabrica:
     """Funcionalidad a la que pertenece: Abastecer tiendas
        Metodo que se encarga de mostrar los productos disponibles en la fábrica para generar. Hace uso del metodo de la interfaz IMostrarProductos"""
     def mostrarProductos():
+        from gestion.IMostrarProductos import IMostrarProductos
         return IMostrarProductos.mostrarProductosLista(Fabrica.productosDisponibles)
     """ Funcionalidad a la que pertenece: Abastecer tiendas
         Metodo que se encarga de generar nuevos productos seleccionados del abastecimiento"""
