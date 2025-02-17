@@ -8,14 +8,14 @@ descripciones = [
     "Andrés Felipe Guerra Amaris \n18 años \nIngeniería de sistemas e informática  \nNacido en Bucaramanga",
     "Juan Esteban Herrera Navarro \n22 años \nEstudiante ingeniería de sistemas \nTrabajador nato.",
     "Yhan Carlos Jaramillo Diaz \n17 años \nEstudiante de Ingeniería de Sistemas \nTrabajador",
-    #agregar info de jose luis 
+    "Jose Luis Sanchez Alvarez \n18 años \nEstudiante de Ingenieria de Sistemas \nNacido en Uraba"
 ]
 fotos_desarrolladores_paths = [
     "src/gestorAplicacion/uiMain/imagenes/collageCarlos.png",
     "src/gestorAplicacion/uiMain/imagenes/collageAndres.png",
     "src/gestorAplicacion/uiMain/imagenes/collageJuan.png",
-    "src/gestorAplicacion/uiMain/imagenes/collageYhan.png"
-    #Falta agregar la foto de jose luis
+    "src/gestorAplicacion/uiMain/imagenes/collageYhan.png",
+    "src/gestorAplicacion/uiMain/imagenes/collageJoseLuis.png"
 ]
 
 def cambiar_desarrollador():
