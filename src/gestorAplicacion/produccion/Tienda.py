@@ -1,4 +1,6 @@
 from typing import List
+
+
 class Tienda():
 
     numTiendas = 0  # Contador de tiendas
@@ -284,7 +286,7 @@ def descargarProducto(self, transporteSeleccionado):
         productosTransportados = transporteSeleccionado.getListaDeProductos()
         self.listaProducto.extend(productosTransportados)
         transporteSeleccionado.getListaDeProductos().clear()  # Vaciar la lista de productos del transporte
-        
+
 
 #from .Producto import Producto
 #tienda = Tienda()

@@ -26,6 +26,9 @@ class Cliente:
         texto = ""
         for i, cliente in enumerate(Cliente.listaClientes, start=1):
             texto += f"{i}. {cliente.getNombre()}\n"
+        
+        return texto
+
 
     # Getters
     def getNombre(self):
@@ -78,3 +81,5 @@ class Cliente:
         """
         if producto in self.__listaProductos:
             self.__listaProductos.remove(producto)
+
+cliente1 = Cliente(nombre="Juan Pérez", edad=30, cedula="12345678", cuentaBancaria="987654321")

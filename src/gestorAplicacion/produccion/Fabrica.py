@@ -1,3 +1,8 @@
+from gestorAplicacion.produccion.Producto import Producto
+from gestorAplicacion.produccion.Tienda import Tienda
+from gestorAplicacion.gestion.Vendedor import Vendedor#prueba
+
+
 class Fabrica:
     # Variables de clase
     cuentaBancaria = None
@@ -68,7 +73,7 @@ class Fabrica:
         if not Fabrica.listaTienda:
             return "No hay tiendas registradas."
 
-        return "\n".join(f"{i}. Tienda: {t.nombre}" for i, t in enumerate(Fabrica.listaTienda, start=1))
+        return "\n".join(f"{i}. Tienda: {t.getNombre()}" for i, t in enumerate(Fabrica.listaTienda, start=1))
 
     @staticmethod
     def mostrarProductos():
@@ -93,3 +98,13 @@ class Fabrica:
         return [Producto(producto.nombre, producto.precio, producto.estado, 
                          producto.tipo, producto.categoria, producto.peso) 
                 for _ in range(cantidad_a_enviar)]
+mi_vendedor = Vendedor("Juan Pérez", 123456789, 30, "1234567890")
+mi_tienda = Tienda(
+    nombre="Supermercado La Estrella",
+    vendedor=mi_vendedor,
+    cuentaBancaria="9876543210",
+    capacidadMaximaMaterial=100,
+    capacidadMaximaConsumible=200,
+    capacidadMaximaLimpieza=150
+)
+Fabrica.listaTienda.append(mi_tienda)

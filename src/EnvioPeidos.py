@@ -58,7 +58,7 @@ def enviar_pedidos():
         print("\nSeleccione la tienda desde la cual se enviará el pedido. Si no desea continuar, presione 0 para salir.")
         print("\nListado de Tiendas:")
         print("0. Salir")
-        print(mostrarTiendas(True))#llamar el metodo mostrarTiendas
+        print(Fabrica.mostrarTiendasSinProductos())#llamar el metodo mostrarTiendas
 
         opcion = -1
         tiendaSeleccionada = None
@@ -72,8 +72,8 @@ def enviar_pedidos():
                     print("\nSaliendo...")
                     time.sleep(2)
                     return
-                elif 0 < opcion <= len(listaTienda): #llamar el atriburo listaTienda de la clase fabrica
-                    tiendaSeleccionada = listaTienda[opcion - 1]#llamar el atriburo listaTienda de la clase fabrica
+                elif 0 < opcion <= len(Fabrica.listaTienda): #llamar el atriburo listaTienda de la clase fabrica
+                    tiendaSeleccionada = Fabrica.listaTienda[opcion - 1]#llamar el atriburo listaTienda de la clase fabrica
                     break  # Tienda seleccionada correctamente
                 else:
                     print("\nNúmero fuera de rango. Por favor, elija una tienda válida.")
