@@ -7,7 +7,7 @@ class CuentaBancaria:
         self.saldo += monto
 
     def devolverDinero(self, total: float, cliente):
-        from Cliente import Cliente
+        from gestorAplicacion.gestion.Cliente import Cliente
         cliente: Cliente = cliente
         """
         Funcionalidad a la que pertenece: Devoluciones
@@ -20,3 +20,8 @@ class CuentaBancaria:
         """
         self.saldo -= valor
         cuentaDestino.añadirDinero(valor)
+    #setters y getters 
+    def setSaldo(self,saldo): 
+        self.saldo=saldo
+    def getSaldo(self): 
+        return self.saldo

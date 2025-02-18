@@ -1,4 +1,4 @@
-from Persona import Persona
+from gestorAplicacion.gestion.Persona import Persona
 class Operario(Persona):
     lista_operarios = []
     

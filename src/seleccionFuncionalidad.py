@@ -4,7 +4,7 @@ from tkinter import ttk, messagebox
 # Funciones para los menús
 def mostrar_info_aplicacion():
     messagebox.showinfo("Aplicación", "Esta aplicación gestiona procesos y consultas del sistema.")
-
+    
 def mostrar_autores():
     messagebox.showinfo("Acerca de", "Autores: Equipo de Desarrollo JJAYC")
 

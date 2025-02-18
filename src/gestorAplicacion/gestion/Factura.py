@@ -1,6 +1,8 @@
 from datetime import datetime
+from gestorAplicacion.produccion.EstadoProducto import EstadosProducto
+from gestorAplicacion.gestion.IMostrarProductos import IMostrarProductos
 
-class Factura:
+class Factura(IMostrarProductos):
     # Variables de clase (atributos estáticos)
     totalCreadas = 0
     listaFacturas = []
@@ -13,18 +15,18 @@ class Factura:
         self.precioEnvio = precio_envio
 
         # Si ya existen más de dos facturas, se ordenan por fecha.
-        if len(Factura.lista_facturas) > 2:
+        if len(Factura.listaFacturas) > 2:
             Factura.ordenar_facturas_por_fecha()
 
         self.fecha = fecha
-        self.total = self.calcular_total()
+        self.total = self.calcularTotal()
 
         # Se incrementa el contador y se asigna el id
-        Factura.total_creadas += 1
-        self.id = Factura.total_creadas
+        Factura.totalCreadas += 1
+        self.id = Factura.totalCreadas
 
         # Se agrega la factura a la lista de facturas
-        Factura.lista_facturas.append(self)
+        Factura.listaFacturas.append(self)
 
     
     @classmethod
@@ -52,18 +54,21 @@ class Factura:
     @classmethod
     def seleccionarFactura(cls,num:int):
         return cls.listaFacturas[num-1] 
+    
+    def calcularTotal(self): 
+        total=0
+        for producto in self.listaProductos: 
+            total+=producto.precio
+        return total
 
-    def mostrarProductosFactura(self): 
-        from gestion.IMostrarProductos import mostrarProductosFactura
-        return mostrarProductosFactura(self)
+        
     
     def todosDevueltos(self) -> bool:
-        from gestorAplicacion.produccion.EstadoProducto import EstadoProducto
         """
         Funcionalidad a la que pertenece: Devoluciones
         Método que se encarga de verificar si todos los productos de una factura han sido devueltos o no.
         """
-        return all(p.estado == EstadoProducto.DEVUELTO for p in self.listaProductos)
+        return all(p.estado == EstadosProducto.DEVUELTO for p in self.listaProductos)
     
     def seleccionarProducto(self, n: int):
         """

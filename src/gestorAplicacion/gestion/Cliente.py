@@ -71,10 +71,10 @@ class Cliente:
    
     
     def removerProducto(self, producto):
-        from produccion.Producto import Producto
+        from gestorAplicacion.produccion.Producto import Producto
         """
         Funcionalidad a la que pertenece: Devoluciones
         Método que remueve un producto de la lista de productos del cliente.
         """
-        if producto in self.listaProductos:
-            self.listaProductos.remove(producto)
+        if producto in self.__listaProductos:
+            self.__listaProductos.remove(producto)

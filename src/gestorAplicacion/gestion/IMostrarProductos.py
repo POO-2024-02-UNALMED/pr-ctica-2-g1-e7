@@ -1,6 +1,5 @@
 from abc import ABC
 from typing import List, Optional
-from Factura import Factura
 
 class IMostrarProductos(ABC):
     def mostrarProductos(self, productoOmitir):
@@ -9,15 +8,13 @@ class IMostrarProductos(ABC):
         """
         return "Este método debe ser implementado si es necesario."
 
-    @staticmethod
-    def mostrarProductosFactura(factura: 'Factura') -> str:
-        from produccion.EstadoProducto import EstadosProducto
-        if not factura or not factura.listaProductos:
-            return "La factura no tiene productos."
+    
+    def mostrarProductosFactura(self) -> str:
+        from gestorAplicacion.produccion.EstadoProducto import EstadosProducto
         
         texto = [
             f"{i + 1}. {p.nombre} (devuelto)" if p.estado == EstadosProducto.DEVUELTO else f"{i + 1}. {p.nombre}"
-            for i, p in enumerate(factura.listaProductos)
+            for i, p in enumerate(self.listaProductos)
         ]
         
         return "\n".join(texto)

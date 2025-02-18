@@ -1,6 +1,3 @@
-from gestorAplicacion.produccion.Producto import Producto
-from gestorAplicacion.produccion.Tienda import Tienda
-
 class Fabrica:
     # Variables de clase
     cuentaBancaria = None
@@ -23,10 +20,10 @@ class Fabrica:
             Fabrica.listaTienda = listaTienda
         if operario is not None:
             Fabrica.operario = operario
-            operario.setFabrica(self)
+            operario.set_fabrica(self)
 
     @staticmethod
-    def descontarDineroCuenta(producto: Producto) -> float:
+    def descontarDineroCuenta(producto) -> float:
         """
         Resta el precio del producto devuelto de la cuenta bancaria de la fábrica.
         """
@@ -40,7 +37,7 @@ class Fabrica:
         return producto.precio
 
     @staticmethod
-    def calcular_excedente(productos: list[Producto], valor: float) -> float:
+    def calcularExcedente(productos, valor: float) -> float:
         """
         Calcula si el cliente debe pagar un excedente al cambiar productos.
         """
@@ -82,10 +79,12 @@ class Fabrica:
         return IMostrarProductos.mostrarProductosLista(Fabrica.productosDisponibles)
 
     @staticmethod
-    def cantidadProductos(producto: Producto, cantidad_a_enviar: int):
+    def cantidadProductos(producto, cantidad_a_enviar: int):
         """
         Genera una cantidad específica de productos para abastecimiento.
         """
+        from gestorAplicacion.produccion.Producto import Producto
+
         if not isinstance(producto, Producto):
             raise ValueError("Error: El objeto proporcionado no es un producto válido.")
         if cantidad_a_enviar <= 0:

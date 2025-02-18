@@ -94,17 +94,17 @@ class Tienda():
 
 
     def devolverProducto(self, factura, producto):
-        from Producto import Producto
+        from gestorAplicacion.produccion.Producto import Producto
         producto: Producto = producto
-        from gestion.Factura import Factura
-        from produccion.EstadoProducto import EstadoProducto
+        from gestorAplicacion.gestion.Factura import Factura
+        from gestorAplicacion.produccion.EstadoProducto import EstadosProducto
         factura: Factura = factura
         """
         Funcionalidad a la que pertenece: Devoluciones
         Método que se encarga de procesar la devolución de un producto.
         """
-        self.listaProducto.append(producto)
-        producto.estado = EstadoProducto.DEVUELTO
+        self.__listaProducto.append(producto)
+        producto.estado = EstadosProducto.DEVUELTO
         return factura.cliente 
 
     
@@ -113,7 +113,7 @@ class Tienda():
         Sobreescribe el método por defecto de la clase abstracta IMostrarProducto
         Método que muestra la lista de productos omitiendo el producto dado.
         """
-        return [p for p in self.listaProducto if p.producto_id != producto.producto_id]
+        return [p for p in self.__listaProducto if p.producto_id != producto.producto_id]
     from typing import List
     # Método de la funcionalidad enviarPedidos:
     # Crea una lista con los productos disponibles en la tienda y la cantidad de cada uno.
