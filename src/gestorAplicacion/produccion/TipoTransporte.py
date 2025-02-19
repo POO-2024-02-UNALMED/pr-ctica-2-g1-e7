@@ -22,7 +22,7 @@ class TipoTransporte(Enum):
     """Bosquejo"""
 
     @classmethod
-    def crear_tipo_transporte_segun_carga(cls, peso_total_productos: float) -> List['TipoTransporte']:
+    def crearTipoTransporteSegunCarga(cls, peso_total_productos: float) -> List['TipoTransporte']:
         """ Crear lista según la carga."""
         lista_filtrada = []
         for transporte in cls:

@@ -1,6 +1,5 @@
 from typing import List
 
-
 class Tienda():
 
     numTiendas = 0  # Contador de tiendas
@@ -123,13 +122,13 @@ class Tienda():
     def listaProductosTienda(self):
         listaProductos = []
         
-        for producto in self._listaProducto:
+        for producto in self.__listaProducto:
             encontrado = False
             if not listaProductos:
                 listaProductos.append([producto, 1])
             else:
                 for listaAux in listaProductos:
-                    if listaAux[0].nombre == producto.nombre:
+                    if listaAux[0].getNombre( )== producto.getNombre():
                         listaAux[1] += 1
                         encontrado = True
                         break
@@ -149,10 +148,10 @@ class Tienda():
         texto = []
         for i, listaAux in enumerate(listaProductos, start=1):
             producto, cantidad = listaAux
-            texto.append(f"{i}. Producto: {producto.nombre}")
-            texto.append(f" - Precio: {producto.precio}")
+            texto.append(f"{i}. Producto: {producto.getNombre()}")
+            texto.append(f" - Precio: {producto.getPrecio()}")
             texto.append(f" - Cantidad: {cantidad}")
-            texto.append(f" - Peso: {producto.peso}\n")
+            texto.append(f" - Peso: {producto.getPeso()}\n")
 
         return "\n".join(texto).strip()
 
@@ -176,116 +175,121 @@ class Tienda():
     #def __init__(self):
         #self.listaProducto = []
 
-def agregar_productos_para_cambio(self, precio_cambio: float, seleccion_productos: List[int], productos_disponibles):
-        from Producto import Producto
-        """
-        Funcionalidad: Devoluciones
-        Método principal para gestionar los productos seleccionados para un cambio.
+    def agregar_productos_para_cambio(self, precio_cambio: float, seleccion_productos: List[int], productos_disponibles):
+            from Producto import Producto
+            """
+            Funcionalidad: Devoluciones
+            Método principal para gestionar los productos seleccionados para un cambio.
 
-        :param precio_cambio: El valor máximo permitido para el cambio.
-        :param seleccion_productos: Lista de índices seleccionados por el cliente.
-        :param productos_disponibles: Lista de productos disponibles.
-        :return: Lista de productos seleccionados para el cambio.
-        """
-        productos_seleccionados = []
-        subtotal = 0.0
+            :param precio_cambio: El valor máximo permitido para el cambio.
+            :param seleccion_productos: Lista de índices seleccionados por el cliente.
+            :param productos_disponibles: Lista de productos disponibles.
+            :return: Lista de productos seleccionados para el cambio.
+            """
+            productos_seleccionados = []
+            subtotal = 0.0
 
-        for indice in seleccion_productos:
-            # Validar índice y obtener el producto correspondiente
-            if indice < 1 or indice > len(productos_disponibles):
-                continue  # Ignorar índices inválidos
+            for indice in seleccion_productos:
+                # Validar índice y obtener el producto correspondiente
+                if indice < 1 or indice > len(productos_disponibles):
+                    continue  # Ignorar índices inválidos
 
-            producto_seleccionado = productos_disponibles[indice - 1]
+                producto_seleccionado = productos_disponibles[indice - 1]
 
-            # Agregar el producto al carrito sin verificar duplicados
-            productos_seleccionados.append(producto_seleccionado)
-            subtotal += producto_seleccionado.precio
+                # Agregar el producto al carrito sin verificar duplicados
+                productos_seleccionados.append(producto_seleccionado)
+                subtotal += producto_seleccionado.precio
 
-            # Verificar si el subtotal supera el precio permitido
-            if subtotal > precio_cambio:
-                break
+                # Verificar si el subtotal supera el precio permitido
+                if subtotal > precio_cambio:
+                    break
 
-        return productos_seleccionados
+            return productos_seleccionados
 
-    
-def productosPorCategoria(self, productos, conteoTemporal=None):
-        from Producto import Producto
-        productos: List[Producto] = productos
-        """
-        Muestra los productos por categoría en formato: (cantidad actual/capacidad máxima).
-        Si `conteoTemporal` se proporciona, se usa en lugar del conteo normal.
-        """
-        # Limpiar listas antes de procesar
-        self.categorias = []
-
-        # Lista de todas las categorías posibles
-        todasLasCategorias = ["Herramientas", "Muebles", "Aseo"]
         
-        # Inicializar las categorías
-        for categoria in todasLasCategorias:
-            self.categorias.append(categoria)
-        
-        # Si `conteoTemporal` no se proporciona, inicializar `conteoCategorias`
-        if conteoTemporal is None:
-            self.conteoCategorias = []
-            self.conteoCategorias = [0] * len(self.categorias)
+    def productosPorCategoria(self, productos, conteoTemporal=None):
+            from Producto import Producto
+            productos: List[Producto] = productos
+            """
+            Muestra los productos por categoría en formato: (cantidad actual/capacidad máxima).
+            Si `conteoTemporal` se proporciona, se usa en lugar del conteo normal.
+            """
+            # Limpiar listas antes de procesar
+            self.categorias = []
 
-            # Contar productos por categoría
-            for producto in productos:
-                categoria = producto.getCategoria()  # Obtener la categoría
-                if categoria in self.categorias:
-                    index = self.categorias.index(categoria)
-                    self.conteoCategorias[index] += 1
-        else:
-            # Si `conteoTemporal` existe, solo asegurarse de que las categorías están en la lista
-            for producto in productos:
-                categoria = producto.getCategoria()
-                if categoria not in self.categorias:
-                    self.categorias.append(categoria)
+            # Lista de todas las categorías posibles
+            todasLasCategorias = ["Herramientas", "Muebles", "Aseo"]
+            
+            # Inicializar las categorías
+            for categoria in todasLasCategorias:
+                self.categorias.append(categoria)
+            
+            # Si `conteoTemporal` no se proporciona, inicializar `conteoCategorias`
+            if conteoTemporal is None:
+                self.conteoCategorias = []
+                self.conteoCategorias = [0] * len(self.categorias)
 
-        # Construir el resultado
-        resultado = ""
-        for i, categoria in enumerate(self.categorias):
-            conteo = self.conteoCategorias[i] if conteoTemporal is None else conteoTemporal[i]
-            resultado += f"{categoria}: {conteo}/"
-
-            # Agregar la capacidad máxima correspondiente
-            if categoria == "Herramientas":
-                resultado += str(self.capacidadMaximaMaterial)
-            elif categoria == "Muebles":
-                resultado += str(self.capacidadMaximaConsumible)
-            elif categoria == "Aseo":
-                resultado += str(self.capacidadMaximaLimpieza)
+                # Contar productos por categoría
+                for producto in productos:
+                    categoria = producto.getCategoria()  # Obtener la categoría
+                    if categoria in self.categorias:
+                        index = self.categorias.index(categoria)
+                        self.conteoCategorias[index] += 1
             else:
-                resultado += "N/A"
+                # Si `conteoTemporal` existe, solo asegurarse de que las categorías están en la lista
+                for producto in productos:
+                    categoria = producto.getCategoria()
+                    if categoria not in self.categorias:
+                        self.categorias.append(categoria)
 
-            resultado += " productos\n"
-        return resultado
-def getCantidadActualPorCategoria(self, categoria):
-        cantidad = sum(1 for producto in self.listaProducto if producto.getCategoria() == categoria)
-        return cantidad
-def cantidadProductos(self):
-        """
-        Muestra los productos de la tienda de forma ordenada (producto: cantidad).
-        """
-        nombresContados = []
-        resultado = ""
+            # Construir el resultado
+            resultado = ""
+            for i, categoria in enumerate(self.categorias):
+                conteo = self.conteoCategorias[i] if conteoTemporal is None else conteoTemporal[i]
+                resultado += f"{categoria}: {conteo}/"
 
-        for producto in self.listaProducto:
-            if producto.getNombre() not in nombresContados:
-                cantidad = sum(1 for p in self.listaProducto if p.getNombre() == producto.getNombre())
-                nombresContados.append(producto.getNombre())
-                resultado += f"{producto.getNombre()}: {cantidad} unidades\n"
+                # Agregar la capacidad máxima correspondiente
+                if categoria == "Herramientas":
+                    resultado += str(self.capacidadMaximaMaterial)
+                elif categoria == "Muebles":
+                    resultado += str(self.capacidadMaximaConsumible)
+                elif categoria == "Aseo":
+                    resultado += str(self.capacidadMaximaLimpieza)
+                else:
+                    resultado += "N/A"
 
-        return resultado
+                resultado += " productos\n"
+            return resultado
+    def getCantidadActualPorCategoria(self, categoria):
+            cantidad = sum(1 for producto in self.listaProducto if producto.getCategoria() == categoria)
+            return cantidad
+    def cantidadProductos(self):
+            """
+            Muestra los productos de la tienda de forma ordenada (producto: cantidad).
+            """
+            nombresContados = []
+            resultado = ""
 
-def descargarProducto(self, transporteSeleccionado):
-        """
-        Descarga los productos transportados a la tienda y vacía la lista del transporte.
-        """
-        productosTransportados = transporteSeleccionado.getListaDeProductos()
-        self.listaProducto.extend(productosTransportados)
-        transporteSeleccionado.getListaDeProductos().clear()  # Vaciar la lista de productos del transporte
+            for producto in self.listaProducto:
+                if producto.getNombre() not in nombresContados:
+                    cantidad = sum(1 for p in self.listaProducto if p.getNombre() == producto.getNombre())
+                    nombresContados.append(producto.getNombre())
+                    resultado += f"{producto.getNombre()}: {cantidad} unidades\n"
+
+            return resultado
+
+    def descargarProducto(self, transporteSeleccionado):
+            """
+            Descarga los productos transportados a la tienda y vacía la lista del transporte.
+            """
+            productosTransportados = transporteSeleccionado.getListaDeProductos()
+            self.listaProducto.extend(productosTransportados)
+            transporteSeleccionado.getListaDeProductos().clear()  # Vaciar la lista de productos del transporte
+    def agregarProducto(self, producto):
+            """Agrega el producto a la lista sin preocuparse por duplicados"""
+            self.__listaProducto.append(producto)
+
+
 
 
 #from .Producto import Producto

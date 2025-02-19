@@ -5,13 +5,13 @@ class Persona(ABC):
     personasTotales = 0
     listaPersonas = []
     
-    def __init__(self, nombre: str, cedula: int, edad: int, cuentaBancaria):
-        self.nombre = nombre
-        self.cedula = cedula
-        self.edad = edad
-        self.cuentaBancaria = cuentaBancaria
-        self.cantidadTrabajo = 0
-        self.indiceMeta = 0
+    def __init__(self, nombre: str, cedula: int, edad: int, cuenta_bancaria):
+        self.__nombre = nombre
+        self.__cedula = cedula
+        self.__edad = edad
+        self.__cuentaBancaria = cuenta_bancaria
+        self.__cantidadTrabajo = 0
+        self.__indiceMeta = 0
         
         Persona.personasTotales += 1
         Persona.listaPersonas.append(self)
@@ -30,44 +30,44 @@ class Persona(ABC):
     
     # Getters y Setters
     def getNombre(self) -> str:
-        return self.nombre
+        return self.__nombre
     
     def setNombre(self, nombre: str):
-        self.nombre = nombre
+        self.__nombre = nombre
     
     def getCedula(self) -> int:
-        return self.cedula
+        return self.__cedula
     
     def setCedula(self, cedula: int):
-        self.cedula = cedula
+        self.__cedula = cedula
     
     def getEdad(self) -> int:
-        return self.edad
+        return self.__edad
     
     def setEdad(self, edad: int):
-        self.edad = edad
+        self.__edad = edad
     
     def getCantidadTrabajo(self) -> int:
-        return self.cantidadTrabajo
+        return self.__cantidadTrabajo
     
-    def setCantidadTrabajo(self, cantidadTrabajo: int):
-        self.cantidadTrabajo = cantidadTrabajo
+    def setCantidadTrabajo(self, cantidad_trabajo: int):
+        self.__cantidadTrabajo = cantidad_trabajo
     
     def getCuentaBancaria(self):
-        return self.cuentaBancaria
+        return self.__cuentaBancaria
     
-    def setCuentaBancaria(self, cuentaBancaria):
-        self.cuentaBancaria = cuentaBancaria
+    def setCuentaBancaria(self, cuenta_bancaria):
+        self.__cuentaBancaria = cuenta_bancaria
     
     @classmethod
     def getSalarioBase(cls) -> int:
         return cls.SALARIO_BASE
     
     def getIndiceMeta(self) -> float:
-        return self.indiceMeta
+        return self.__indiceMeta
     
-    def setIndiceMeta(self, indiceMeta: float):
-        self.indiceMeta = indiceMeta
+    def setIndiceMeta(self, indice_meta: float):
+        self.indice_meta = indice_meta
     
     @classmethod
     def getPersonasTotales(cls) -> int:
