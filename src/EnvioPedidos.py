@@ -182,33 +182,33 @@ def enviar_pedidos():
                 except ValueError:
                     print("\nEntrada inválida. Por favor, ingrese un número.")
          # Calcular el peso total de los productos seleccionados
-        total_peso = 0.0
+        totalPeso = 0.0
         for producto in listaProductosPedidos:
             peso = producto.getPeso()
             if peso > 0:  # Validamos que el peso sea positivo
-                total_peso += peso
+                totalPeso += peso
             else:
                 print("\nError: Peso inválido para el producto " + producto.getNombre())
 
         # Determinar los tipos de transporte posibles según el peso total
-        lista_posible_transporte = TipoTransporte.crearTipoTransporteSegunCarga(total_peso)
-        lista_transporte_filtrada = []
+        listaPosibleTransporte = TipoTransporte.crearTipoTransporteSegunCarga(totalPeso)
+        listaTransporteFiltrada = []
 
         # Filtrar los transportes disponibles que coinciden con los de los conductores
         for conductor in Conductor.getListaConductores():
-            conductor_tipo_transporte = conductor.getTransporte().getTipoTransporte()
-            for posible_transporte in lista_posible_transporte:
-                if conductor_tipo_transporte == posible_transporte:
-                    lista_transporte_filtrada.append(conductor.getTransporte().getTipoTransporte())
+            conductorTipoTransporte = conductor.getTransporte().getTipoTransporte()
+            for posible_transporte in listaPosibleTransporte:
+                if conductorTipoTransporte == posible_transporte:
+                    listaTransporteFiltrada.append(conductor.getTransporte().getTipoTransporte())
 
         # Verificar si el envío es gratis
-        envio_gratis = Transporte.enviarGratis(lista_productos_pedidos)
+        envio_gratis = Transporte.enviarGratis(listaProductosPedidos)
 
         # Solicitar al cliente que seleccione el tipo de transporte
         print("\nPor favor, elija el transporte que desea utilizar para su envío:")
         print("\nOpciones de transporte disponibles:")
         print("0. Salir")
-        print(TipoTransporte.mostrarTipoTransporteSegunCarga(lista_transporte_filtrada, envio_gratis))
+        print(TipoTransporte.mostrarTipoTransporteSegunCarga(listaTransporteFiltrada, envio_gratis))
 
         # Bucle para pedir la opción de transporte hasta que sea válida
         while True:
@@ -219,8 +219,8 @@ def enviar_pedidos():
                     print("\nSaliendo...")
                     time.sleep(1)  # Pausa de 1000 milisegundos (1 segundo)
                     return
-                elif opcion > 0 and opcion <= len(lista_transporte_filtrada):
-                    tipo_transporte_seleccionado = lista_transporte_filtrada[opcion - 1]
+                elif opcion > 0 and opcion <= len(listaTransporteFiltrada):
+                    tipo_transporte_seleccionado = listaTransporteFiltrada[opcion - 1]
                     break
                 else:
                     print("\nNúmero fuera de rango. Por favor, elija un transporte válido.")
@@ -262,22 +262,22 @@ def enviar_pedidos():
         print("\nGenerando Factura...")
         time.sleep(1)  # Pausa de 1000 milisegundos (1 segundo)
         print("\n¡Factura creada con éxito! A continuación, se mostrará la factura:\n")
-        print(tienda_seleccionada.enviarPedido(lista_productos_pedidos,
+        print(tiendaSeleccionada.enviarPedido(listaProductosPedidos,
                                                 transporte_seleccionado,
-                                                cliente_seleccionado,
+                                                clienteSeleccionado,
                                                 transporte_seleccionado.getTipoTransporte().getPrecioEnvio(),
                                                 fecha_venta))
 
         # Aumentar la carga de trabajo del vendedor y conductor
-        tienda_seleccionada.getVendedor().aumentarCargaTrabajo()
+        tiendaSeleccionada.getVendedor().aumentarCargaTrabajo()
         transporte_seleccionado.getConductor().aumentarCargaTrabajo()
 
         # Aumentar el indice de meta para el vendedor y conductor
-        tienda_seleccionada.getVendedor().aumentarIndiceMeta()
-        transporte_seleccionado.getConductor().aumentarIndiceMeta(total_peso)
+        tiendaSeleccionada.getVendedor().aumentarIndiceMeta()
+        transporte_seleccionado.getConductor().aumentarIndiceMeta(totalPeso)
 
         # Eliminar los productos vendidos del inventario
-        tienda_seleccionada.eliminarProductosPorNombre(lista_productos_pedidos)
+        tiendaSeleccionada.eliminarProductosPorNombre(listaProductosPedidos)
 
         # Mensaje final
         print("¡Genial! 🎉 Los productos han sido enviados con éxito.")

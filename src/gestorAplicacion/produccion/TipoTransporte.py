@@ -15,42 +15,42 @@ class TipoTransporte(Enum):
     CAMINANDO = (5000, 15, "Caminando")
    
     def __init__(self, precioEnvio, capacidadMax, nombre):
-        self.precioEnvio = precioEnvio
-        self.capacidadMax = capacidadMax
-        self.nombre = nombre
+        self.__precioEnvio = precioEnvio
+        self.__capacidadMax = capacidadMax
+        self.__nombre = nombre
     
     """Bosquejo"""
 
     @classmethod
-    def crearTipoTransporteSegunCarga(cls, peso_total_productos: float) -> List['TipoTransporte']:
+    def crearTipoTransporteSegunCarga(cls, pesoTotalProductos: float) -> List['TipoTransporte']:
         """ Crear lista según la carga."""
-        lista_filtrada = []
+        listaFiltrada = []
         for transporte in cls:
-            if peso_total_productos <= transporte.capacidadMax:
-                lista_filtrada.append(transporte)
-        return lista_filtrada
+            if pesoTotalProductos <= transporte.__capacidadMax:
+                listaFiltrada.append(transporte)
+        return listaFiltrada
     "Jose luis no hay sorecarga en python...entonces falta un metodo"
     @classmethod
-    def mostrar_tipo_transporte_segun_carga(cls, lista_filtrada: List['TipoTransporte'], envio_gratis_recomendado: bool = False) -> str:
+    def mostrarTipoTransporteSegunCarga(cls, listaFiltrada: List['TipoTransporte'], envioGratisRecomendado: bool = False) -> str:
         """Display filtered transport options as a formatted string."""
-        if not lista_filtrada:
+        if not listaFiltrada:
             return "No hay tipos de transporte disponibles para esta carga."
 
         # Encuentra el transporte recomendado
-        precio_minimo = sys.float_info.max
-        transporte_recomendado = None
-        for transporte in lista_filtrada:
-            if transporte.precioEnvio < precio_minimo:
-                precio_minimo = transporte.precioEnvio
-                transporte_recomendado = transporte
+        precioMinimo = sys.float_info.max
+        transporteRecomendado = None
+        for transporte in listaFiltrada:
+            if transporte.__precioEnvio < precioMinimo:
+                precioMinimo = transporte.__precioEnvio
+                transporteRecomendado = transporte
 
         # Construir string para mostrar los transportes disponibles
         resultado = ""
-        for i, transporte in enumerate(lista_filtrada, 1):
-            precio = 0 if (transporte == transporte_recomendado and envio_gratis_recomendado) else transporte.precioEnvio
-            resultado += f"{i}. {transporte.nombre} (Precio: {precio}, Capacidad Máxima: {transporte.capacidadMax}"
+        for i, transporte in enumerate(listaFiltrada, 1):
+            precio = 0 if (transporte == transporteRecomendado and envioGratisRecomendado) else transporte.__precioEnvio
+            resultado += f"{i}. {transporte.__nombre} (Precio: {precio}, Capacidad Máxima: {transporte.__capacidadMax}"
             
-            if transporte == transporte_recomendado:
+            if transporte == transporteRecomendado:
                 resultado += " ---- TRANSPORTE RECOMENDADO"
             
             resultado += ")\n"
@@ -59,7 +59,7 @@ class TipoTransporte(Enum):
     """Respectiva mejora(Yhan): Selecciona un transporte de la lista filtrada según el número de opción.
        Si la opción no es válida, devuelve el transporte recomendado."""
     @staticmethod
-    def seleccionar_transporte(lista_filtrada: List['TipoTransporte'], opcion: int) -> 'TipoTransporte':
+    def seleccionarTransporte(lista_filtrada: List['TipoTransporte'], opcion: int) -> 'TipoTransporte':
         try:
             if 0 < opcion <= len(lista_filtrada):
                 return lista_filtrada[opcion - 1]
@@ -73,3 +73,22 @@ class TipoTransporte(Enum):
         except ValueError as e:
             print(f"Error: {e}")
             return None
+        
+    #getters y setters
+    def getPrecioEnvio(self):
+        return self.__precioEnvio
+
+    def setPrecioEnvio(self, precioEnvio):
+        self.__precioEnvio = precioEnvio
+
+    def getCapacidadMax(self):
+        return self.__capacidadMax
+
+    def setCapacidadMax(self, capacidadMax):
+        self.__capacidadMax = capacidadMax
+
+    def getNombre(self):
+        return self.__nombre
+
+    def setNombre(self, nombre):
+        self.__nombre = nombre
