@@ -10,7 +10,7 @@ class Fabrica:
     operario = None
     productosDisponibles = []
     listaTienda = []
-
+    
     def __init__(self, idFabrica=None, nombre=None, direccion=None,
                  cuentaBancariaFabrica=None, productosDisponibles=None,
                  listaTienda=None, operario=None):
@@ -27,7 +27,6 @@ class Fabrica:
         if operario is not None:
             Fabrica.operario = operario
             operario.setFabrica(self)
-
 
     @staticmethod
     def busquedaTrabajo(listaTrabajadores):
@@ -67,7 +66,7 @@ class Fabrica:
         return max(0, subtotal - valor)
 
     @staticmethod
-    def mostrar_tiendas():
+    def mostrarTiendas():
         """
         Muestra las tiendas registradas y sus productos en stock.
         """
@@ -76,7 +75,7 @@ class Fabrica:
 
         resultado = "Listado de Tiendas:\n"
         for i, tienda in enumerate(Fabrica.listaTienda, start=1):
-            resultado += f"{i}. {tienda.getNombre}:\n"
+            resultado += f"{i}. {tienda.getNombre()}:\n"
             productos = tienda.cantidadProductos().split("\n")
             resultado += "\n".join(f"    {p}" for p in productos) + "\n"
 
@@ -124,6 +123,7 @@ mi_tienda = Tienda(
     capacidadMaximaConsumible=200,
     capacidadMaximaLimpieza=150
 )
+
 Fabrica.listaTienda.append(mi_tienda)
 
 producto1 = Producto("Laptop", 3000, "Nuevo", "Electrónica", "Computadoras", 2.5)

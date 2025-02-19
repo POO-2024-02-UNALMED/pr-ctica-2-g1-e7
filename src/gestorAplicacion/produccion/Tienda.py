@@ -1,4 +1,5 @@
 from typing import List
+from gestorAplicacion.produccion.Producto import Producto
 
 class Tienda():
 
@@ -207,9 +208,7 @@ class Tienda():
             return productos_seleccionados
 
         
-    def productosPorCategoria(self, productos, conteoTemporal=None):
-            from Producto import Producto
-            productos: List[Producto] = productos
+    def productosPorCategoria(self, productos : List[Producto], conteoTemporal=None):
             """
             Muestra los productos por categoría en formato: (cantidad actual/capacidad máxima).
             Si `conteoTemporal` se proporciona, se usa en lugar del conteo normal.
@@ -270,9 +269,9 @@ class Tienda():
             nombresContados = []
             resultado = ""
 
-            for producto in self.listaProducto:
+            for producto in self.__listaProducto:
                 if producto.getNombre() not in nombresContados:
-                    cantidad = sum(1 for p in self.listaProducto if p.getNombre() == producto.getNombre())
+                    cantidad = sum(1 for p in self.__listaProducto if p.getNombre() == producto.getNombre())
                     nombresContados.append(producto.getNombre())
                     resultado += f"{producto.getNombre()}: {cantidad} unidades\n"
 
