@@ -33,7 +33,7 @@ def main():
                 else:
                     confirmacionTienda = False
                     while not confirmacionTienda:
-                        tiendaSeleccionada = Fabrica.lista[tiendaSeleccionadaIndex - 1]
+                        tiendaSeleccionada = Fabrica.listaTienda[tiendaSeleccionadaIndex - 1]
                         print(f"Tienda seleccionada: {tiendaSeleccionada.getNombre()}")
                         print("¿Es correcta esta selección? (1 para sí, 2 para no)")
                         print("1. Sí, proceder")
