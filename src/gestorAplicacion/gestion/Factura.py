@@ -56,9 +56,10 @@ class Factura(IMostrarProductos):
         return cls.listaFacturas[num-1] 
     
     def calcularTotal(self): 
+        from gestorAplicacion.produccion.Producto import Producto
         total=0
         for producto in self.listaProductos: 
-            total+=producto.precio
+            total+=producto.getPrecio()
         return total
 
         
@@ -189,7 +190,7 @@ class Factura(IMostrarProductos):
         factura.append(f"| ID Factura: {self.id:<24} |\n")
         factura.append(f"| Cliente: {self.cliente.getNombre():<26} |\n")
         factura.append(f"| Cédula: {self.cliente.getCedula():<26} |\n")
-        factura.append(f"| Fecha: {self.fecha:<28} |\n")
+        factura.append(f"| Fecha: {self.fecha.strftime('%Y-%m-%d'):<28} |\n")
         factura.append(f"| Transporte: {self.transporte.getTipoTransporte().getNombre():<22} |\n")
         factura.append("========================================================\n")
 

@@ -220,7 +220,7 @@ def enviar_pedidos():
                     time.sleep(1)  # Pausa de 1000 milisegundos (1 segundo)
                     return
                 elif opcion > 0 and opcion <= len(listaTransporteFiltrada):
-                    tipo_transporte_seleccionado = listaTransporteFiltrada[opcion - 1]
+                    tipoTransporteSeleccionado = listaTransporteFiltrada[opcion - 1]
                     break
                 else:
                     print("\nNúmero fuera de rango. Por favor, elija un transporte válido.")
@@ -228,18 +228,18 @@ def enviar_pedidos():
                 print("\nEntrada inválida. Por favor, ingrese un número.")
 
         # Determinar el transporte seleccionado
-        transporte_seleccionado = None
+        transporteSeleccionado = None
         for conductor in Conductor.getListaConductores():
-            if conductor.getTransporte().getTipoTransporte() == tipo_transporte_seleccionado:
-                transporte_seleccionado = conductor.getTransporte()
+            if conductor.getTransporte().getTipoTransporte() == tipoTransporteSeleccionado:
+                transporteSeleccionado = conductor.getTransporte()
 
         # Mostrar detalles del transporte seleccionado
         if envio_gratis:
-            print("\nHa escogido el transporte: " + transporte_seleccionado.getTipoTransporte().getNombre() +
+            print("\nHa escogido el transporte: " + transporteSeleccionado.getTipoTransporte().getNombre() +
                     "\n- Precio: 0.0")
         else:
-            print("\nHa escogido el transporte: " + transporte_seleccionado.getTipoTransporte().getNombre() +
-                    "\n- Precio: " + str(transporte_seleccionado.getTipoTransporte().getPrecioEnvio()) + "\n")
+            print("\nHa escogido el transporte: " + transporteSeleccionado.getTipoTransporte().getNombre() +
+                    "\n- Precio: " + str(transporteSeleccionado.getTipoTransporte().getPrecioEnvio()) + "\n")
 
         # Solicitar y validar la fecha de la venta
         formato_fecha = "%d/%m/%Y"
@@ -263,18 +263,18 @@ def enviar_pedidos():
         time.sleep(1)  # Pausa de 1000 milisegundos (1 segundo)
         print("\n¡Factura creada con éxito! A continuación, se mostrará la factura:\n")
         print(tiendaSeleccionada.enviarPedido(listaProductosPedidos,
-                                                transporte_seleccionado,
+                                                transporteSeleccionado,
                                                 clienteSeleccionado,
-                                                transporte_seleccionado.getTipoTransporte().getPrecioEnvio(),
+                                                transporteSeleccionado.getTipoTransporte().getPrecioEnvio(),
                                                 fecha_venta))
 
         # Aumentar la carga de trabajo del vendedor y conductor
         tiendaSeleccionada.getVendedor().aumentarCargaTrabajo()
-        transporte_seleccionado.getConductor().aumentarCargaTrabajo()
+        transporteSeleccionado.getConductor().aumentarCargaTrabajo()
 
         # Aumentar el indice de meta para el vendedor y conductor
         tiendaSeleccionada.getVendedor().aumentarIndiceMeta()
-        transporte_seleccionado.getConductor().aumentarIndiceMeta(totalPeso)
+        transporteSeleccionado.getConductor().aumentarIndiceMeta(totalPeso)
 
         # Eliminar los productos vendidos del inventario
         tiendaSeleccionada.eliminarProductosPorNombre(listaProductosPedidos)

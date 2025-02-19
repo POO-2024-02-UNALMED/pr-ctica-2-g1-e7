@@ -166,7 +166,7 @@ class Tienda():
     # Genera una factura con los productos seleccionados para el pedido, junto con el cliente, el transporte y el precio de envío.
     # Devuelve la factura en formato de texto.
     def enviarPedido(self, listaProductosPedidos, transporteSeleccionado, clienteSeleccionado, precioEnvio, dia):
-        from gestion.Factura import Factura
+        from gestorAplicacion.gestion.Factura import Factura
         factura = Factura(self, clienteSeleccionado, transporteSeleccionado, listaProductosPedidos, precioEnvio, dia)
         return str(factura)
 
