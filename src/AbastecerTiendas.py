@@ -18,51 +18,65 @@ def main():
         print(Fabrica.mostrarTiendas())
         print("========================================")
 
-        tiendaSeleccionadaIndex = -1
+        tiendaSeleccionadaIndex = None
         tiendaSeleccionada = None
 
-        while tiendaSeleccionadaIndex < 0 or tiendaSeleccionadaIndex > len(Fabrica.listaTienda):
+        while True:
             try:
                 tiendaSeleccionadaIndex = int(input("» "))
+                
                 if tiendaSeleccionadaIndex == 0:
                     time.sleep(1)
                     print("Saliendo...")
                     return
-                if tiendaSeleccionadaIndex < 1 or tiendaSeleccionadaIndex > len(Fabrica.getListaTienda()):
-                    print(f"Número inválido. Ingrese un número entre 1 y {len(Fabrica.getListaTienda())}.")
-                else:
-                    confirmacionTienda = False
-                    while not confirmacionTienda:
-                        tiendaSeleccionada = Fabrica.listaTienda[tiendaSeleccionadaIndex - 1]
-                        print(f"Tienda seleccionada: {tiendaSeleccionada.getNombre()}")
-                        print("¿Es correcta esta selección? (1 para sí, 2 para no)")
-                        print("1. Sí, proceder")
-                        print("2. No, seleccionar otra tienda")
 
+                if 1 <= tiendaSeleccionadaIndex <= len(Fabrica.listaTienda):
+                    break  # Número válido, salir del bucle
+                else:
+                    print(f"Número inválido. Ingrese un número entre 1 y {len(Fabrica.listaTienda)}.")
+            
+            except ValueError:
+                print("Entrada inválida. Por favor, ingrese un número.")
+
+        confirmacionTienda = False
+        while not confirmacionTienda:
+            tiendaSeleccionada = Fabrica.listaTienda[tiendaSeleccionadaIndex - 1]
+            print(f"Tienda seleccionada: {tiendaSeleccionada.getNombre()}")
+            print("¿Es correcta esta selección? (1 para sí, 2 para no)")
+            print("1. Sí, proceder")
+            print("2. No, seleccionar otra tienda")
+
+            try:
+                confirmacion = int(input("» "))
+                if confirmacion == 1:
+                    print("Procediendo con la tienda seleccionada...")
+                    confirmacionTienda = True
+                elif confirmacion == 2:
+                    print("========================================")
+                    print("Seleccione la tienda que desea abastecer (0 para salir):")
+                    print("========================================")
+                    print("0. Salir")
+                    print(Fabrica.mostrarTiendas())
+                    print("========================================")
+
+                    while True:
                         try:
-                            confirmacion = int(input("» "))
-                            if confirmacion == 1:
-                                print("Procediendo con la tienda seleccionada...")
-                                confirmacionTienda = True
-                            elif confirmacion == 2:
-                                print("========================================")
-                                print("Seleccione la tienda que desea abastecer (0 para salir):")
-                                print("========================================")
-                                print("0. Salir")
-                                print(Fabrica.mostrarTiendas())
-                                print("========================================")
-                                tiendaSeleccionadaIndex = int(input("» "))
-                                if tiendaSeleccionadaIndex == 0:
-                                    time.sleep(1)
-                                    print("Saliendo...")
-                                    return
-                                if tiendaSeleccionadaIndex < 1 or tiendaSeleccionadaIndex > len(Fabrica.getListaTienda()):
-                                    print(f"Número inválido. Ingrese un número entre 1 y {len(Fabrica.getListaTienda())}.")
-                                else:
-                                    print("Entrada inválida. Por favor, ingrese un número.")
-                        except Exception as e:
+                            tiendaSeleccionadaIndex = int(input("» "))
+
+                            if tiendaSeleccionadaIndex == 0:
+                                time.sleep(1)
+                                print("Saliendo...")
+                                return
+
+                            if 1 <= tiendaSeleccionadaIndex <= len(Fabrica.getListaTienda()):
+                                break  # Número válido, salir del bucle
+                            else:
+                                print(f"Número inválido. Ingrese un número entre 1 y {len(Fabrica.getListaTienda())}.")
+                        
+                        except ValueError:
                             print("Entrada inválida. Por favor, ingrese un número.")
-            except Exception as e:
+
+            except ValueError:
                 print("Entrada inválida. Por favor, ingrese un número.")
 
         print("========================================")
