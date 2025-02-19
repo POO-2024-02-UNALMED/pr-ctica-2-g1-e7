@@ -249,18 +249,18 @@ class Tienda():
 
                 # Agregar la capacidad máxima correspondiente
                 if categoria == "Herramientas":
-                    resultado += str(self.capacidadMaximaMaterial)
+                    resultado += str(self.__capacidadMaximaMaterial)
                 elif categoria == "Muebles":
-                    resultado += str(self.capacidadMaximaConsumible)
+                    resultado += str(self.__capacidadMaximaConsumible)
                 elif categoria == "Aseo":
-                    resultado += str(self.capacidadMaximaLimpieza)
+                    resultado += str(self.__capacidadMaximaLimpieza)
                 else:
                     resultado += "N/A"
 
                 resultado += " productos\n"
             return resultado
     def getCantidadActualPorCategoria(self, categoria):
-            cantidad = sum(1 for producto in self.listaProducto if producto.getCategoria() == categoria)
+            cantidad = sum(1 for producto in self.__listaProducto if producto.getCategoria() == categoria)
             return cantidad
     def cantidadProductos(self):
             """

@@ -21,7 +21,7 @@ class IMostrarProductos(ABC):
 
     @staticmethod
     def mostrarProductosLista(listaProductos) -> str:
-        from produccion.Producto import Producto
+        from gestorAplicacion.produccion.Producto import Producto
         listaProductos: list[Producto] = listaProductos
         if not listaProductos:
             return "No hay productos registrados o disponibles."

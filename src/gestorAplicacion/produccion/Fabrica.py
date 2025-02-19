@@ -96,7 +96,7 @@ class Fabrica:
         """
         Muestra los productos disponibles en la fábrica usando la interfaz IMostrarProductos.
         """
-        from gestion.IMostrarProductos import IMostrarProductos
+        from gestorAplicacion.gestion.IMostrarProductos import IMostrarProductos
         return IMostrarProductos.mostrarProductosLista(Fabrica.productosDisponibles)
 
     @staticmethod
