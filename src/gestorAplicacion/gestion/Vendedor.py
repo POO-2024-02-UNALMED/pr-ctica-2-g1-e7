@@ -1,89 +1,12 @@
-from abc import ABC, abstractmethod
-
-class Persona(ABC):
-    SALARIO_BASE = 10000  # Salario base que después se modifica por cantidad de veces trabajadas y por bonos
-    personasTotales = 0
-    listaPersonas = []
-    
-    def __init__(self, nombre: str, cedula: int, edad: int, cuentaBancaria):
-        self.nombre = nombre
-        self.cedula = cedula
-        self.edad = edad
-        self.cuentaBancaria = cuentaBancaria
-        self.cantidadTrabajo = 0
-        self.indiceMeta = 0
-        
-        Persona.personasTotales += 1
-        Persona.listaPersonas.append(self)
-    
-    @abstractmethod
-    def recibirSueldo(self, valor: float):
-        pass
-    
-    @abstractmethod
-    def mostrarMetas(self) -> str:
-        pass
-    
-    @abstractmethod
-    def getMeta(self):
-        pass
-    
-    # Getters y Setters
-    def getNombre(self) -> str:
-        return self.nombre
-    
-    def setNombre(self, nombre: str):
-        self.nombre = nombre
-    
-    def getCedula(self) -> int:
-        return self.cedula
-    
-    def setCedula(self, cedula: int):
-        self.cedula = cedula
-    
-    def getEdad(self) -> int:
-        return self.edad
-    
-    def setEdad(self, edad: int):
-        self.edad = edad
-    
-    def getCantidadTrabajo(self) -> int:
-        return self.cantidadTrabajo
-    
-    def setCantidadTrabajo(self, cantidadTrabajo: int):
-        self.cantidadTrabajo = cantidadTrabajo
-    
-    def getCuentaBancaria(self):
-        return self.cuentaBancaria
-    
-    def setCuentaBancaria(self, cuentaBancaria):
-        self.cuentaBancaria = cuentaBancaria
-    
-    @classmethod
-    def getSalarioBase(cls) -> int:
-        return cls.SALARIO_BASE
-    
-    def getIndiceMeta(self) -> float:
-        return self.indiceMeta
-    
-    def setIndiceMeta(self, indiceMeta: float):
-        self.indiceMeta = indiceMeta
-    
-    @classmethod
-    def getPersonasTotales(cls) -> int:
-        return cls.personasTotales
-    
-    @classmethod
-    def getListaPersonas(cls):
-        return cls.listaPersonas
+from gestorAplicacion.gestion.Persona import Persona
 
 class Vendedor(Persona):
     listaVendedores = []
     
     def __init__(self, nombre: str, cedula: int, edad: int, cuentaBancaria):
         super().__init__(nombre, cedula, edad, cuentaBancaria)
-        self.tienda = None
-        self.metaVendedor = []
+        self.__tienda = None
+        self.__metaVendedor = []
         Vendedor.listaVendedores.append(self)
     
     def mostrarMetas(self) -> str:
@@ -105,23 +28,23 @@ class Vendedor(Persona):
         self.setCantidadTrabajo(0)
     
     def setTienda(self, tienda):
-        self.tienda = tienda
+        self.__tienda = tienda
     
     def getTienda(self):
-        return self.tienda
+        return self.__tienda
     
     def getMeta(self):
-        return self.metaVendedor
+        return self.__metaVendedor
     
     def setMetaVendedor(self, meta):
-        self.metaVendedor.append(meta)
+        self.__metaVendedor.append(meta)
     
     @classmethod
     def getListaVendedores(cls):
         return cls.listaVendedores
     
     def aumentarCargaTrabajo(self):
-        self.cantidadTrabajo += 1
+        self.__cantidadTrabajo += 1
     
     def aumentarIndiceMeta(self):
         self.setIndiceMeta(self.getIndiceMeta() + 1)
