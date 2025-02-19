@@ -25,8 +25,24 @@ class Fabrica:
             Fabrica.listaTienda = listaTienda
         if operario is not None:
             Fabrica.operario = operario
-            operario.set_fabrica(self)
+            operario.setFabrica(self)
 
+
+    @staticmethod
+    def busquedaTrabajo(listaTrabajadores):
+        trabajadores = []
+        for e in listaTrabajadores:
+            if e.getCantidadTrabajo() > 0:
+                trabajadores.append(e)
+        return trabajadores
+
+    @staticmethod
+    def mostrarPersonas(listaTrabajadores):
+        texto = ""
+        for indice, persona in enumerate(listaTrabajadores, start=1):
+            texto += f"\nTrabajador {indice} {persona}"  
+        return texto
+    
     @staticmethod
     def descontarDineroCuenta(producto) -> float:
         """
