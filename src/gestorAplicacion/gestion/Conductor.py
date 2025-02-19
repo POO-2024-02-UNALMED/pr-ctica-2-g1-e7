@@ -1,16 +1,16 @@
 from gestorAplicacion.gestion.Persona import Persona
 class Conductor(Persona):
-    lista_conductores = []
+    listaConductores = []
     
     def __init__(self, nombre: str, cedula: int, edad: int, cuenta_bancaria, fabrica, transporte, licencia: str = None):
         from produccion.Transporte import Transporte
         super().__init__(nombre, cedula, edad, cuenta_bancaria)
-        self.transporte: Transporte = transporte
-        self.fabrica = fabrica
-        self.meta_conductor = []
-        self.licencia = licencia
-        transporte.set_conductor(self)
-        Conductor.lista_conductores.append(self)
+        self.__transporte: Transporte = transporte
+        self.__fabrica = fabrica
+        self.__metaConductor = []
+        self.__licencia = licencia
+        transporte.setConductor(self)
+        Conductor.listaConductores.append(self)
     
     def mostrar_metas(self) -> str:
         texto = []
@@ -20,19 +20,19 @@ class Conductor(Persona):
         return "".join(texto)
     
     def __str__(self) -> str:
-        return (f"\nNombre: {self.get_nombre()}\n"
-                f"Cedula: {self.get_cedula()}\n"
-                f"Edad: {self.get_edad()}\n"
-                f"Transporte: {self.transporte.get_tipo_transporte()}")
+        return (f"\nNombre: {self.getNombre()}\n"
+                f"Cedula: {self.getCedula()}\n"
+                f"Edad: {self.getEdad()}\n"
+                f"Transporte: {self.transporte.getTipoTransporte()}")
     
     def recibir_sueldo(self, valor: float):
-        self.get_cuenta_bancaria().anadir_dinero(valor)
-        self.set_cantidad_trabajo(0)
+        self.getCuentaBancaria().anadir_dinero(valor)
+        self.setCantidadTrabajo(0)
     
-    def get_transporte(self):
+    def getTransporte(self):
         return self.transporte
     
-    def set_transporte(self, transporte):
+    def setTransporte(self, transporte):
         self.transporte = transporte
     
     def get_fabrica(self):
@@ -42,23 +42,23 @@ class Conductor(Persona):
         self.fabrica = fabrica
     
     @classmethod
-    def get_lista_conductores(cls):
-        return cls.lista_conductores
+    def getListaConductores(cls):
+        return cls.listaConductores
     
-    def get_meta(self):
-        return self.meta_conductor
+    def getMeta(self):
+        return self.__metaConductor
     
-    def set_meta_conductor(self, meta):
-        self.meta_conductor.append(meta)
+    def setMetaConductor(self, meta):
+        self.__metaConductor.append(meta)
     
-    def aumentar_carga_trabajo(self):
-        self.cantidad_trabajo += 1
+    def aumentarCargaTrabajo(self):
+        self.__cantidadTrabajo += 1
     
-    def aumentar_indice_meta(self, peso: float):
-        self.set_indice_meta(self.get_indice_meta() + peso)
+    def aumentarIndiceMeta(self, peso: float):
+        self.setIndiceMeta(self.getIndiceMeta() + peso)
     
-    def get_licencia(self) -> str:
-        return self.licencia
+    def getLicencia(self) -> str:
+        return self.__licencia
     
-    def set_licencia(self, licencia: str):
-        self.licencia = licencia
+    def setLicencia(self, licencia: str):
+        self.__licencia = licencia

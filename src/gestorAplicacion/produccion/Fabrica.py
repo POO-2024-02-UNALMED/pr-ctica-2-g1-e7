@@ -3,6 +3,7 @@ from gestorAplicacion.produccion.Tienda import Tienda
 from gestorAplicacion.gestion.Vendedor import Vendedor#prueba
 
 
+
 class Fabrica:
     # Variables de clase
     cuentaBancaria = None
@@ -59,8 +60,8 @@ class Fabrica:
 
         resultado = "Listado de Tiendas:\n"
         for i, tienda in enumerate(Fabrica.listaTienda, start=1):
-            resultado += f"{i}. {tienda.nombre}:\n"
-            productos = tienda.cantidad_productos().split("\n")
+            resultado += f"{i}. {tienda.getNombre}:\n"
+            productos = tienda.cantidadProductos().split("\n")
             resultado += "\n".join(f"    {p}" for p in productos) + "\n"
 
         return resultado.strip()
@@ -108,3 +109,23 @@ mi_tienda = Tienda(
     capacidadMaximaLimpieza=150
 )
 Fabrica.listaTienda.append(mi_tienda)
+
+producto1 = Producto("Laptop", 3000, "Nuevo", "Electrónica", "Computadoras", 2.5)
+producto2 = Producto("Laptop", 3000, "Nuevo", "Electrónica", "Computadoras", 2.5)
+producto3 = Producto("Teléfono", 1000, "Usado", "Electrónica", "Móviles", 0.3)
+producto4 = Producto("Mesa", 500, "Nuevo", "Muebles", "Hogar", 20.0)
+producto5 = Producto("Mesa", 500, "Nuevo", "Muebles", "Hogar", 20.0)
+producto6 = Producto("Audífonos", 200, "Nuevo", "Electrónica", "Accesorios", 0.2)
+producto7 = Producto("Monitor", 400, "Nuevo", "Electrónica", "Computadoras", 5.0)
+producto8 = Producto("Monitor", 400, "Nuevo", "Electrónica", "Computadoras", 5.0)
+
+
+mi_tienda.agregarProducto(producto1)
+mi_tienda.agregarProducto(producto2)
+mi_tienda.agregarProducto(producto3)
+mi_tienda.agregarProducto(producto4)
+mi_tienda.agregarProducto(producto5)
+mi_tienda.agregarProducto(producto6)
+mi_tienda.agregarProducto(producto7)
+mi_tienda.agregarProducto(producto8)
+
