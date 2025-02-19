@@ -18,7 +18,7 @@ class CuentaBancaria:
     def añadirDinero(self, monto: float):
         self.saldo += monto
 
-    def descontarDinero(self, valor):
+    def descontarDinero(self, valor: float):
         self.saldo -= valor
 
     def devolverDinero(self, total: float, cliente):

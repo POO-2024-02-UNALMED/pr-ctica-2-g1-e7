@@ -88,10 +88,11 @@ class Vendedor(Persona):
     
     def mostrarMetas(self) -> str:
         texto = []
-        for idx, meta in enumerate(self.metaVendedor, start=1):
-            if not meta.getVerificador():
-                texto.append(f"\nMeta {idx} {meta}")
-        return "".join(texto)
+        metas_no_verificadas = [meta for meta in self.metaVendedor if not meta.getVerificador()] 
+
+        for idx, meta in enumerate(metas_no_verificadas, start=1): 
+            texto.append(f"\nMeta {idx}: {meta}")  
+        return "".join(texto)  
     
     def __str__(self) -> str:
         return (f"\nNombre: {self.getNombre()}\n"

@@ -4,7 +4,7 @@ class Conductor(Persona):
     
     def __init__(self, nombre: str, cedula: int, edad: int, cuentaBancaria, fabrica, transporte, licencia: str = None):
         from produccion.Transporte import Transporte
-        super().__init__(nombre, cedula, edad, cuenta_bancaria)
+        super().__init__(nombre, cedula, edad, cuentaBancaria)
         self.__transporte: Transporte = transporte
         self.__fabrica = fabrica
         self.__metaConductor = []
@@ -14,10 +14,11 @@ class Conductor(Persona):
     
     def mostrarMetas(self) -> str:
         texto = []
-        for idx, meta in enumerate(self.metaConductor, start=1):
-            if not meta.getVerificador():
-                texto.append(f"\nMeta {idx} {meta}")
-        return "".join(texto)
+        metas_no_verificadas = [meta for meta in self.metaConductor if not meta.getVerificador()] 
+
+        for idx, meta in enumerate(metas_no_verificadas, start=1): 
+            texto.append(f"\nMeta {idx}: {meta}")  
+        return "".join(texto)  
     
     def __str__(self) -> str:
         return (f"\nNombre: {self.getNombre()}\n"

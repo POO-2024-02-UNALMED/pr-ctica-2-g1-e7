@@ -54,6 +54,7 @@ def pagoTrabajadores():
     print("\nEligió la opción de pagar a sus trabajadores.")
     while True:
         listaTrabajadores = []
+        verificador = None
         while True:
             print("Seleccione el tipo de empleado que desea pagarle.")
             print("1. Operarios \n2. Conductores \n3. Vendedores\n0. Volver al menú.")
@@ -112,6 +113,9 @@ def pagoTrabajadores():
             print(f"\nTrabajador(a) seleccionado(a): {trabajadorSeleccionado.getNombre()}. Se le debe hacer un pago de: {pagoPotencial} por haber trabajado {trabajadorSeleccionado.getCantidadTrabajo()} veces.\n")
             
             while True:
+                if verificador == False:
+                    break
+
                 print("¿Quiere revisar las metas del trabajador?\n1. Sí\n2. No\n3. Cambiar de Trabajador\n0. Volver al menú principal.")
                 opcionPT3 = input("» ")
                 
@@ -125,14 +129,18 @@ def pagoTrabajadores():
                     time.sleep(1)
                     return
                 elif opcionPT3 == 3:
-                    continue
+                    break
                 elif opcionPT3 == 1:
                     while True:
+                        if verificador == False:
+                            break
+
                         metasTrabajador = trabajadorSeleccionado.getMeta()
                         metasNoPagas = [m for m in metasTrabajador if not m.getVerificador()]
                         
                         if not metasNoPagas:
                             print("El trabajador no tiene metas en este momento.\nProcediendo con el pago.")
+                            verificador = False
                             break
                         
                         print(trabajadorSeleccionado.mostrarMetas())
@@ -148,32 +156,49 @@ def pagoTrabajadores():
                         opcionPT4 = int(opcionPT4)
                         if opcionPT4 == 0:
                             return
+                        
                         elif opcionPT4 == len(metasNoPagas) + 1:
+                            verificador = False
                             break
+
                         elif 1 <= opcionPT4 <= len(metasNoPagas):
                             metaSeleccionada = metasNoPagas[opcionPT4 - 1]
                             print(f"\nINFORMACIÓN DE LA META SELECCIONADA:\n{metaSeleccionada.porcentajeCumplidos(trabajadorSeleccionado.getIndiceMeta())}")
                             if metaSeleccionada.cumpleMeta(trabajadorSeleccionado.getIndiceMeta()):
-                                print("La meta ha sido cumplida exitosamente.\nSumaremos el pago indicado por haberlo conseguido.")
+                                print("La meta ha sido cumplida exitosamente.\nSumaremos el pago indicado por haberlo conseguido.\n")
                                 pagoPorMetas += metaSeleccionada.getPago()
                                 metaSeleccionada.setVerificador(True)
-                            break
+                            while True:
+                                opcionPT5 = int(input("¿Qué desea hacer? \n1. Revisar otra meta. \n2. Proceder con el pago. \n» "))
+                                if opcionPT5 != 1 and opcionPT5 != 2:
+                                    print("Escoja alguna de las opciones.")
+                                    continue
+                                elif not int:
+                                    print("Entrada inválida. Por favor, ingrese un número.\n")
+                                    continue
+                                elif opcionPT5 == 1:
+                                    break
+                                else: 
+                                    verificador == False
+                                    break
+                                
                 elif opcionPT3 == 2:
                     break
-            
-            pagoTotal = pagoPotencial + pagoPorMetas
-            print("Procesando pago...")
-            time.sleep(1.5)
-            Fabrica.cuentaBancaria.descontarDinero(pagoTotal)
-            trabajadorSeleccionado.recibirSueldo(pagoTotal)
-            print("\n------------------------------------------------------------")
-            print(f"COMPROBANTE \nTrabajador(a): {trabajadorSeleccionado.getNombre()}")
-            print(f"Total pagado: {pagoTotal}")
-            print(f"- {pagoPotencial} por las veces trabajadas")
-            print(f"- {pagoPorMetas} por las metas cumplidas")
-            print("------------------------------------------------------------")
-            
-            while True:
+            if opcionPT3 == 2 or opcionPT3 == 1:    
+                pagoTotal = pagoPotencial + pagoPorMetas
+                print("Procesando pago...")
+                time.sleep(1.5)
+                Fabrica.cuentaBancaria.descontarDinero(pagoTotal)
+                trabajadorSeleccionado.recibirSueldo(pagoTotal)
+                print("\n------------------------------------------------------------")
+                print(f"COMPROBANTE \nTrabajador(a): {trabajadorSeleccionado.getNombre()}")
+                print(f"Total pagado: {pagoTotal}")
+                print(f"- {pagoPotencial} por las veces trabajadas")
+                print(f"- {pagoPorMetas} por las metas cumplidas")
+                print("------------------------------------------------------------")
+                break
+                    
+        while True:
                 print("\n¿Qué desea hacer? \n1. Pagar a otro trabajador de la misma categoría. \n2. Volver a elegir tipo de trabajador. \n0. Volver al menú principal.")
                 opcionPT4 = input("» ")
                 
