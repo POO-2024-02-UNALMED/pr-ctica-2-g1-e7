@@ -1,7 +1,7 @@
 from gestorAplicacion.produccion.Producto import Producto
 from gestorAplicacion.produccion.Tienda import Tienda
 from gestorAplicacion.gestion.Vendedor import Vendedor#prueba
-
+from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria#prueba
 
 
 class Fabrica:
@@ -116,8 +116,8 @@ class Fabrica:
                 for _ in range(cantidad_a_enviar)]
     
 
-
-mi_vendedor = Vendedor("Juan Pérez", 123456789, 30, "1234567890")
+cuentaBancaria1=CuentaBancaria(1001 , 10000)
+mi_vendedor = Vendedor("Juan Pérez", 123456789, 30, cuentaBancaria1)
 mi_tienda = Tienda(
     nombre="Supermercado La Estrella",
     vendedor=mi_vendedor,

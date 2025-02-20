@@ -5,21 +5,29 @@ from gestorAplicacion.produccion.Producto import Producto  # Importar la clase P
 from gestorAplicacion.produccion.TipoTransporte import TipoTransporte  # Importar la clase TipoTransporte
 from gestorAplicacion.produccion.Transporte import Transporte  # Importar la clase Transporte
 from gestorAplicacion.gestion.Conductor import Conductor  # Importar la clase Conductor
+from gestorAplicacion.gestion.Vendedor import Vendedor #prueba
+from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria#prueba
 
-producto1 = Producto("Laptop", 1200, "Electrónico", "Tecnología", 2.5)
-producto2 = Producto("Teléfono", 800, "Electrónico", "Tecnología", 0.3)
-producto3 = Producto("Tablet", 500, "Electrónico", "Tecnología", 0.6)
-producto4 = Producto("Impresora", 200, "Electrónico", "Oficina", 5.0)
-producto5 = Producto("Monitor", 300, "Electrónico", "Tecnología", 4.0)
+cuentaBancaria2=CuentaBancaria(1002 , 10002)
 
-mi_tienda = Tienda(
-nombre="Supermercado La Estrella",
-cuentaBancaria="9876543210",
-capacidadMaximaMaterial=100,
-capacidadMaximaConsumible=200,
-capacidadMaximaLimpieza=150)
+mi_vendedor2 = Vendedor("Juan Pablo", 1037121919, 20, cuentaBancaria2)
 
-Fabrica.listaTienda.append(mi_tienda)
+producto10 = Producto("Laptop", 1200, "Tecnología", 2.5)
+producto11 = Producto("Teléfono", 800, "Tecnología", 0.3)
+producto12 = Producto("Tablet", 500, "Tecnología", 0.6)
+producto13= Producto("Impresora", 200, "Oficina", 5.0)
+producto14 = Producto("Monitor", 300,  "Tecnología", 4.0)
+
+mi_tienda2 = Tienda(
+    nombre="Supermercado La Estrella",
+    vendedor=mi_vendedor2,
+    cuentaBancaria="9876543210",
+    capacidadMaximaMaterial=100,
+    capacidadMaximaConsumible=200,
+    capacidadMaximaLimpieza=150
+)
+
+Fabrica.listaTienda.append(mi_tienda2)
     
 def main():
     salir = False
