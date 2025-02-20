@@ -197,7 +197,7 @@ def main():
 
                     conductorSeleccionado = None
                     for conductor in Conductor.getListaConductores():
-                        if conductor.getTransporte().getTipoTransporte == transporteSeleccionado:
+                        if conductor.getTransporte().getTipoTransporte() == transporteSeleccionado:
                             conductorSeleccionado = conductor
                             break
 #error
@@ -228,10 +228,10 @@ def main():
                         transporte = conductorSeleccionado.getTransporte()
                         transporte.abastecerProducto(tiendaSeleccionada, productosGenerados)
 
-                        conductorSeleccionado.setIndiceMeta(conductorSeleccionado.indiceMeta + pesoTotalProductos)
-                        conductorSeleccionado.cantidadTrabajo += 1
-                        Fabrica.getOperario().setIndiceMeta(Fabrica.getOperario().indiceMeta + 1)
-                        Fabrica.getOperario().cantidadTrabajo += 1
+                        """conductorSeleccionado.setIndiceMeta(conductorSeleccionado.getIndiceMeta() + pesoTotalProductos)
+                        conductorSeleccionado.getCantidadTrabajo() += 1
+                        Fabrica.getOperario().setIndiceMeta(Fabrica.getOperario().getIndiceMeta() + 1)
+                        Fabrica.getOperario().getCantidadTrabajo() += 1"""
 
                         tiendaSeleccionada.descargarProducto(transporte)
                         print(f"PRODUCTOS DESCARGADOS EN LA TIENDA {tiendaSeleccionada.getNombre()}")

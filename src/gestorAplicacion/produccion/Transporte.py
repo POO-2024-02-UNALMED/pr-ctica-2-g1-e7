@@ -16,12 +16,12 @@ class Transporte:
         else:
             # Constructor vacío
             self.listaTransportes = []
-            self.listaDeProductos = []
+            self.__listaDeProductos = []
     def abastecerProducto(self, tiendaSeleccionada, productosSeleccionados):
         """
         Carga productos en el transporte y asigna la tienda de destino.
         """
-        self.listaDeProductos.extend(productosSeleccionados)
+        self.getListaDeProductos().extend(productosSeleccionados)
         self.tienda = tiendaSeleccionada
     # Método estático perteneciente a la funcionalidad enviarPedidos:
     # Calcula y devuelve el peso total de una lista de productos, sumando solo los productos con peso positivo.
