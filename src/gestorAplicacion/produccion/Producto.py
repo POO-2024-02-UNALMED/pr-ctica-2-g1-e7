@@ -26,7 +26,6 @@ class Producto:
             producto = args[0]
             self._nombre = producto._nombre
             self._precio = producto._precio
-            self._estado = producto._estado
             self._tipo = producto._tipo
             self._categoria = producto._categoria
             self._peso = producto._peso
@@ -36,14 +35,13 @@ class Producto:
             self._id = Producto._totalCreados
             Producto._listaProductos.append(self)
             Producto._totalCreados += 1
-        # Constructor con parámetros posicionales (6 argumentos)
-        elif len(args) == 6:
+        # Constructor con parámetros posicionales (5 argumentos)
+        elif len(args) == 5:
             self._nombre = args[0]
             self._precio = args[1]
-            self._estado = args[2]  
-            self._tipo = args[3]
-            self._categoria = args[4]
-            self._peso = args[5]
+            self._tipo = args[2]
+            self._categoria = args[3]
+            self._peso = args[4]
             self._cantidad = 0
             self._motivoDevolucion = None
             self._devuelto = False
@@ -55,7 +53,6 @@ class Producto:
             try:
                 self._nombre = kwargs['nombre']
                 self._precio = kwargs['precio']
-                self._estado = kwargs['estado']
                 self._tipo = kwargs['tipo']
                 self._categoria = kwargs['categoria']
                 self._peso = kwargs['peso']
@@ -84,7 +81,7 @@ class Producto:
     
     # Getters
     def getNombre(self): 
-        return self._nombre
+        return self._nombre#falla el inicializador
     def getPrecio(self):
         return self._precio  
     def getTipo(self): 
@@ -106,7 +103,7 @@ class Producto:
         return cls.motivosDevolucion
 
 
-    #getters: 
+    #setters: 
     def setMotivoDevolucion(self, motivoDevolucion): 
         self._motivoDevolucion=motivoDevolucion
 

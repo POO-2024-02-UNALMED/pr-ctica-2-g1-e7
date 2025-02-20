@@ -259,7 +259,7 @@ class Tienda():
                 resultado += " productos\n"
             return resultado
     def getCantidadActualPorCategoria(self, categoria):
-            cantidad = sum(1 for producto in self._listaProducto if producto.getCategorias() == categoria)
+            cantidad = sum(1 for producto in self._listaProducto if producto.getCategoria() == categoria)
             return cantidad
     def cantidadProductos(self):
             """

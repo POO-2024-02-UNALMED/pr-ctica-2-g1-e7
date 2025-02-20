@@ -14,15 +14,15 @@ class Factura(IMostrarProductos):
         self._precioEnvio = precio_envio
 
         # Si ya existen más de dos facturas, se ordenan por fecha.
-        if len(Factura.listaFacturas) > 2:
+        if len(Factura.getListaFacturas()) > 2:
             Factura.ordenar_facturas_por_fecha()
 
         self._fecha = fecha
         self._total = self.calcularTotal()
 
         # Se incrementa el contador y se asigna el id
-        Factura.totalCreadas += 1
-        self._id = Factura.totalCreadas
+        Factura._totalCreadas += 1
+        self._id = Factura._totalCreadas
 
         # Se agrega la factura a la lista de facturas
         Factura._listaFacturas.append(self)
