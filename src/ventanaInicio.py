@@ -21,11 +21,11 @@ class VentanaInicio(Tk):
             "Jose Luis Sanchez Alvarez \n18 años \nEstudiante de Ingenieria de Sistemas \nNacido en Uraba"
         ]
         self.fotosDesarrolladoresPaths = [
-            "src/imagenes/collageCarlos.png",
-            "src/imagenes/collageAndres.png",
-            "src/imagenes/collageJuan.png",
-            "src/imagenes/collageYhan.png",
-            "src/imagenes/collageJoseLuis.png"
+            "./imagenes/collageCarlos.png",
+            "./imagenes/collageAndres.png",
+            "./imagenes/collageJuan.png",
+            "./imagenes/collageYhan.png",
+            "./imagenes/collageJoseLuis.png"
         ]
 
         # Creación de la interfaz gráfica
@@ -69,7 +69,7 @@ class VentanaInicio(Tk):
         p4Frame = tk.Frame(frameDeAbajo, bg="gray")
         p4Frame.pack(side="left", fill="both", expand=True)
 
-        self.fotoNegocio = tk.PhotoImage(file="src/imagenes/fotosDistribuidora.png")
+        self.fotoNegocio = tk.PhotoImage(file="./imagenes/fotosDistribuidora.png")
         imagen = self.fotoNegocio.subsample(2, 2)
         fotoLabel = tk.Label(p4Frame, image=imagen)
         fotoLabel.image = imagen
