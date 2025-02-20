@@ -12,12 +12,12 @@ class Tienda():
         if all(param is not None for param in [nombre, vendedor, cuentaBancaria,
                                                capacidadMaximaMaterial, capacidadMaximaConsumible,
                                                capacidadMaximaLimpieza]):
-            self.__nombre = nombre
-            self.__vendedor = vendedor
-            self.__cuentaBancaria = cuentaBancaria
-            self.__capacidadMaximaMaterial = capacidadMaximaMaterial
-            self.__capacidadMaximaConsumible = capacidadMaximaConsumible
-            self.__capacidadMaximaLimpieza = capacidadMaximaLimpieza
+            self._nombre = nombre
+            self._vendedor = vendedor
+            self._cuentaBancaria = cuentaBancaria
+            self._capacidadMaximaMaterial = capacidadMaximaMaterial
+            self._capacidadMaximaConsumible = capacidadMaximaConsumible
+            self._capacidadMaximaLimpieza = capacidadMaximaLimpieza
 
             # Se asigna la tienda al vendedor si tiene el método
             if hasattr(vendedor, "setTienda"):
@@ -25,70 +25,70 @@ class Tienda():
 
             Tienda.numTiendas += 1
 
-            self.__listaProducto = []
-            self.__productosPorCategoria = []
-            self.__categorias = []
-            self.__conteoCategorias = []
+            self._listaProducto = []
+            self._productosPorCategoria = []
+            self._categorias = []
+            self._conteoCategorias = []
 
     # Getters
     def getNombre(self):
-        return self.__nombre
+        return self._nombre
 
     def getVendedor(self):
-        return self.__vendedor
+        return self._vendedor
 
     def getCuentaBancaria(self):
-        return self.__cuentaBancaria
+        return self._cuentaBancaria
 
     def getListaProducto(self):
-        return self.__listaProducto
+        return self._listaProducto
 
     def getProductosPorCategoria(self):
-        return self.__productosPorCategoria
+        return self._productosPorCategoria
 
     def getCategorias(self):
-        return self.__categorias
+        return self._categorias
 
     def getConteoCategorias(self):
-        return self.__conteoCategorias
+        return self._conteoCategorias
 
     # Setters
     def setNombre(self, nuevoNombre):
         if isinstance(nuevoNombre, str):
-            self.__nombre = nuevoNombre
+            self._nombre = nuevoNombre
         else:
             raise ValueError("El nombre debe ser una cadena")
 
     def setVendedor(self, nuevoVendedor):
-        self.__vendedor = nuevoVendedor
+        self._vendedor = nuevoVendedor
 
     def setCuentaBancaria(self, nuevaCuenta):
         if isinstance(nuevaCuenta, str):
-            self.__cuentaBancaria = nuevaCuenta
+            self._cuentaBancaria = nuevaCuenta
         else:
             raise ValueError("La cuenta bancaria debe ser una cadena")
 
     def setListaProducto(self, nuevaLista):
         if isinstance(nuevaLista, list):
-            self.__listaProducto = nuevaLista
+            self._listaProducto = nuevaLista
         else:
             raise ValueError("La lista de productos debe ser una lista")
 
     def setProductosPorCategoria(self, nuevaLista):
         if isinstance(nuevaLista, list):
-            self.__productosPorCategoria = nuevaLista
+            self._productosPorCategoria = nuevaLista
         else:
             raise ValueError("La lista de productos por categoría debe ser una lista")
 
     def setCategorias(self, nuevaLista):
         if isinstance(nuevaLista, list):
-            self.__categorias = nuevaLista
+            self._categorias = nuevaLista
         else:
             raise ValueError("La lista de categorías debe ser una lista")
 
     def setConteoCategorias(self, nuevaLista):
         if isinstance(nuevaLista, list):
-            self.__conteoCategorias = nuevaLista
+            self._conteoCategorias = nuevaLista
         else:
             raise ValueError("La lista de conteo de categorías debe ser una lista")
     
@@ -104,7 +104,7 @@ class Tienda():
         Funcionalidad a la que pertenece: Devoluciones
         Método que se encarga de procesar la devolución de un producto.
         """
-        self.__listaProducto.append(producto)
+        self._listaProducto.append(producto)
         producto.setDevuelto(True)
         return factura.getCliente() 
 
@@ -114,7 +114,7 @@ class Tienda():
         Sobreescribe el método por defecto de la clase abstracta IMostrarProducto
         Método que muestra la lista de productos omitiendo el producto dado.
         """
-        return [p for p in self.__listaProducto if p.producto_id != producto.producto_id]
+        return [p for p in self._listaProducto if p.producto_id != producto.producto_id]
     from typing import List
     # Método de la funcionalidad enviarPedidos:
     # Crea una lista con los productos disponibles en la tienda y la cantidad de cada uno.
@@ -122,7 +122,7 @@ class Tienda():
     def listaProductosTienda(self):
         listaProductos = []
         
-        for producto in self.__listaProducto:
+        for producto in self._listaProducto:
             encontrado = False
             if not listaProductos:
                 listaProductos.append([producto, 1])
@@ -158,9 +158,8 @@ class Tienda():
     # Método de la funcionalidad enviarPedidos:
     # Elimina de la tienda los productos cuyos nombres coincidan con los de la lista recibida.
     def eliminarProductosPorNombre(self, listaEliminar):
+        self._listaProducto = [producto for producto in self._listaProducto if producto.getNombre() not in {p.getNombre() for p in listaEliminar}]
         
-        self._listaProducto = [producto for producto in self._listaProducto if producto.nombre not in {p.nombre for p in listaEliminar}]
-
     # Método de la funcionalidad enviarPedidos:
     # Genera una factura con los productos seleccionados para el pedido, junto con el cliente, el transporte y el precio de envío.
     # Devuelve la factura en formato de texto.
@@ -210,7 +209,7 @@ class Tienda():
     def productosPorCategoria(self, productos : List[Producto], conteoTemporal=None):
             """
             Muestra los productos por categoría en formato: (cantidad actual/capacidad máxima).
-            Si `conteoTemporal` se proporciona, se usa en lugar del conteo normal.
+            Si conteoTemporal se proporciona, se usa en lugar del conteo normal.
             """
             # Limpiar listas antes de procesar
             self.categorias = []
@@ -222,7 +221,7 @@ class Tienda():
             for categoria in todasLasCategorias:
                 self.categorias.append(categoria)
             
-            # Si `conteoTemporal` no se proporciona, inicializar `conteoCategorias`
+            # Si conteoTemporal no se proporciona, inicializar conteoCategorias
             if conteoTemporal is None:
                 self.conteoCategorias = []
                 self.conteoCategorias = [0] * len(self.categorias)
@@ -234,7 +233,7 @@ class Tienda():
                         index = self.categorias.index(categoria)
                         self.conteoCategorias[index] += 1
             else:
-                # Si `conteoTemporal` existe, solo asegurarse de que las categorías están en la lista
+                # Si conteoTemporal existe, solo asegurarse de que las categorías están en la lista
                 for producto in productos:
                     categoria = producto.getCategoria()
                     if categoria not in self.categorias:
@@ -248,18 +247,18 @@ class Tienda():
 
                 # Agregar la capacidad máxima correspondiente
                 if categoria == "Herramientas":
-                    resultado += str(self.__capacidadMaximaMaterial)
+                    resultado += str(self._capacidadMaximaMaterial)
                 elif categoria == "Muebles":
-                    resultado += str(self.__capacidadMaximaConsumible)
+                    resultado += str(self._capacidadMaximaConsumible)
                 elif categoria == "Aseo":
-                    resultado += str(self.__capacidadMaximaLimpieza)
+                    resultado += str(self._capacidadMaximaLimpieza)
                 else:
                     resultado += "N/A"
 
                 resultado += " productos\n"
             return resultado
     def getCantidadActualPorCategoria(self, categoria):
-            cantidad = sum(1 for producto in self.__listaProducto if producto.getCategoria() == categoria)
+            cantidad = sum(1 for producto in self._listaProducto if producto.getCategoria() == categoria)
             return cantidad
     def cantidadProductos(self):
             """
@@ -268,9 +267,9 @@ class Tienda():
             nombresContados = []
             resultado = ""
 
-            for producto in self.__listaProducto:
+            for producto in self._listaProducto:
                 if producto.getNombre() not in nombresContados:
-                    cantidad = sum(1 for p in self.__listaProducto if p.getNombre() == producto.getNombre())
+                    cantidad = sum(1 for p in self._listaProducto if p.getNombre() == producto.getNombre())
                     nombresContados.append(producto.getNombre())
                     resultado += f"{producto.getNombre()}: {cantidad} unidades\n"
 
@@ -281,15 +280,15 @@ class Tienda():
             Descarga los productos transportados a la tienda y vacía la lista del transporte.
             """
             productosTransportados = transporteSeleccionado.getListaDeProductos()
-            self.listaProducto.extend(productosTransportados)
+            self._listaProducto.extend(productosTransportados)
             transporteSeleccionado.getListaDeProductos().clear()  # Vaciar la lista de productos del transporte
     def agregarProducto(self, producto):
             """Agrega el producto a la lista sin preocuparse por duplicados"""
-            self.__listaProducto.append(producto)
+            self._listaProducto.append(producto)
 
 
 
 
 #from .Producto import Producto
 #tienda = Tienda()
-#tienda.productosPorCategoria([Producto("Martillo", 10, "Herramientas"), Producto("Silla", 20, "Muebles"), Producto("Escoba", 30, "Aseo")])
+#tienda.productosPorCategoria([Producto("Martillo", 10, "Herramientas"), Producto("Silla", 20, "Muebles"), Producto("Escoba", 30, "Aseo")]

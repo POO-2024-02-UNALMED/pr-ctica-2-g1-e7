@@ -116,7 +116,7 @@ class Fabrica:
                 for _ in range(cantidad_a_enviar)]
     
 
-"""""
+
 mi_vendedor = Vendedor("Juan Pérez", 123456789, 30, "1234567890")
 mi_tienda = Tienda(
     nombre="Supermercado La Estrella",
@@ -129,14 +129,14 @@ mi_tienda = Tienda(
 
 Fabrica.listaTienda.append(mi_tienda)
 
-producto1 = Producto("Laptop", 3000, "Nuevo", "Electrónica", "Computadoras", 2.5)
-producto2 = Producto("Laptop", 3000, "Nuevo", "Electrónica", "Computadoras", 2.5)
-producto3 = Producto("Teléfono", 1000, "Usado", "Electrónica", "Móviles", 0.3)
-producto4 = Producto("Mesa", 500, "Nuevo", "Muebles", "Hogar", 20.0)
-producto5 = Producto("Mesa", 500, "Nuevo", "Muebles", "Hogar", 20.0)
-producto6 = Producto("Audífonos", 200, "Nuevo", "Electrónica", "Accesorios", 0.2)
-producto7 = Producto("Monitor", 400, "Nuevo", "Electrónica", "Computadoras", 5.0)
-producto8 = Producto("Monitor", 400, "Nuevo", "Electrónica", "Computadoras", 5.0)
+producto1 = Producto("Laptop", 3000, "Nuevo", "Electrónica", 2.5)
+producto2 = Producto("Laptop", 3000, "Nuevo", "Electrónica", 2.5)
+producto3 = Producto("Teléfono", 1000, "Usado", "Electrónica", 0.3)
+producto4 = Producto("Mesa", 500, "Nuevo", "Muebles", 20.0)
+producto5 = Producto("Mesa", 500, "Nuevo", "Muebles", 20.0)
+producto6 = Producto("Audífonos", 200, "Nuevo", "Electrónica", 0.2)
+producto7 = Producto("Monitor", 400, "Nuevo", "Electrónica", 5.0)
+producto8 = Producto("Monitor", 400, "Nuevo", "Electrónica", 5.0)
 
 
 mi_tienda.agregarProducto(producto1)
@@ -147,4 +147,3 @@ mi_tienda.agregarProducto(producto5)
 mi_tienda.agregarProducto(producto6)
 mi_tienda.agregarProducto(producto7)
 mi_tienda.agregarProducto(producto8)
-"""""

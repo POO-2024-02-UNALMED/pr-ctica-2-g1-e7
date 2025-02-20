@@ -202,13 +202,13 @@ def enviar_pedidos():
                     listaTransporteFiltrada.append(conductor.getTransporte().getTipoTransporte())
 
         # Verificar si el envío es gratis
-        envio_gratis = Transporte.enviarGratis(listaProductosPedidos)
+        envioGratis = Transporte.enviarGratis(listaProductosPedidos)
 
         # Solicitar al cliente que seleccione el tipo de transporte
         print("\nPor favor, elija el transporte que desea utilizar para su envío:")
         print("\nOpciones de transporte disponibles:")
         print("0. Salir")
-        print(TipoTransporte.mostrarTipoTransporteSegunCarga(listaTransporteFiltrada, envio_gratis))
+        print(TipoTransporte.mostrarTipoTransporteSegunCarga(listaTransporteFiltrada, envioGratis))
 
         # Bucle para pedir la opción de transporte hasta que sea válida
         while True:
@@ -234,27 +234,31 @@ def enviar_pedidos():
                 transporteSeleccionado = conductor.getTransporte()
 
         # Mostrar detalles del transporte seleccionado
-        if envio_gratis:
+        if envioGratis:
             print("\nHa escogido el transporte: " + transporteSeleccionado.getTipoTransporte().getNombre() +
                     "\n- Precio: 0.0")
         else:
             print("\nHa escogido el transporte: " + transporteSeleccionado.getTipoTransporte().getNombre() +
                     "\n- Precio: " + str(transporteSeleccionado.getTipoTransporte().getPrecioEnvio()) + "\n")
-
+        precioEnvio = 0
+        if envioGratis:
+            precioEnvio = 0.0
+        else:
+            precioEnvio = transporteSeleccionado.getTipoTransporte().getPrecioEnvio()
         # Solicitar y validar la fecha de la venta
-        formato_fecha = "%d/%m/%Y"
-        fecha_valida = False
-        fecha_venta = None
+        formatoFecha = "%d/%m/%Y"
+        fechaValida = False
+        fechaVenta = None
 
         print("\nPor favor, ingrese el día en que se realiza la venta (formato: DD/MM/AAAA). Asegúrese de que la fecha sea válida.")
-        while not fecha_valida:
+        while not fechaValida:
             print("\nIngrese una fecha:  »", end="")
             entrada = input()
             try:
                 # Convierte la fecha en formato String a datetime object
-                fecha_venta = datetime.datetime.strptime(entrada, formato_fecha)
-                print("\nLa fecha ingresada es válida: " + fecha_venta.strftime(formato_fecha))
-                fecha_valida = True
+                fechaVenta = datetime.datetime.strptime(entrada, formatoFecha)
+                print("\nLa fecha ingresada es válida: " + fechaVenta.strftime(formatoFecha))
+                fechaValida = True
             except ValueError:
                 print("\nLa fecha ingresada no es válida o no cumple con el formato DD/MM/AAAA. Intente nuevamente.")
 
@@ -265,8 +269,8 @@ def enviar_pedidos():
         print(tiendaSeleccionada.enviarPedido(listaProductosPedidos,
                                                 transporteSeleccionado,
                                                 clienteSeleccionado,
-                                                transporteSeleccionado.getTipoTransporte().getPrecioEnvio(),
-                                                fecha_venta))
+                                                precioEnvio,
+                                                fechaVenta))
 
         # Aumentar la carga de trabajo del vendedor y conductor
         tiendaSeleccionada.getVendedor().aumentarCargaTrabajo()

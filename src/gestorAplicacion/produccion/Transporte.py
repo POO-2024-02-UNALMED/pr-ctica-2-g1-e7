@@ -1,6 +1,6 @@
 
 class Transporte:
-    montoEnvioGratis = 100000
+    montoEnvioGratis = 3000
     listaTransportes = []  # Lista de transportes
 
 
@@ -39,6 +39,7 @@ class Transporte:
         return totalPeso
     @staticmethod
     def enviarGratis(listaProductos):
+        from gestorAplicacion.produccion.Producto import Producto
         precioTotal = sum(producto.getPrecio() for producto in listaProductos)
         return precioTotal > Transporte.montoEnvioGratis
     
