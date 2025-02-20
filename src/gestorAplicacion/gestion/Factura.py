@@ -186,10 +186,10 @@ class Factura(IMostrarProductos):
         factura.append("=====================================\n")
 
         # Encabezado del cliente y detalles
-        factura.append(f"| ID Factura: {self.id:<24} |\n")
+        factura.append(f"| ID Factura: {self._id:<24} |\n")
         factura.append(f"| Cliente: {self._cliente.getNombre():<26} |\n")
         factura.append(f"| Cédula: {self._cliente.getCedula():<26} |\n")
-        factura.append(f"| Fecha: {self.fecha.strftime('%Y-%m-%d'):<28} |\n")
+        factura.append(f"| Fecha: {self._fecha.strftime('%Y-%m-%d'):<28} |\n")
         factura.append(f"| Transporte: {self._transporte.getTipoTransporte().getNombre():<22} |\n")
         factura.append("========================================================\n")
 
