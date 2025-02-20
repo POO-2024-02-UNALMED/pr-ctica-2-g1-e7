@@ -14,7 +14,7 @@ class Producto:
         """
         Se pueden utilizar tres formas de construcción:
           1. Constructor posicional: 
-             Producto(nombre, precio, tipo, categoria, peso, cantidad)
+             Producto(nombre, precio, tipo, categoria, peso)
           2. Constructor con palabras clave.
           3. Constructor de copia: Producto(otro_producto) donde otro_producto es una instancia de Producto.
           4. Constructor vacío: sin parámetros, solo incrementa el contador.
@@ -41,12 +41,12 @@ class Producto:
             self.__cantidad = 0
             self.__motivoDevolucion = None
             self._devuelto = False
-            self.__id = Producto.totalCreados
+            self._id = Producto.totalCreados
 
         elif kwargs:  # 🔹 Constructor con palabras clave
             try:
                 self.__nombre = kwargs['nombre']
-                self._precio = kwargs['precio']  # ✅ CORREGIDO
+                self._precio = kwargs['precio']  
                 self.__tipo = kwargs['tipo']
                 self.__categoria = kwargs['categoria']
                 self.__peso = kwargs['peso']
@@ -59,7 +59,7 @@ class Producto:
             self.__id = Producto.totalCreados
 
         else:  # 🔹 Constructor vacío
-            self.__id = Producto.totalCreados
+            self._id = Producto.totalCreados
 
         # Agregar a la lista de productos y aumentar el contador total
         Producto.listaProductos.append(self)
@@ -105,7 +105,7 @@ class Producto:
     def getDevuelto(self): 
         return self._devuelto
     def getId(self): 
-        return self.__id
+        return self._id
     @classmethod
     def getMotivosDevolucion(cls): 
         return cls.motivosDevolucion

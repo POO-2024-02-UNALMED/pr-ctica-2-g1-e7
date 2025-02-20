@@ -25,7 +25,7 @@ class Tienda():
 
             Tienda.numTiendas += 1
 
-            self.__listaProducto = []
+            self._listaProducto = []
             self.__productosPorCategoria = []
             self.__categorias = []
             self.__conteoCategorias = []
@@ -41,7 +41,7 @@ class Tienda():
         return self.__cuentaBancaria
 
     def getListaProducto(self):
-        return self.__listaProducto
+        return self._listaProducto
 
     def getProductosPorCategoria(self):
         return self.__productosPorCategoria
@@ -70,7 +70,7 @@ class Tienda():
 
     def setListaProducto(self, nuevaLista):
         if isinstance(nuevaLista, list):
-            self.__listaProducto = nuevaLista
+            self._listaProducto = nuevaLista
         else:
             raise ValueError("La lista de productos debe ser una lista")
 
@@ -104,7 +104,7 @@ class Tienda():
         Funcionalidad a la que pertenece: Devoluciones
         Método que se encarga de procesar la devolución de un producto.
         """
-        self.__listaProducto.append(producto)
+        self._listaProducto.append(producto)
         producto.setDevuelto(True)
         return factura.getCliente() 
 
@@ -114,7 +114,7 @@ class Tienda():
         Sobreescribe el método por defecto de la clase abstracta IMostrarProducto
         Método que muestra la lista de productos omitiendo el producto dado.
         """
-        return [p for p in self.__listaProducto if p.producto_id != producto.producto_id]
+        return [p for p in self._listaProducto if p.getId() != producto.getId()]
     from typing import List
     # Método de la funcionalidad enviarPedidos:
     # Crea una lista con los productos disponibles en la tienda y la cantidad de cada uno.
@@ -175,8 +175,8 @@ class Tienda():
     #def __init__(self):
         #self.listaProducto = []
 
-    def agregar_productos_para_cambio(self, precio_cambio: float, seleccion_productos: List[int], productos_disponibles):
-            from Producto import Producto
+    def agregarProductosParaCambio(self, precio_cambio: float, seleccion_productos: List[int], productos_disponibles):
+            from gestorAplicacion.produccion.Producto import Producto
             """
             Funcionalidad: Devoluciones
             Método principal para gestionar los productos seleccionados para un cambio.
@@ -198,7 +198,7 @@ class Tienda():
 
                 # Agregar el producto al carrito sin verificar duplicados
                 productos_seleccionados.append(producto_seleccionado)
-                subtotal += producto_seleccionado.precio
+                subtotal += producto_seleccionado.getPrecio()
 
                 # Verificar si el subtotal supera el precio permitido
                 if subtotal > precio_cambio:
