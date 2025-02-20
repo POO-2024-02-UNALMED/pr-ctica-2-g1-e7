@@ -11,16 +11,17 @@ class Producto:
     ]
 
     def __init__(self, *args, **kwargs):
+
         """
         Se pueden utilizar tres formas de construcción:
           1. Constructor posicional: 
-             Producto(nombre, precio, estado, tipo, categoria, peso)
+             Producto(nombre, precio, tipo, categoria, peso)
           2. Constructor con palabras clave.
           3. Constructor de copia: Producto(otro_producto) donde otro_producto es una instancia de Producto.
           4. Constructor vacío: sin parámetros, solo incrementa el contador.
         """
-        # Constructor de copia
-        if len(args) == 1 and isinstance(args[0], Producto):
+
+        if len(args) == 1 and isinstance(args[0], Producto):  # 🔹 Constructor de copia
             producto = args[0]
             self._nombre = producto._nombre
             self._precio = producto._precio
@@ -72,20 +73,36 @@ class Producto:
 
     @staticmethod
     def mostrarMotivosDeDevolucion() -> str:
-        """
-        Método que devuelve una lista de motivos de devolución en formato enumerado.
-        """
         return "\n".join(f"{i + 1}. {motivo}" for i, motivo in enumerate(Producto.motivosDevolucion))
      
     @staticmethod
     def obtenerMotivoDeDevolucion(index: int) -> str:
-        """
-        Método que devuelve un motivo de devolución basado en el índice proporcionado.
-        """
         if index < 1 or index > len(Producto.motivosDevolucion):
             return "Motivo no válido."
         return Producto.motivosDevolucion[index - 1]
     
+    # Getters
+    def getNombre(self): 
+        return self._nombre
+    def getPrecio(self):
+        return self._precio  
+    def getTipo(self): 
+        return self._tipo
+    def getCategoria(self): 
+        return self._categoria
+    def getPeso(self): 
+        return self._peso
+    def getCantidad(self): 
+        return self._cantidad
+    def getMotivoDevolucion(self): 
+        return self._motivoDevolucion
+    def getDevuelto(self): 
+        return self._devuelto
+    def getId(self): 
+        return self._id
+    @classmethod
+    def getMotivosDevolucion(cls): 
+        return cls.motivosDevolucion
 
 
     #getters: 

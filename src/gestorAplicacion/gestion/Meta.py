@@ -1,50 +1,50 @@
 class Meta:
     def __init__(self, nivel_de_dificultad: str, indice: float, pago: float):
-        self.nivel_de_dificultad = nivel_de_dificultad
-        self.indice = indice
-        self.pago = pago
-        self.verificador = False
+        self._nivelDeDificultad = nivel_de_dificultad
+        self._indice = indice
+        self._pago = pago
+        self._verificador = False
     
-    def cumple_meta(self, indice_de_trabajo: float) -> bool:
-        return self.indice <= indice_de_trabajo
+    def cumpleMeta(self, indice_de_trabajo: float) -> bool:
+        return self._indice <= indice_de_trabajo
     
-    def porcentaje_cumplidos(self, indice_de_trabajo: float) -> str:
-        porcentaje_indice = round((indice_de_trabajo * 100) / self.indice, 2)
-        mensaje = f"Porcentaje de la meta logrado: {porcentaje_indice}%"
+    def porcentajeCumplidos(self, indice_de_trabajo: float) -> str:
+        porcentajeIndice = round((indice_de_trabajo * 100) / self._indice, 2)
+        mensaje = f"Porcentaje de la meta logrado: {porcentajeIndice}%"
         
-        if porcentaje_indice < 100:
-            porcentaje_faltante = round(100 - porcentaje_indice, 2)
-            mensaje += f"\nPorcentaje faltante: {porcentaje_faltante}%"
-            mensaje += f"\nCantidad faltante del índice indicado: {self.indice - indice_de_trabajo}"
+        if porcentajeIndice < 100:
+            porcentajeFaltante = round(100 - porcentajeIndice, 2)
+            mensaje += f"\nPorcentaje faltante: {porcentajeFaltante}%"
+            mensaje += f"\nCantidad faltante del índice indicado: {self._indice - indice_de_trabajo}"
         
         return mensaje
     
     def __str__(self) -> str:
-        return (f"\nNivel de dificultad: {self.nivel_de_dificultad}\n"
-                f"Índice requerido para cumplir la meta: {self.indice}\n"
-                f"Recompensa por meta lograda: {self.pago}")
+        return (f"\nNivel de dificultad: {self._nivelDeDificultad}\n"
+                f"Índice requerido para cumplir la meta: {self._indice}\n"
+                f"Recompensa por meta lograda: {self._pago}")
     
     # Getters y Setters
-    def get_verificador(self) -> bool:
-        return self.verificador
+    def getVerificador(self) -> bool:
+        return self._verificador
     
-    def set_verificador(self, valor: bool):
-        self.verificador = valor
+    def setVerificador(self, valor: bool):
+        self._verificador = valor
     
-    def get_nivel_de_dificultad(self) -> str:
-        return self.nivel_de_dificultad
+    def getNivelDeDificultad(self) -> str:
+        return self._nivelDeDificultad
     
-    def set_nivel_de_dificultad(self, nivel_de_dificultad: str):
-        self.nivel_de_dificultad = nivel_de_dificultad
+    def setNivelDeDificultad(self, nivel_de_dificultad: str):
+        self._nivelDeDificultad = nivel_de_dificultad
     
-    def get_indice(self) -> float:
-        return self.indice
+    def getIndice(self) -> float:
+        return self._indice
     
-    def set_indice(self, indice: float):
-        self.indice = indice
+    def setIndice(self, indice: float):
+        self._indice = indice
     
-    def get_pago(self) -> float:
-        return self.pago
+    def getPago(self) -> float:
+        return self._pago
     
-    def set_pago(self, pago: float):
-        self.pago = pago
+    def setPago(self, pago: float):
+        self._pago = pago

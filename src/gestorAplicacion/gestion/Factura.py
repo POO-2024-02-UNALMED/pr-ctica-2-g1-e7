@@ -1,5 +1,4 @@
 from datetime import datetime
-from gestorAplicacion.produccion.EstadoProducto import EstadosProducto
 from gestorAplicacion.gestion.IMostrarProductos import IMostrarProductos
 
 class Factura(IMostrarProductos):
@@ -56,6 +55,7 @@ class Factura(IMostrarProductos):
         return cls._listaFacturas[num-1] 
     
     def calcularTotal(self): 
+        from gestorAplicacion.produccion.Producto import Producto
         total=0
         for producto in self._listaProductos: 
             total+=producto.getPrecio()
@@ -68,7 +68,7 @@ class Factura(IMostrarProductos):
         Funcionalidad a la que pertenece: Devoluciones
         Método que se encarga de verificar si todos los productos de una factura han sido devueltos o no.
         """
-        return all(p.estado == EstadosProducto.DEVUELTO for p in self._listaProductos)
+        return all(p.getDevuelto() for p in self._listaProductos)
     
     def seleccionarProducto(self, n: int):
         """
@@ -174,23 +174,23 @@ class Factura(IMostrarProductos):
         
     def __str__(self):
         factura = []
-        total_precio = 0
-        total_peso = 0
-        precio_envio = self.precioEnvio
+        totalPrecio = 0
+        totalPeso = 0
+        precioEnvio = self._precioEnvio
 
         # Borde superior
         factura.append("=====================================\n")
         factura.append("|                                   |\n")
-        factura.append(f"| {self.tienda.getNombre():<33} |\n")
+        factura.append(f"| {self._tienda.getNombre():<33} |\n")
         factura.append("|                                   |\n")
         factura.append("=====================================\n")
 
         # Encabezado del cliente y detalles
         factura.append(f"| ID Factura: {self.id:<24} |\n")
-        factura.append(f"| Cliente: {self.cliente.getNombre():<26} |\n")
-        factura.append(f"| Cédula: {self.cliente.getCedula():<26} |\n")
-        factura.append(f"| Fecha: {self.fecha:<28} |\n")
-        factura.append(f"| Transporte: {self.transporte.getTipoTransporte().getNombre():<22} |\n")
+        factura.append(f"| Cliente: {self._cliente.getNombre():<26} |\n")
+        factura.append(f"| Cédula: {self._cliente.getCedula():<26} |\n")
+        factura.append(f"| Fecha: {self.fecha.strftime('%Y-%m-%d'):<28} |\n")
+        factura.append(f"| Transporte: {self._transporte.getTipoTransporte().getNombre():<22} |\n")
         factura.append("========================================================\n")
 
         # Encabezado de los productos
@@ -201,14 +201,14 @@ class Factura(IMostrarProductos):
         for producto in self._listaProductos:
             if producto is not None:
                 factura.append(f"| {producto.getNombre():<28} | ${producto.getPrecio():<8.2f} | {producto.getPeso():<8.2f} |\n")
-                total_precio += producto.getPrecio()
-                total_peso += producto.getPeso()
+                totalPrecio += producto.getPrecio()
+                totalPeso += producto.getPeso()
 
         # Totales
-        total_precio += precio_envio
+        totalPrecio += precioEnvio
         factura.append("|------------------------------|-----------|-----------|\n")
-        factura.append(f"| Envío                       | ${precio_envio:<8.2f} | {'N/A':<8} |\n")
-        factura.append(f"| Total                       | ${total_precio:<8.2f} | {total_peso:<8.2f} |\n")
+        factura.append(f"| Envío                       | ${precioEnvio:<8.2f} | {'N/A':<8} |\n")
+        factura.append(f"| Total                       | ${totalPrecio:<8.2f} | {totalPeso:<8.2f} |\n")
         factura.append("=======================================================\n")
 
         return ''.join(factura)

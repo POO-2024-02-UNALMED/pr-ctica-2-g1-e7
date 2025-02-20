@@ -8,26 +8,23 @@ class IMostrarProductos(ABC):
         """
         return "Este método debe ser implementado si es necesario."
 
-    
     def mostrarProductosFactura(self) -> str:
-        from gestorAplicacion.produccion.EstadoProducto import EstadosProducto
-        
         texto = [
-            f"{i + 1}. {p.nombre} (devuelto)" if p.estado == EstadosProducto.DEVUELTO else f"{i + 1}. {p.nombre}"
-            for i, p in enumerate(self.listaProductos)
+            f"{i + 1}. {p.getNombre()} (devuelto)" if p.getDevuelto() else f"{i + 1}. {p.getNombre()}"
+            for i, p in enumerate(self.getListaProductos())
         ]
         
         return "\n".join(texto)
 
     @staticmethod
     def mostrarProductosLista(listaProductos) -> str:
-        from produccion.Producto import Producto
+        from gestorAplicacion.produccion.Producto import Producto
         listaProductos: list[Producto] = listaProductos
         if not listaProductos:
             return "No hay productos registrados o disponibles."
         
         productos = [
-            f"{i + 1}. {p.nombre} - {p.peso}kg - ${p.precio} - {p.categoria}"
+            f"{i + 1}. {p.getNombre()} - {p.getPeso()}kg - ${p.getPrecio()} - {p.getCategoria()}"
             for i, p in enumerate(listaProductos)
         ]
         

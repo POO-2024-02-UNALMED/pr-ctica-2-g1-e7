@@ -1,6 +1,7 @@
 from gestorAplicacion.produccion.Producto import Producto
 from gestorAplicacion.produccion.Tienda import Tienda
 from gestorAplicacion.gestion.Vendedor import Vendedor#prueba
+from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria#prueba
 
 
 class Fabrica:
@@ -9,7 +10,7 @@ class Fabrica:
     operario = None
     productosDisponibles = []
     listaTienda = []
-
+    
     def __init__(self, idFabrica=None, nombre=None, direccion=None,
                  cuentaBancariaFabrica=None, productosDisponibles=None,
                  listaTienda=None, operario=None):
@@ -25,8 +26,23 @@ class Fabrica:
             Fabrica.listaTienda = listaTienda
         if operario is not None:
             Fabrica.operario = operario
-            operario.set_fabrica(self)
+            operario.setFabrica(self)
 
+    @staticmethod
+    def busquedaTrabajo(listaTrabajadores):
+        trabajadores = []
+        for e in listaTrabajadores:
+            if e.getCantidadTrabajo() > 0:
+                trabajadores.append(e)
+        return trabajadores
+
+    @staticmethod
+    def mostrarPersonas(listaTrabajadores):
+        texto = ""
+        for indice, persona in enumerate(listaTrabajadores, start=1):
+            texto += f"\nTrabajador {indice} {persona}"  
+        return texto
+    
     @staticmethod
     def descontarDineroCuenta(producto) -> float:
         """
@@ -35,22 +51,22 @@ class Fabrica:
         if Fabrica.cuentaBancaria is None:
             raise ValueError("Error: La fábrica no tiene una cuenta bancaria registrada.")
         
-        if producto.precio is None:
+        if producto.getPrecio() is None:
             raise ValueError("Error: El producto no tiene un precio definido.")
 
-        Fabrica.cuentaBancaria.setSaldo(Fabrica.cuentaBancaria.getSaldo() - producto.precio)
-        return producto.precio
+        Fabrica.cuentaBancaria.setSaldo(Fabrica.cuentaBancaria.getSaldo() - producto.getPrecio())
+        return producto.getPrecio()
 
     @staticmethod
     def calcularExcedente(productos, valor: float) -> float:
         """
         Calcula si el cliente debe pagar un excedente al cambiar productos.
         """
-        subtotal = sum(p.precio for p in productos if p.precio is not None)
+        subtotal = sum(p.getPrecio() for p in productos if p.getPrecio() is not None)
         return max(0, subtotal - valor)
 
     @staticmethod
-    def mostrar_tiendas():
+    def mostrarTiendas():
         """
         Muestra las tiendas registradas y sus productos en stock.
         """
@@ -59,8 +75,8 @@ class Fabrica:
 
         resultado = "Listado de Tiendas:\n"
         for i, tienda in enumerate(Fabrica.listaTienda, start=1):
-            resultado += f"{i}. {tienda.nombre}:\n"
-            productos = tienda.cantidad_productos().split("\n")
+            resultado += f"{i}. {tienda.getNombre()}:\n"
+            productos = tienda.cantidadProductos().split("\n")
             resultado += "\n".join(f"    {p}" for p in productos) + "\n"
 
         return resultado.strip()
@@ -80,7 +96,7 @@ class Fabrica:
         """
         Muestra los productos disponibles en la fábrica usando la interfaz IMostrarProductos.
         """
-        from gestion.IMostrarProductos import IMostrarProductos
+        from gestorAplicacion.gestion.IMostrarProductos import IMostrarProductos
         return IMostrarProductos.mostrarProductosLista(Fabrica.productosDisponibles)
 
     @staticmethod
@@ -98,7 +114,10 @@ class Fabrica:
         return [Producto(producto.nombre, producto.precio, producto.estado, 
                          producto.tipo, producto.categoria, producto.peso) 
                 for _ in range(cantidad_a_enviar)]
-mi_vendedor = Vendedor("Juan Pérez", 123456789, 30, "1234567890")
+    
+
+cuentaBancaria1=CuentaBancaria(1001 , 10000)
+mi_vendedor = Vendedor("Juan Pérez", 123456789, 30, cuentaBancaria1)
 mi_tienda = Tienda(
     nombre="Supermercado La Estrella",
     vendedor=mi_vendedor,
@@ -107,4 +126,24 @@ mi_tienda = Tienda(
     capacidadMaximaConsumible=200,
     capacidadMaximaLimpieza=150
 )
+
 Fabrica.listaTienda.append(mi_tienda)
+
+producto1 = Producto("Laptop", 3000, "Nuevo", "Electrónica", 2.5)
+producto2 = Producto("Laptop", 3000, "Nuevo", "Electrónica", 2.5)
+producto3 = Producto("Teléfono", 1000, "Usado", "Electrónica", 0.3)
+producto4 = Producto("Mesa", 500, "Nuevo", "Muebles", 20.0)
+producto5 = Producto("Mesa", 500, "Nuevo", "Muebles", 20.0)
+producto6 = Producto("Audífonos", 200, "Nuevo", "Electrónica", 0.2)
+producto7 = Producto("Monitor", 400, "Nuevo", "Electrónica", 5.0)
+producto8 = Producto("Monitor", 400, "Nuevo", "Electrónica", 5.0)
+
+
+mi_tienda.agregarProducto(producto1)
+mi_tienda.agregarProducto(producto2)
+mi_tienda.agregarProducto(producto3)
+mi_tienda.agregarProducto(producto4)
+mi_tienda.agregarProducto(producto5)
+mi_tienda.agregarProducto(producto6)
+mi_tienda.agregarProducto(producto7)
+mi_tienda.agregarProducto(producto8)
