@@ -8,6 +8,22 @@ class Fabrica:
     _cuentaBancaria = None
     _listaTienda = []
     _productosDisponibles = []
+    def __init__(self, idFabrica=None, nombre=None, direccion=None,
+                 cuentaBancariaFabrica=None, productosDisponibles=None,
+                 listaTienda=None, operario=None):
+        self.idFabrica = idFabrica
+        self.nombre = nombre
+        self.direccion = direccion
+
+        if cuentaBancariaFabrica is not None:
+            Fabrica.cuentaBancaria = cuentaBancariaFabrica
+        if productosDisponibles is not None:
+            Fabrica.productosDisponibles = productosDisponibles
+        if listaTienda is not None:
+            Fabrica.listaTienda = listaTienda
+        if operario is not None:
+            Fabrica.operario = operario
+            operario.setFabrica(self)
 
     # Getters y Setters para atributos privados (estáticos)
     @staticmethod
