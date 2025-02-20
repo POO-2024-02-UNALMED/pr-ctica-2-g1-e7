@@ -19,7 +19,7 @@ class Producto:
           4. Constructor vacío: sin parámetros, solo incrementa el contador.
         """
         self._nombre = None
-        self._precio = None
+        self._precio = 0
         self._estado = None
         self._tipo = None
         self._categoria = None
