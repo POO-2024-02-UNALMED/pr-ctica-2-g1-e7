@@ -1,8 +1,8 @@
-from gestorAplicacion.produccion.EstadoProducto import EstadosProducto
 from gestorAplicacion.gestion.Factura import Factura
 from gestorAplicacion.produccion.Producto import Producto
 from gestorAplicacion.gestion.Cliente import Cliente
 from gestorAplicacion.produccion.Tienda import Tienda
+from gestorAplicacion.produccion.Transporte import Transporte
 from datetime import datetime
 
 class Estadisticas:
@@ -37,9 +37,12 @@ class Estadisticas:
 
 
     def estadistica(self):
-        print( f"Bienvenido al módulo de estadísticas\n Las fechas por defecto son {Factura.fechaInicio} y {Factura.fechaFin}\n")
+        print( f"Bienvenido al módulo de estadísticas\n Las fechas por defecto son {Factura.getFechaMinima()} y {Factura.getFechaMaxima()}\n")
     
 
 if __name__ == "__main__":
-    fact1 = Factura(Tienda("Tienda1", "Calle 1", "1234567890"), Cliente("Juan", "Perez", "1234567890"), Transporte("Transporte1", "Calle 2", "0987654321"))
-    print(fact1.getFecha())
+    try:
+        fact1 = Factura(Tienda(nombre="Tienda1", vendedor=None), Cliente("Juan", 20, 1234567890), Transporte("Transporte1", "Calle 2", "0987654321"), [Producto("Producto1", 1000, None, "Tipo1", "Categoria1", 1), Producto("Producto2", 2000, None, "Tipo2", "Categoria2", 2)], 1000, datetime.now())
+        print(fact1)
+    except Exception as e:
+        print(e)

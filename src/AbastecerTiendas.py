@@ -8,35 +8,7 @@ from gestorAplicacion.gestion.Conductor import Conductor  # Importar la clase Co
 from gestorAplicacion.gestion.Vendedor import Vendedor #prueba
 from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria#prueba
 
-cuentaBancaria2=CuentaBancaria(1002 , 10002)
-
-mi_vendedor2 = Vendedor("Juan Pablo", 1037121919, 20, cuentaBancaria2)
-
-
-producto10 = Producto("Laptop", 3000, "Nuevo", "Electrónica", 2.5)
-producto11= Producto("Laptop", 3000, "Nuevo", "Electrónica", 2.5)
-producto12 = Producto("Teléfono", 1000, "Usado", "Electrónica", 0.3)
-producto13= Producto("Mesa", 500, "Nuevo", "Muebles", 20.0)
-producto14= Producto("Mesa", 500, "Nuevo", "Muebles", 20.0)
-producto15= Producto("Audífonos", 200, "Nuevo", "Electrónica", 0.2)
-product16= Producto("Monitor", 400, "Nuevo", "Electrónica", 5.0)
-producto17 = Producto("Monitor", 400, "Nuevo", "Electrónica", 5.0)
-
-mi_tienda2 = Tienda(
-    nombre="Supermercado La Estrella",
-    vendedor=mi_vendedor2,
-    cuentaBancaria="9876543210",
-    capacidadMaximaMaterial=100,
-    capacidadMaximaConsumible=200,
-    capacidadMaximaLimpieza=150
-)
-
-
-Fabrica.getListaTienda().append(mi_tienda2)
-Fabrica.getProductosDisponibles().append(producto10)
-Fabrica.getProductosDisponibles().append(producto11)
-Fabrica.getProductosDisponibles().append(producto12)
-    
+   
 def main():
     salir = False
     
