@@ -131,8 +131,8 @@ class Fabrica:
         if cantidad_a_enviar <= 0:
             raise ValueError("Error: La cantidad a enviar debe ser mayor a 0.")
 
-        return [Producto(producto.nombre, producto.precio, producto.estado,
-                         producto.tipo, producto.categoria, producto.peso)
+        return [Producto(producto.getNombre, producto.getPrecio, producto.getEstado,
+                         producto.getTipo, producto.getCategoria, producto.getPeso)
                 for _ in range(cantidad_a_enviar)]
 
 import datetime
