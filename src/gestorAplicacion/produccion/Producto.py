@@ -11,7 +11,17 @@ class Producto:
     ]
 
     def __init__(self, *args, **kwargs):
-        if len(args) == 1 and isinstance(args[0], Producto):  # Constructor de copia
+
+        """
+        Se pueden utilizar tres formas de construcción:
+          1. Constructor posicional: 
+             Producto(nombre, precio, tipo, categoria, peso)
+          2. Constructor con palabras clave.
+          3. Constructor de copia: Producto(otro_producto) donde otro_producto es una instancia de Producto.
+          4. Constructor vacío: sin parámetros, solo incrementa el contador.
+        """
+
+        if len(args) == 1 and isinstance(args[0], Producto):  # 🔹 Constructor de copia
             producto = args[0]
             self._nombre = producto._nombre
             self._precio = producto._precio  
@@ -41,6 +51,7 @@ class Producto:
                 self._tipo = kwargs['tipo']
                 self._categoria = kwargs['categoria']
                 self._peso = kwargs['peso']
+
             except KeyError as e:
                 raise ValueError(f"Falta el parámetro requerido: {e}")
 

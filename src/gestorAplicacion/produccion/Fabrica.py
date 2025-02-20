@@ -62,7 +62,7 @@ class Fabrica:
         """
         Calcula si el cliente debe pagar un excedente al cambiar productos.
         """
-        subtotal = sum(p.precio for p in productos if p.precio is not None)
+        subtotal = sum(p.getPrecio() for p in productos if p.getPrecio() is not None)
         return max(0, subtotal - valor)
 
     @staticmethod
