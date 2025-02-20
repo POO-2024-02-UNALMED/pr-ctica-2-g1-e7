@@ -12,11 +12,15 @@ cuentaBancaria2=CuentaBancaria(1002 , 10002)
 
 mi_vendedor2 = Vendedor("Juan Pablo", 1037121919, 20, cuentaBancaria2)
 
-producto10 = Producto("Laptop", 1200, "Tecnología", 2.5)
-producto11 = Producto("Teléfono", 800, "Tecnología", 0.3)
-producto12 = Producto("Tablet", 500, "Tecnología", 0.6)
-producto13= Producto("Impresora", 200, "Oficina", 5.0)
-producto14 = Producto("Monitor", 300,  "Tecnología", 4.0)
+
+producto10 = Producto("Laptop", 3000, "Nuevo", "Electrónica", 2.5)
+producto11= Producto("Laptop", 3000, "Nuevo", "Electrónica", 2.5)
+producto12 = Producto("Teléfono", 1000, "Usado", "Electrónica", 0.3)
+producto13= Producto("Mesa", 500, "Nuevo", "Muebles", 20.0)
+producto14= Producto("Mesa", 500, "Nuevo", "Muebles", 20.0)
+producto15= Producto("Audífonos", 200, "Nuevo", "Electrónica", 0.2)
+product16= Producto("Monitor", 400, "Nuevo", "Electrónica", 5.0)
+producto17 = Producto("Monitor", 400, "Nuevo", "Electrónica", 5.0)
 
 mi_tienda2 = Tienda(
     nombre="Supermercado La Estrella",
@@ -27,7 +31,11 @@ mi_tienda2 = Tienda(
     capacidadMaximaLimpieza=150
 )
 
+
 Fabrica.listaTienda.append(mi_tienda2)
+Fabrica.productosDisponibles.append(producto10)
+Fabrica.productosDisponibles.append(producto11)
+Fabrica.productosDisponibles.append(producto12)
     
 def main():
     salir = False

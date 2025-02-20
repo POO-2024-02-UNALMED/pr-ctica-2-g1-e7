@@ -24,7 +24,7 @@ class IMostrarProductos(ABC):
             return "No hay productos registrados o disponibles."
         
         productos = [
-            f"{i + 1}. {p.nombre} - {p.peso}kg - ${p.precio} - {p.categoria}"
+            f"{i + 1}. {p.getNombre()} - {p.getPeso()}kg - ${p.getPrecio()} - {p.getCategoria()}"
             for i, p in enumerate(listaProductos)
         ]
         
