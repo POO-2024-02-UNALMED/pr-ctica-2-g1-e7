@@ -8,18 +8,18 @@ class Conductor(Persona):
     def __init__(self, nombre: str, cedula: int, edad: int, cuentaBancaria, fabrica, transporte, licencia: str = None):
         #from produccion.Transporte import Transporte
         super().__init__(nombre, cedula, edad, cuentaBancaria)
-        self.__transporte: Transporte = transporte
-        self.__fabrica = fabrica
-        self.__metaConductor = []
-        self.__licencia = licencia
+        self._transporte: Transporte = transporte
+        self._fabrica = fabrica
+        self._metaConductor = []
+        self._licencia = licencia
         transporte.setConductor(self)
         Conductor.listaConductores.append(self)
     
     def mostrarMetas(self) -> str:
         texto = []
-        metas_no_verificadas = [meta for meta in self.metaConductor if not meta.getVerificador()] 
+        metaSNoVerificadas = [meta for meta in self._metaConductor if not meta.getVerificador()] 
 
-        for idx, meta in enumerate(metas_no_verificadas, start=1): 
+        for idx, meta in enumerate(metaSNoVerificadas, start=1): 
             texto.append(f"\nMeta {idx}: {meta}")  
         return "".join(texto)  
     
@@ -30,42 +30,42 @@ class Conductor(Persona):
                 f"Transporte: {self.transporte.getTipoTransporte()}")
     
     def recibirSueldo(self, valor: float):
-        self.getCuentaBancaria().anadir_dinero(valor)
+        self.getCuentaBancaria().anadirDinero(valor)
         self.setCantidadTrabajo(0)
     
     def getTransporte(self):
-        return self.__transporte
+        return self._transporte
     
     def setTransporte(self, transporte):
-        self.__transporte = transporte
-    
+        self._transporte = transporte
+
     def getFabrica(self):
-        return self.__fabrica
+        return self._fabrica
     
     def setFabrica(self, fabrica):
-        self.__fabrica = fabrica
+        self._fabrica = fabrica
     
     @classmethod
     def getListaConductores(cls):
         return cls.listaConductores
     
     def getMeta(self):
-        return self.__metaConductor
+        return self._metaConductor
     
     def setMetaConductor(self, meta):
-        self.__metaConductor.append(meta)
+        self._metaConductor.append(meta)
     
     def aumentarCargaTrabajo(self):
-        self.__cantidadTrabajo += 1
+        self._cantidadTrabajo += 1
     
     def aumentarIndiceMeta(self, peso: float):
         self.setIndiceMeta(self.getIndiceMeta() + peso)
     
     def getLicencia(self) -> str:
-        return self.__licencia
+        return self._licencia
     
     def setLicencia(self, licencia: str):
-        self.__licencia = licencia
+        self._licencia = licencia
 transporte1 = Transporte(TipoTransporte.CAMION, 16000, 15000)
 transporte2 = Transporte(TipoTransporte.AVION, 60000, 30000)
 transporte3 = Transporte(TipoTransporte.BICICLETA, 30, 5000)

@@ -1,7 +1,7 @@
 class CuentaBancaria:
     def __init__(self, numeroCuenta, saldo=0):
-        self.numeroCuenta = numeroCuenta
-        self.saldo = saldo
+        self._numeroCuenta = numeroCuenta
+        self._saldo = saldo
         
     def calcularPago(self, persona):
         tipoPersona = type(persona).__name__  # Obtiene el nombre de la clase como string
@@ -16,10 +16,10 @@ class CuentaBancaria:
         return saldoTrabajo
     
     def añadirDinero(self, monto: float):
-        self.saldo += monto
+        self._saldo += monto
 
     def descontarDinero(self, valor: float):
-        self.saldo -= valor
+        self._saldo -= valor
 
     def devolverDinero(self, total: float, cliente):
         from gestorAplicacion.gestion.Cliente import Cliente
@@ -34,12 +34,12 @@ class CuentaBancaria:
         """
         Método que transfiere dinero de esta cuenta a la cuenta de destino.
         """
-        self.saldo -= valor
+        self._saldo -= valor
         cuentaDestino.añadirDinero(valor)
     #setters y getters 
 
     def setSaldo(self,saldo): 
-        self.saldo=saldo
+        self._saldo=saldo
 
     def getSaldo(self): 
-        return self.saldo
+        return self._saldo
