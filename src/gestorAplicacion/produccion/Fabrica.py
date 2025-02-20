@@ -1,32 +1,38 @@
-from gestorAplicacion.produccion.Producto import Producto
+
 from gestorAplicacion.produccion.Tienda import Tienda
 from gestorAplicacion.gestion.Vendedor import Vendedor#prueba
 from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria#prueba
 
-
 class Fabrica:
-    # Variables de clase
-    cuentaBancaria = None
-    operario = None
-    productosDisponibles = []
-    listaTienda = []
-    
-    def __init__(self, idFabrica=None, nombre=None, direccion=None,
-                 cuentaBancariaFabrica=None, productosDisponibles=None,
-                 listaTienda=None, operario=None):
-        self.idFabrica = idFabrica
-        self.nombre = nombre
-        self.direccion = direccion
+    # Atributos "privados" (convención con guion bajo)
+    _cuentaBancaria = None
+    _listaTienda = []
+    _productosDisponibles = []
 
-        if cuentaBancariaFabrica is not None:
-            Fabrica.cuentaBancaria = cuentaBancariaFabrica
-        if productosDisponibles is not None:
-            Fabrica.productosDisponibles = productosDisponibles
-        if listaTienda is not None:
-            Fabrica.listaTienda = listaTienda
-        if operario is not None:
-            Fabrica.operario = operario
-            operario.setFabrica(self)
+    # Getters y Setters para atributos privados (estáticos)
+    @staticmethod
+    def getCuentaBancaria():
+        return Fabrica._cuentaBancaria
+
+    @staticmethod
+    def setCuentaBancaria(cuentaBancaria):
+        Fabrica._cuentaBancaria = cuentaBancaria
+
+    @staticmethod
+    def getListaTienda():
+        return Fabrica._listaTienda
+
+    @staticmethod
+    def setListaTienda(listaTienda):
+        Fabrica._listaTienda = listaTienda
+
+    @staticmethod
+    def getProductosDisponibles():
+        return Fabrica._productosDisponibles
+
+    @staticmethod
+    def setProductosDisponibles(productosDisponibles):
+        Fabrica._productosDisponibles = productosDisponibles
 
     @staticmethod
     def busquedaTrabajo(listaTrabajadores):
@@ -40,21 +46,22 @@ class Fabrica:
     def mostrarPersonas(listaTrabajadores):
         texto = ""
         for indice, persona in enumerate(listaTrabajadores, start=1):
-            texto += f"\nTrabajador {indice} {persona}"  
+            texto += f"\nTrabajador {indice} {persona}"
         return texto
-    
+
     @staticmethod
     def descontarDineroCuenta(producto) -> float:
         """
         Resta el precio del producto devuelto de la cuenta bancaria de la fábrica.
         """
-        if Fabrica.cuentaBancaria is None:
+        if Fabrica.getCuentaBancaria() is None:
             raise ValueError("Error: La fábrica no tiene una cuenta bancaria registrada.")
-        
+
         if producto.getPrecio() is None:
             raise ValueError("Error: El producto no tiene un precio definido.")
 
-        Fabrica.cuentaBancaria.setSaldo(Fabrica.cuentaBancaria.getSaldo() - producto.getPrecio())
+        cuenta = Fabrica.getCuentaBancaria()
+        cuenta.setSaldo(cuenta.getSaldo() - producto.getPrecio())
         return producto.getPrecio()
 
     @staticmethod
@@ -70,11 +77,11 @@ class Fabrica:
         """
         Muestra las tiendas registradas y sus productos en stock.
         """
-        if not Fabrica.listaTienda:
+        if not Fabrica.getListaTienda():
             return "No hay tiendas disponibles."
 
         resultado = "Listado de Tiendas:\n"
-        for i, tienda in enumerate(Fabrica.listaTienda, start=1):
+        for i, tienda in enumerate(Fabrica.getListaTienda(), start=1):
             resultado += f"{i}. {tienda.getNombre()}:\n"
             productos = tienda.cantidadProductos().split("\n")
             resultado += "\n".join(f"    {p}" for p in productos) + "\n"
@@ -86,10 +93,10 @@ class Fabrica:
         """
         Muestra una lista numerada de las tiendas sin incluir los productos.
         """
-        if not Fabrica.listaTienda:
+        if not Fabrica.getListaTienda():
             return "No hay tiendas registradas."
 
-        return "\n".join(f"{i}. Tienda: {t.getNombre()}" for i, t in enumerate(Fabrica.listaTienda, start=1))
+        return "\n".join(f"{i}. Tienda: {t.getNombre()}" for i, t in enumerate(Fabrica.getListaTienda(), start=1))
 
     @staticmethod
     def mostrarProductos():
@@ -97,24 +104,23 @@ class Fabrica:
         Muestra los productos disponibles en la fábrica usando la interfaz IMostrarProductos.
         """
         from gestorAplicacion.gestion.IMostrarProductos import IMostrarProductos
-        return IMostrarProductos.mostrarProductosLista(Fabrica.productosDisponibles)
+        return IMostrarProductos.mostrarProductosLista(Fabrica.getProductosDisponibles())
 
     @staticmethod
     def cantidadProductos(producto, cantidad_a_enviar: int):
+        from gestorAplicacion.produccion.Producto import Producto
         """
         Genera una cantidad específica de productos para abastecimiento.
         """
-        from gestorAplicacion.produccion.Producto import Producto
 
         if not isinstance(producto, Producto):
             raise ValueError("Error: El objeto proporcionado no es un producto válido.")
         if cantidad_a_enviar <= 0:
             raise ValueError("Error: La cantidad a enviar debe ser mayor a 0.")
 
-        return [Producto(producto.nombre, producto.precio, producto.estado, 
-                         producto.tipo, producto.categoria, producto.peso) 
+        return [Producto(producto.nombre, producto.precio, producto.estado,
+                         producto.tipo, producto.categoria, producto.peso)
                 for _ in range(cantidad_a_enviar)]
-    
 
 cuentaBancaria1=CuentaBancaria(1001 , 10000)
 mi_vendedor = Vendedor("Juan Pérez", 123456789, 30, cuentaBancaria1)
@@ -127,7 +133,8 @@ mi_tienda = Tienda(
     capacidadMaximaLimpieza=150
 )
 
-Fabrica.listaTienda.append(mi_tienda)
+Fabrica.getListaTienda().append(mi_tienda)
+from gestorAplicacion.produccion.Producto import Producto
 
 producto1 = Producto("Laptop", 3000, "Nuevo", "Electrónica", 2.5)
 producto2 = Producto("Laptop", 3000, "Nuevo", "Electrónica", 2.5)
