@@ -4,29 +4,29 @@ from gestorAplicacion.gestion.IMostrarProductos import IMostrarProductos
 
 class Factura(IMostrarProductos):
     # Variables de clase (atributos estáticos)
-    totalCreadas = 0
-    listaFacturas = []
+    _totalCreadas = 0
+    _listaFacturas = []
 
     def __init__(self, tienda, cliente, transporte, lista_productos: list, precio_envio: float, fecha: datetime):
-        self.tienda = tienda
-        self.cliente = cliente
-        self.transporte = transporte
-        self.listaProductos = lista_productos
-        self.precioEnvio = precio_envio
+        self._tienda = tienda
+        self._cliente = cliente
+        self._transporte = transporte
+        self._listaProductos = lista_productos
+        self._precioEnvio = precio_envio
 
         # Si ya existen más de dos facturas, se ordenan por fecha.
         if len(Factura.listaFacturas) > 2:
             Factura.ordenar_facturas_por_fecha()
 
-        self.fecha = fecha
-        self.total = self.calcularTotal()
+        self._fecha = fecha
+        self._total = self.calcularTotal()
 
         # Se incrementa el contador y se asigna el id
         Factura.totalCreadas += 1
-        self.id = Factura.totalCreadas
+        self._id = Factura.totalCreadas
 
         # Se agrega la factura a la lista de facturas
-        Factura.listaFacturas.append(self)
+        Factura._listaFacturas.append(self)
 
     
     @classmethod
@@ -35,30 +35,30 @@ class Factura(IMostrarProductos):
         Método que ordena la lista de facturas (lista_facturas) utilizando
         el algoritmo de la burbuja, comparando la propiedad 'fecha'.
         """
-        n = len(cls.lista_facturas)
+        n = len(cls._listaFacturas)
         for i in range(n - 1):
             for j in range(n - i - 1):
-                if cls.lista_facturas[j].fecha > cls.lista_facturas[j + 1].fecha:
+                if cls._listaFacturas[j].fecha > cls.lista_facturas[j + 1].fecha:
                     # Intercambio de posiciones
-                    cls.lista_facturas[j], cls.lista_facturas[j + 1] = cls.lista_facturas[j + 1], cls.lista_facturas[j]
+                    cls._listaFacturas[j], cls.lista_facturas[j + 1] = cls.lista_facturas[j + 1], cls.lista_facturas[j]
 
     @classmethod
     def mostrarFacturas(cls): 
         string=""
         n=1
-        for factura in Factura.lista_facturas: 
+        for factura in Factura._listaFacturas: 
             string+= str(n),". ", factura.getCliente().getNombre(), "ID: ", factura.getID() 
             n+=1
         return string 
     
     @classmethod
     def seleccionarFactura(cls,num:int):
-        return cls.listaFacturas[num-1] 
+        return cls._listaFacturas[num-1] 
     
     def calcularTotal(self): 
         total=0
-        for producto in self.listaProductos: 
-            total+=producto.precio
+        for producto in self._listaProductos: 
+            total+=producto.getPrecio()
         return total
 
         
@@ -68,14 +68,14 @@ class Factura(IMostrarProductos):
         Funcionalidad a la que pertenece: Devoluciones
         Método que se encarga de verificar si todos los productos de una factura han sido devueltos o no.
         """
-        return all(p.estado == EstadosProducto.DEVUELTO for p in self.listaProductos)
+        return all(p.estado == EstadosProducto.DEVUELTO for p in self._listaProductos)
     
     def seleccionarProducto(self, n: int):
         """
         Método que selecciona un producto de la lista basado en el índice proporcionado.
         """
-        if 1 <= n <= len(self.listaProductos):
-            return self.listaProductos[n - 1]
+        if 1 <= n <= len(self._listaProductos):
+            return self._listaProductos[n - 1]
         return None 
     #Manejar con una excepcion cuando el entero pasado está por fuera del rango establecido. !!
     
@@ -85,19 +85,19 @@ class Factura(IMostrarProductos):
         """
         Método que convierte una cadena de texto en una fecha.
         """
-        return datetime.strptime(fecha, "%d-%m-%y %H:%M:%S")
+        return datetime.strptime(fecha, "%d-%m-%y")
     
     def getFechaMinima(self) -> datetime:
         """
         Método que obtiene la fecha mínima de la factura.
         """
-        return min(p.fecha for p in self.listaProductos)
+        return min(f.getFecha() for f in self._listaFacturas)
     
     def getFechaMaxima(self) -> datetime:
         """
         Método que obtiene la fecha máxima de la factura.
         """
-        return max(p.fecha for p in self.listaProductos)
+        return max(f.getFecha() for f in self._listaFacturas)
     
     def getFacturasEntreFechas(self, fecha_min: datetime, fecha_max: datetime):
         """
@@ -109,7 +109,7 @@ class Factura(IMostrarProductos):
         """
         Método que obtiene una lista de fechas entre dos fechas.
         """
-        return [f.fecha for f in Factura.lista_facturas if fecha_min <= f.fecha <= fecha_max]
+        return [f.getFecha() for f in Factura.lista_facturas if fecha_min <= f.getFecha() <= fecha_max]
     
     def gananciasDiscretas(self, fecha_min: datetime, fecha_max: datetime):
         """
@@ -118,7 +118,7 @@ class Factura(IMostrarProductos):
         facturas = self.getFacturasEntreFechas(fecha_min, fecha_max)
         ganancias: list[list[datetime, float]] = []
         for f in facturas:
-            ganancias.append([f.fecha, f.total])
+            ganancias.append([f.getFecha(), f.getTotal()])
         return ganancias
     
     def gananciaTotal(self, fecha_min: datetime, fecha_max: datetime):
@@ -126,14 +126,14 @@ class Factura(IMostrarProductos):
         Método que calcula la ganancia total entre dos fechas.
         """
         facturas = self.getFacturasEntreFechas(fecha_min, fecha_max)
-        return sum(f.total for f in facturas)
+        return sum(f.getTotal() for f in facturas)
     
     def promedioDeGanancias(self, fecha_min: datetime, fecha_max: datetime):
         """
         Método que calcula el promedio de ganancias entre dos fechas.
         """
         facturas = self.getFacturasEntreFechas(fecha_min, fecha_max)
-        return sum(f.total for f in facturas) / len(facturas)
+        return sum(f.getTotal() for f in facturas) / len(facturas)
     
     def aumentosPorcentuales(self, fecha_min: datetime, fecha_max: datetime):
         """
@@ -142,7 +142,7 @@ class Factura(IMostrarProductos):
         facturas = self.getFacturasEntreFechas(fecha_min, fecha_max)
         aumentos = []
         for i in range(1, len(facturas)):
-            aumento = (facturas[i].total - facturas[i - 1].total) / facturas[i - 1].total * 100
+            aumento = (facturas[i].getTotal() - facturas[i - 1].getTotal()) / facturas[i - 1].getTotal() * 100
             aumentos.append([facturas[i].fecha, aumento])
         return aumentos
     
@@ -150,7 +150,7 @@ class Factura(IMostrarProductos):
         """
         Método que calcula la moda de los productos.
         """
-        productos = [p.nombre for p in self.listaProductos]
+        productos = [p.nombre for p in self._listaProductos]
         moda = max(set(productos), key=productos.count)
         return moda
     
@@ -159,7 +159,7 @@ class Factura(IMostrarProductos):
         """
         Método que calcula la moda de los clientes.
         """
-        clientes = [f.cliente.nombre for f in Factura.lista_facturas]
+        clientes = [f.getCliente().getNombre() for f in Factura.getListaFacturas()]
         moda = max(set(clientes), key=clientes.count)
         return moda
     
@@ -167,7 +167,7 @@ class Factura(IMostrarProductos):
         """
         Método que calcula la moda de las tiendas.
         """
-        tiendas = [f.tienda.nombre for f in Factura.lista_facturas]
+        tiendas = [f.getTienda().getNombre() for f in Factura.getListaFacturas()]
         moda = max(set(tiendas), key=tiendas.count)
         return moda
     
@@ -198,7 +198,7 @@ class Factura(IMostrarProductos):
         factura.append("|------------------------------|-----------|-----------|\n")
 
         # Detalles de los productos
-        for producto in self.listaProductos:
+        for producto in self._listaProductos:
             if producto is not None:
                 factura.append(f"| {producto.getNombre():<28} | ${producto.getPrecio():<8.2f} | {producto.getPeso():<8.2f} |\n")
                 total_precio += producto.getPrecio()
@@ -213,8 +213,65 @@ class Factura(IMostrarProductos):
 
         return ''.join(factura)
 
-    #getters y setters
+    #getters:
     def getCliente(self): 
-        return self.cliente
+        return self._cliente
     def getListaProductos(self): 
-        return self.listaProductos
+        return self._listaProductos
+
+    def getID(self):
+        return self._id
+    
+    def getFecha(self):
+        return self._fecha
+    
+    def getTotal(self):
+        return self._total
+    
+    def getTransporte(self):
+        return self._transporte
+    
+    def getTienda(self):
+        return self._tienda
+    
+    def getPrecioEnvio(self):
+        return self._precioEnvio
+    
+    def getListaProductos(self):
+        return self._listaProductos
+    
+    @staticmethod
+    def getListaFacturas():
+        return Factura._listaFacturas
+    
+    @staticmethod
+    def getTotalCreadas():
+        return Factura._totalCreadas
+    
+
+    #setters:
+    def setCliente(self, cliente): 
+        self._cliente=cliente
+
+    def setListaProductos(self, listaProductos):
+        self._listaProductos=listaProductos
+
+    def setID(self, id):
+        self._id=id
+
+    def setFecha(self, fecha):
+        self._fecha=fecha
+
+    def setTienda(self, tienda):
+        self._tienda=tienda
+
+    def setCliente(self, cliente):
+        self._cliente=cliente
+
+    def setTransporte(self, transporte):
+        self._transporte=transporte
+
+    def setPrecioEnvio(self, precioEnvio):
+        self._precioEnvio=precioEnvio
+
+    

@@ -1,7 +1,7 @@
 class Producto:
-    totalCreados = 0
-    listaProductos = []
-    motivosDevolucion = [
+    _totalCreados = 0
+    _listaProductos = []
+    _motivosDevolucion = [
         "No llego a tiempo",
         "Llego en mal estado",
         "Se envio el producto equivocado",
@@ -22,53 +22,53 @@ class Producto:
         # Constructor de copia
         if len(args) == 1 and isinstance(args[0], Producto):
             producto = args[0]
-            self.nombre = producto.nombre
-            self.precio = producto.precio
-            self.estado = producto.estado
-            self.tipo = producto.tipo
-            self.categoria = producto.categoria
-            self.peso = producto.peso
-            self.cantidad = getattr(producto, "cantidad", 0)
-            self.motivoDevolucion = producto.motivoDevolucion
-            self.devuelto = producto.devuelto
-            self.id = Producto.totalCreados
-            Producto.listaProductos.append(self)
-            Producto.totalCreados += 1
+            self._nombre = producto._nombre
+            self._precio = producto._precio
+            self._estado = producto._estado
+            self._tipo = producto._tipo
+            self._categoria = producto._categoria
+            self._peso = producto._peso
+            self._cantidad = getattr(producto, "cantidad", 0)
+            self._motivoDevolucion = producto._motivoDevolucion
+            self._devuelto = producto._devuelto
+            self._id = Producto._totalCreados
+            Producto._listaProductos.append(self)
+            Producto._totalCreados += 1
         # Constructor con parámetros posicionales (6 argumentos)
         elif len(args) == 6:
-            self.nombre = args[0]
-            self.precio = args[1]
-            self.estado = args[2]  
-            self.tipo = args[3]
-            self.categoria = args[4]
-            self.peso = args[5]
-            self.cantidad = 0
-            self.motivoDevolucion = None
-            self.devuelto = False
-            self.id = Producto.totalCreados
-            Producto.listaProductos.append(self)
-            Producto.totalCreados += 1
+            self._nombre = args[0]
+            self._precio = args[1]
+            self._estado = args[2]  
+            self._tipo = args[3]
+            self._categoria = args[4]
+            self._peso = args[5]
+            self._cantidad = 0
+            self._motivoDevolucion = None
+            self._devuelto = False
+            self._id = Producto._totalCreados
+            Producto._listaProductos.append(self)
+            Producto._totalCreados += 1
         # Constructor con parámetros por palabra clave
         elif kwargs:
             try:
-                self.nombre = kwargs['nombre']
-                self.precio = kwargs['precio']
-                self.estado = kwargs['estado']
-                self.tipo = kwargs['tipo']
-                self.categoria = kwargs['categoria']
-                self.peso = kwargs['peso']
+                self._nombre = kwargs['nombre']
+                self._precio = kwargs['precio']
+                self._estado = kwargs['estado']
+                self._tipo = kwargs['tipo']
+                self._categoria = kwargs['categoria']
+                self._peso = kwargs['peso']
             except KeyError as e:
                 raise ValueError(f"Falta el parámetro requerido: {e}")
-            self.cantidad = 0
-            self.motivoDevolucion = None
-            self.devuelto = False
-            self.id = Producto.totalCreados
-            Producto.listaProductos.append(self)
-            Producto.totalCreados += 1
+            self._cantidad = 0
+            self._motivoDevolucion = None
+            self._devuelto = False
+            self._id = Producto._totalCreados
+            Producto._listaProductos.append(self)
+            Producto._totalCreados += 1
         else:
             # Constructor vacío
-            self.id = Producto.totalCreados
-            Producto.totalCreados += 1
+            self._id = Producto._totalCreados
+            Producto._totalCreados += 1
 
     @staticmethod
     def mostrarMotivosDeDevolucion() -> str:
@@ -88,8 +88,64 @@ class Producto:
     
 
 
-    #getters y setters: 
+    #getters: 
     def setMotivoDevolucion(self, motivoDevolucion): 
-        self.motivoDevolucion=motivoDevolucion
+        self._motivoDevolucion=motivoDevolucion
     def getPrecio(self): 
-        return self.precio
+        return self._precio
+    
+    def getNombre(self):
+        return self._nombre
+    
+    def getEstado(self):
+        return self._estado
+    
+    def getTipo(self):
+        return self._tipo
+    
+    def getCategoria(self):
+        return self._categoria
+    
+    def getPeso(self):
+        return self._peso
+    
+    def getCantidad(self):
+        return self._cantidad
+    
+    def getMotivoDevolucion(self):
+        return self._motivoDevolucion
+    
+    def getDevuelto(self):
+        return self._devuelto
+    
+    def getID(self):
+        return self._id
+    
+    #setters:
+
+    def setPrecio(self, precio):
+        self._precio=precio
+
+    def setNombre(self, nombre):
+        self._nombre=nombre
+
+    def setEstado(self, estado):
+        self._estado=estado
+
+    def setTipo(self, tipo):
+        self._tipo=tipo
+
+    def setCategoria(self, categoria):
+        self._categoria=categoria
+
+    def setPeso(self, peso):
+        self._peso=peso
+
+    def setCantidad(self, cantidad):
+        self._cantidad=cantidad
+
+    def setDevuelto(self, devuelto):
+        self._devuelto=devuelto
+
+    def __str__(self):
+        return f"ID: {self._id} - Nombre: {self._nombre} - Precio: {self._precio} - Estado: {self._estado} - Tipo: {self._tipo} - Categoría: {self._categoria} - Peso: {self._peso} - Cantidad: {self._cantidad} - Devuelto: {self._devuelto}"
