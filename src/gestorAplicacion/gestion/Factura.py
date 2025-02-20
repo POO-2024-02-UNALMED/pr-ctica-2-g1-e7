@@ -14,15 +14,15 @@ class Factura(IMostrarProductos):
         self._precioEnvio = precio_envio
 
         # Si ya existen más de dos facturas, se ordenan por fecha.
-        if len(Factura.listaFacturas) > 2:
+        if len(Factura.getListaFacturas()) > 2:
             Factura.ordenar_facturas_por_fecha()
 
         self._fecha = fecha
         self._total = self.calcularTotal()
 
         # Se incrementa el contador y se asigna el id
-        Factura.totalCreadas += 1
-        self._id = Factura.totalCreadas
+        Factura._totalCreadas += 1
+        self._id = Factura._totalCreadas
 
         # Se agrega la factura a la lista de facturas
         Factura._listaFacturas.append(self)
@@ -274,6 +274,7 @@ class Factura(IMostrarProductos):
     def setPrecioEnvio(self, precioEnvio):
         self._precioEnvio=precioEnvio
 
+
 #fecha = datetime.date(2024, 10, 2)
 #fecha2 = datetime.date(2024, 10, 5)
 #fecha3 = datetime.date(2024, 10, 8)
@@ -281,3 +282,8 @@ class Factura(IMostrarProductos):
 #f1 = Factura(tienda1, cliente1, transporte1, listaProductosTienda1, transporte1.tipo_transporte.precio_envio, fecha)
 #f2 = Factura(tienda2, csliente2, transporte2, listaProductosTienda2, transporte2.tipo_transporte.precio_envio, fecha2)
 #f3 = Factura(tienda2, cliente1, transporte3, listaProductosTienda3, transporte3.tipo_transporte.precio_envio, fecha3)
+
+    @staticmethod
+    def setTotalCreadas(cls, totalCreadas):
+        cls._totalCreadas=totalCreadas
+
