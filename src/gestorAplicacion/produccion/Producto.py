@@ -9,6 +9,7 @@ class Producto:
         "El producto no era lo que esperaba",
         "Otro motivo"
     ]
+    
 
     def __init__(self, *args, **kwargs):
 
@@ -108,38 +109,13 @@ class Producto:
     #getters: 
     def setMotivoDevolucion(self, motivoDevolucion): 
         self._motivoDevolucion=motivoDevolucion
-    def getPrecio(self): 
-        return self._precio
-    
-    def getNombre(self):
-        return self._nombre
-    
+
     def getEstado(self):
         return self._estado
-    
-    def getTipo(self):
-        return self._tipo
-    
-    def getCategoria(self):
-        return self._categoria
-    
-    def getPeso(self):
-        return self._peso
-    
-    def getCantidad(self):
-        return self._cantidad
     
     def getMotivoDevolucion(self):
         return self._motivoDevolucion
     
-    def getDevuelto(self):
-        return self._devuelto
-    
-    def getID(self):
-        return self._id
-    
-    #setters:
-
     def setPrecio(self, precio):
         self._precio=precio
 

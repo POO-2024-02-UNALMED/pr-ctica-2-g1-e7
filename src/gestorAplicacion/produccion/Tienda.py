@@ -213,37 +213,37 @@ class Tienda():
             Si conteoTemporal se proporciona, se usa en lugar del conteo normal.
             """
             # Limpiar listas antes de procesar
-            self.categorias = []
+            self._categorias = []
 
             # Lista de todas las categorías posibles
             todasLasCategorias = ["Herramientas", "Muebles", "Aseo"]
             
             # Inicializar las categorías
             for categoria in todasLasCategorias:
-                self.categorias.append(categoria)
+                self._categorias.append(categoria)
             
             # Si conteoTemporal no se proporciona, inicializar conteoCategorias
             if conteoTemporal is None:
-                self.conteoCategorias = []
-                self.conteoCategorias = [0] * len(self.categorias)
+                self._conteoCategorias = []
+                self._conteoCategorias = [0] * len(self._categorias)
 
                 # Contar productos por categoría
                 for producto in productos:
                     categoria = producto.getCategoria()  # Obtener la categoría
-                    if categoria in self.categorias:
-                        index = self.categorias.index(categoria)
-                        self.conteoCategorias[index] += 1
+                    if categoria in self._categorias:
+                        index = self._categorias.index(categoria)
+                        self._conteoCategorias[index] += 1
             else:
                 # Si conteoTemporal existe, solo asegurarse de que las categorías están en la lista
                 for producto in productos:
                     categoria = producto.getCategoria()
-                    if categoria not in self.categorias:
-                        self.categorias.append(categoria)
+                    if categoria not in self._categorias:
+                        self._categorias.append(categoria)
 
             # Construir el resultado
             resultado = ""
-            for i, categoria in enumerate(self.categorias):
-                conteo = self.conteoCategorias[i] if conteoTemporal is None else conteoTemporal[i]
+            for i, categoria in enumerate(self._categorias):
+                conteo = self._conteoCategorias[i] if conteoTemporal is None else conteoTemporal[i-1]
                 resultado += f"{categoria}: {conteo}/"
 
                 # Agregar la capacidad máxima correspondiente
@@ -259,7 +259,7 @@ class Tienda():
                 resultado += " productos\n"
             return resultado
     def getCantidadActualPorCategoria(self, categoria):
-            cantidad = sum(1 for producto in self._listaProducto if producto.getCategoria() == categoria)
+            cantidad = sum(1 for producto in self._listaProducto if producto.getCategorias() == categoria)
             return cantidad
     def cantidadProductos(self):
             """

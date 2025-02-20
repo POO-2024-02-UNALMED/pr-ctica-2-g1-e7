@@ -32,10 +32,10 @@ mi_tienda2 = Tienda(
 )
 
 
-Fabrica.listaTienda.append(mi_tienda2)
-Fabrica.productosDisponibles.append(producto10)
-Fabrica.productosDisponibles.append(producto11)
-Fabrica.productosDisponibles.append(producto12)
+Fabrica.getListaTienda().append(mi_tienda2)
+Fabrica.getProductosDisponibles().append(producto10)
+Fabrica.getProductosDisponibles().append(producto11)
+Fabrica.getProductosDisponibles().append(producto12)
     
 def main():
     salir = False
@@ -61,7 +61,7 @@ def main():
                     print("Saliendo...")
                     return
 
-                if 1 <= tiendaSeleccionadaIndex <= len(Fabrica.listaTienda):
+                if 1 <= tiendaSeleccionadaIndex <= len(Fabrica.getListaTienda()):
                     break  # Número válido, salir del bucle
                 else:
                     print(f"Número inválido. Ingrese un número entre 1 y {len(Fabrica.listaTienda)}.")
@@ -71,7 +71,7 @@ def main():
 
         confirmacionTienda = False
         while not confirmacionTienda:
-            tiendaSeleccionada = Fabrica.listaTienda[tiendaSeleccionadaIndex - 1]
+            tiendaSeleccionada = Fabrica.getListaTienda()[tiendaSeleccionadaIndex - 1]
             print(f"Tienda seleccionada: {tiendaSeleccionada.getNombre()}")
             print("¿Es correcta esta selección? (1 para sí, 2 para no)")
             print("1. Sí, proceder")
