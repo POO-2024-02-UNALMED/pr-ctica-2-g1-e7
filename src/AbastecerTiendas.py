@@ -7,7 +7,7 @@ from gestorAplicacion.produccion.Transporte import Transporte  # Importar la cla
 from gestorAplicacion.gestion.Conductor import Conductor  # Importar la clase Conductor
 from gestorAplicacion.gestion.Vendedor import Vendedor #prueba
 from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria#prueba
-
+import traceback
    
 def main():
     salir = False
@@ -145,6 +145,7 @@ def main():
                                         conteoCategoriasTemporal[2] += cantidadAEnviar
                             except Exception as e:
                                 print("Entrada inválida. Por favor, ingrese un número.")
+                                traceback.print_exc()
                 except Exception as e:
                     print("Entrada inválida. Por favor, ingrese un número.")
 
@@ -196,10 +197,10 @@ def main():
 
                     conductorSeleccionado = None
                     for conductor in Conductor.getListaConductores():
-                        if conductor.getTransporte().tipoTransporte == transporteSeleccionado:
+                        if conductor.getTransporte().getTipoTransporte == transporteSeleccionado:
                             conductorSeleccionado = conductor
                             break
-
+#error
                     if conductorSeleccionado is None:
                         print("No se encontró un conductor con el transporte seleccionado.")
                         transporteSeleccionado = None
@@ -244,6 +245,7 @@ def main():
                         continue
             except Exception as e:
                 print("Entrada inválida. Por favor, ingrese un número.")
+                traceback.print_exc()
 
         print("========================================")
         print("¿Desea volver al menú principal o realizar otro proceso de abastecer alguna tienda?")
