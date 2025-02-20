@@ -6,6 +6,21 @@ from gestorAplicacion.produccion.TipoTransporte import TipoTransporte  # Importa
 from gestorAplicacion.produccion.Transporte import Transporte  # Importar la clase Transporte
 from gestorAplicacion.gestion.Conductor import Conductor  # Importar la clase Conductor
 
+producto1 = Producto("Laptop", 1200, "Electrónico", "Tecnología", 2.5)
+producto2 = Producto("Teléfono", 800, "Electrónico", "Tecnología", 0.3)
+producto3 = Producto("Tablet", 500, "Electrónico", "Tecnología", 0.6)
+producto4 = Producto("Impresora", 200, "Electrónico", "Oficina", 5.0)
+producto5 = Producto("Monitor", 300, "Electrónico", "Tecnología", 4.0)
+
+mi_tienda = Tienda(
+nombre="Supermercado La Estrella",
+cuentaBancaria="9876543210",
+capacidadMaximaMaterial=100,
+capacidadMaximaConsumible=200,
+capacidadMaximaLimpieza=150)
+
+Fabrica.listaTienda.append(mi_tienda)
+    
 def main():
     salir = False
     
@@ -268,3 +283,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+ 
+
+

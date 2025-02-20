@@ -1,8 +1,8 @@
-from src.gestorAplicacion.gestion.Factura import Factura
-from src.gestorAplicacion.produccion.EstadoProducto import EstadosProducto
-from src.gestorAplicacion.produccion.Producto import Producto
-from src.gestorAplicacion.gestion.Cliente import Cliente
-from src.gestorAplicacion.produccion.Tienda import Tienda
+from gestorAplicacion.gestion.Factura import Factura
+from gestorAplicacion.produccion.EstadoProducto import EstadosProducto
+from gestorAplicacion.produccion.Producto import Producto
+from gestorAplicacion.gestion.Cliente import Cliente
+from gestorAplicacion.produccion.Tienda import Tienda
 
 def bienvenida():
     return "¡Bienvenido al sistema!\n\n Esta es la sección de mostrar estadísticas,\n en este, podras ver informaciones estadísticas detalladas, a partir de cualquier fecha dentro del margen de fechas de facturación.\n"
