@@ -1,5 +1,4 @@
 from datetime import datetime
-from gestorAplicacion.produccion.EstadoProducto import EstadosProducto
 from gestorAplicacion.gestion.IMostrarProductos import IMostrarProductos
 
 class Factura(IMostrarProductos):
@@ -8,11 +7,11 @@ class Factura(IMostrarProductos):
     listaFacturas = []
 
     def __init__(self, tienda, cliente, transporte, lista_productos: list, precio_envio: float, fecha: datetime):
-        self.tienda = tienda
-        self.cliente = cliente
-        self.transporte = transporte
-        self.listaProductos = lista_productos
-        self.precioEnvio = precio_envio
+        self._tienda = tienda
+        self._cliente = cliente
+        self._transporte = transporte
+        self._listaProductos = lista_productos
+        self._precioEnvio = precio_envio
 
         # Si ya existen más de dos facturas, se ordenan por fecha.
         if len(Factura.listaFacturas) > 2:
@@ -58,7 +57,7 @@ class Factura(IMostrarProductos):
     def calcularTotal(self): 
         from gestorAplicacion.produccion.Producto import Producto
         total=0
-        for producto in self.listaProductos: 
+        for producto in self._listaProductos: 
             total+=producto.getPrecio()
         return total
 
@@ -69,7 +68,7 @@ class Factura(IMostrarProductos):
         Funcionalidad a la que pertenece: Devoluciones
         Método que se encarga de verificar si todos los productos de una factura han sido devueltos o no.
         """
-        return all(p.estado == EstadosProducto.DEVUELTO for p in self.listaProductos)
+        return all(p.getDevuelto() for p in self._listaProductos)
     
     def seleccionarProducto(self, n: int):
         """
@@ -216,6 +215,8 @@ class Factura(IMostrarProductos):
 
     #getters y setters
     def getCliente(self): 
-        return self.cliente
+        return self._cliente
     def getListaProductos(self): 
-        return self.listaProductos
+        return self._listaProductos
+    def getTienda(self): 
+        return self._tienda

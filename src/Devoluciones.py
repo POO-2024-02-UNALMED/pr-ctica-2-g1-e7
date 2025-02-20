@@ -6,23 +6,22 @@ from gestorAplicacion.gestion.Operario import Operario
 from gestorAplicacion.gestion.Factura import Factura
 from gestorAplicacion.gestion.Vendedor import Vendedor
 from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
-from gestorAplicacion.produccion.EstadoProducto import EstadosProducto
 import tkinter as tk
 from tkinter import ttk, messagebox
 from datetime import datetime
 import time 
 
 # 🔹 CREACIÓN DE OBJETOS NECESARIOS PARA LA FUNCIONALIDAD
-p1=Producto("a",12,"dispo","venta","si",12)
-p2=Producto("a",12,"dispo","venta","si",12)
-p3=Producto("a",12,"dispo","venta","si",12)
-p4=Producto("a",12,"dispo","venta","si",12)
-p5=Producto("a",12,"dispo","venta","si",12)
-p6=Producto("a",12,"dispo","venta","si",12)
-p7=Producto("a",12,"dispo","venta","si",12)
-p8=Producto("a",12,"dispo","venta","si",12)
-p9=Producto("a",12,"dispo","venta","si",12)
-p0=Producto("a",12,"dispo","venta","si",12)
+p1=Producto("a",12,"venta","si",12)
+p2=Producto("a",12,"venta","si",12)
+p3=Producto("a",12,"venta","si",12)
+p4=Producto("a",12,"venta","si",12)
+p5=Producto("a",12,"venta","si",12)
+p6=Producto("a",12,"venta","si",12)
+p7=Producto("a",12,"venta","si",12)
+p8=Producto("a",12,"venta","si",12)
+p9=Producto("a",12,"venta","si",12)
+p0=Producto("a",12,"venta","si",12)
 
 listaProductos=[p1,p2,p3]
 tienda=Tienda("tienda 1",Vendedor("juan",123,12,CuentaBancaria(124,1000000)),CuentaBancaria(12,100000),10,10,10)
@@ -43,7 +42,7 @@ def devoluciones():
 
         # Mostrar las facturas disponibles
         for i, factura in enumerate(Factura.listaFacturas):
-            print(f"{i+1}. Factura ID: {factura.id}, Cliente: {factura.cliente.getNombre()}")
+            print(f"{i+1}. Factura ID: {factura.id}, Cliente: {factura.getCliente().getNombre()}")
 
         try:
             opcion = int(input("Ingrese una opción: "))
@@ -57,7 +56,7 @@ def devoluciones():
 
         if 1 <= opcion <= len(Factura.listaFacturas):
             factura:Factura = Factura.listaFacturas[opcion - 1]
-            tienda = factura.tienda
+            tienda:Tienda = factura.getTienda()
 
             while True:
                 print("\nSeleccione el producto que desea devolver o presione 0 para regresar al menú anterior:")
@@ -76,25 +75,24 @@ def devoluciones():
                     print("Regresando al menú de facturas.")
                     break
 
-                if 1 <= opcion2 <= len(factura.listaProductos):
+                if 1 <= opcion2 <= len(factura.getListaProductos()):
                     if factura.todosDevueltos():  
                         print("Todos los productos de esta factura ya han sido devueltos.")
                         break
 
-                    producto = factura.listaProductos[opcion2 - 1]
+                    producto:Producto = factura.getListaProductos()[opcion2 - 1]
 
-                    if producto.estado ==EstadosProducto.DEVUELTO:
+                    if producto.getDevuelto():
                         print("El producto ya ha sido devuelto, elija otro.")
                     else:
-                        print(f"Eligió el producto: {producto.nombre}")
+                        print(f"Eligió el producto: {producto.getNombre()}")
                         print("Indique el motivo de la devolución:")
                         
                         # Mostrar los motivos de devolución
                         print("\nMotivos de devolución:")
-                        motivos = Producto.motivosDevolucion
+                        motivos = Producto.getMotivosDevolucion()
                         for i, motivo in enumerate(motivos, 1):
                             print(f"{i}. {motivo}")
-                        print(f"{len(motivos) + 1}. Otro (especificar)")
 
                         try:
                             motivoDevolucion = int(input("Ingrese una opción: "))
@@ -103,11 +101,11 @@ def devoluciones():
                             continue
 
                         if 1 <= motivoDevolucion <= len(motivos):
-                            producto.motivo_devolucion = motivos[motivoDevolucion - 1]
+                            producto.setMotivoDevolucion(motivos[motivoDevolucion-1])
                         elif motivoDevolucion == len(motivos) + 1:
                             motivo = input("Especifique su causa de la devolución: ")
-                            producto.motivo_devolucion = motivo
-                            Producto.motivosDevolucion.append(motivo)
+                            producto.setMotivoDevolucion(motivo)
+                            Producto.getMotivosDevolucion().append(motivo)
                         else:
                             print("Motivo de devolución inválido. Intente nuevamente.")
                             continue
@@ -115,11 +113,11 @@ def devoluciones():
                         # Procesar reembolso si aplica
                         if motivoDevolucion in [1, 2, 3]:
                             print("Por el motivo indicado, se le hará el reembolso del dinero.")
-                            cliente = tienda.devolverProducto(factura, producto)
+                            cliente:Cliente = tienda.devolverProducto(factura, producto)
                             valorADevolver = Fabrica.descontarDineroCuenta(producto)
                             Fabrica.cuentaBancaria.devolverDinero(valorADevolver, cliente)
                             cliente.removerProducto(producto)
-                            print(f"Se le devolverá el valor de su producto: ${producto.precio}")
+                            print(f"Se le devolverá el valor de su producto: ${producto.getPrecio()}")
                             print("----Devolviendo el dinero...----")
                             time.sleep(2)
                             print("El producto ha sido devuelto exitosamente y se ha reembolsado su dinero.")

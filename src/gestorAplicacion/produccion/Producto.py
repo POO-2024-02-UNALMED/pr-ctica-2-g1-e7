@@ -2,9 +2,9 @@ class Producto:
     totalCreados = 0
     listaProductos = []
     motivosDevolucion = [
-        "No llego a tiempo",
-        "Llego en mal estado",
-        "Se envio el producto equivocado",
+        "No llegó a tiempo",
+        "Llegó en mal estado",
+        "Se envió el producto equivocado",
         "El cliente cambió de opinión con la compra",
         "El producto no era lo que esperaba",
         "Otro motivo"
@@ -14,62 +14,58 @@ class Producto:
         """
         Se pueden utilizar tres formas de construcción:
           1. Constructor posicional: 
-             Producto(nombre, precio, estado, tipo, categoria, peso)
+             Producto(nombre, precio, tipo, categoria, peso, cantidad)
           2. Constructor con palabras clave.
           3. Constructor de copia: Producto(otro_producto) donde otro_producto es una instancia de Producto.
           4. Constructor vacío: sin parámetros, solo incrementa el contador.
         """
-        # Constructor de copia
-        if len(args) == 1 and isinstance(args[0], Producto):
+
+        if len(args) == 1 and isinstance(args[0], Producto):  # 🔹 Constructor de copia
             producto = args[0]
             self.__nombre = producto.__nombre
-            self.__precio = producto.__precio
-            self.__estado = producto.__estado
+            self._precio = producto._precio  
             self.__tipo = producto.__tipo
             self.__categoria = producto.__categoria
             self.__peso = producto.__peso
             self.__cantidad = getattr(producto, "__cantidad", 0)
             self.__motivoDevolucion = producto.__motivoDevolucion
-            self.__devuelto = producto.__devuelto
+            self._devuelto = producto.__devuelto
             self.__id = Producto.totalCreados
-            Producto.listaProductos.append(self)
-            Producto.totalCreados += 1
-        # Constructor con parámetros posicionales (6 argumentos)
-        elif len(args) == 6:
+
+        elif len(args) == 5:  # 🔹 Constructor con parámetros posicionales
             self.__nombre = args[0]
-            self.__precio = args[1]
-            self.__estado = args[2]  
-            self.__tipo = args[3]
-            self.__categoria = args[4]
-            self.__peso = args[5]
+            self._precio = args[1]  
+            self.__tipo = args[2]
+            self.__categoria = args[3]
+            self.__peso = args[4]
             self.__cantidad = 0
             self.__motivoDevolucion = None
-            self.__devuelto = False
+            self._devuelto = False
             self.__id = Producto.totalCreados
-            Producto.listaProductos.append(self)
-            Producto.totalCreados += 1
-        # Constructor con parámetros por palabra clave
-        elif kwargs:
+
+        elif kwargs:  # 🔹 Constructor con palabras clave
             try:
                 self.__nombre = kwargs['nombre']
-                self.__precio = kwargs['precio']
-                self.__estado = kwargs['estado']
+                self._precio = kwargs['precio']  # ✅ CORREGIDO
                 self.__tipo = kwargs['tipo']
                 self.__categoria = kwargs['categoria']
                 self.__peso = kwargs['peso']
             except KeyError as e:
                 raise ValueError(f"Falta el parámetro requerido: {e}")
-            self.__cantidad = 0
+
+            self.__cantidad = kwargs.get('cantidad', 0)
             self.__motivoDevolucion = None
-            self.__devuelto = False
+            self._devuelto = False
             self.__id = Producto.totalCreados
-            Producto.listaProductos.append(self)
-            Producto.totalCreados += 1
-        else:
-            # Constructor vacío
+
+        else:  # 🔹 Constructor vacío
             self.__id = Producto.totalCreados
-            Producto.totalCreados += 1
-    
+
+        # Agregar a la lista de productos y aumentar el contador total
+        Producto.listaProductos.append(self)
+        Producto.totalCreados += 1
+
+
 
     @staticmethod
     def mostrarMotivosDeDevolucion() -> str:
@@ -89,16 +85,13 @@ class Producto:
     
 
 
-    #getters y setters: 
-    def setMotivoDevolucion(self, motivoDevolucion): 
-        self.motivoDevolucion=motivoDevolucion
+
     #getters
     def getNombre(self): 
         return self.__nombre
-    def getPrecio(self): 
-        return self.__precio
-    def getEstado(self): 
-        return self.__estado
+    
+    def getPrecio(self):
+        return self._precio  
     def getTipo(self): 
         return self.__tipo
     def getCategoria(self): 
@@ -110,17 +103,18 @@ class Producto:
     def getMotivoDevolucion(self): 
         return self.__motivoDevolucion
     def getDevuelto(self): 
-        return self.__devuelto
+        return self._devuelto
     def getId(self): 
         return self.__id
+    @classmethod
+    def getMotivosDevolucion(cls): 
+        return cls.motivosDevolucion
 
     # Setters
     def setNombre(self, nombre):
         self.__nombre = nombre
     def setPrecio(self, precio):
-        self.__precio = precio
-    def setEstado(self, estado): 
-        self.__estado = estado
+        self._precio = precio
     def setTipo(self, tipo): 
         self.__tipo = tipo
     def setCategoria(self, categoria): 
@@ -132,4 +126,7 @@ class Producto:
     def setMotivoDevolucion(self, motivo): 
         self.__motivoDevolucion = motivo
     def setDevuelto(self, devuelto): 
-        self.__devuelto = devuelto
+        self._devuelto = devuelto
+    @classmethod
+    def setMotivosDevolucion(cls,motivos): 
+        cls.motivosDevolucion=motivos

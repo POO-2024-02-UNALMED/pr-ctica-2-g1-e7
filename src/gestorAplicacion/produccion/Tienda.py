@@ -99,15 +99,14 @@ class Tienda():
         from gestorAplicacion.produccion.Producto import Producto
         producto: Producto = producto
         from gestorAplicacion.gestion.Factura import Factura
-        from gestorAplicacion.produccion.EstadoProducto import EstadosProducto
         factura: Factura = factura
         """
         Funcionalidad a la que pertenece: Devoluciones
         Método que se encarga de procesar la devolución de un producto.
         """
         self.__listaProducto.append(producto)
-        producto.estado = EstadosProducto.DEVUELTO
-        return factura.cliente 
+        producto.setDevuelto(True)
+        return factura.getCliente() 
 
     
     def mostrarProductos(self, producto):

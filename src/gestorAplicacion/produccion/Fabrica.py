@@ -51,11 +51,11 @@ class Fabrica:
         if Fabrica.cuentaBancaria is None:
             raise ValueError("Error: La fábrica no tiene una cuenta bancaria registrada.")
         
-        if producto.precio is None:
+        if producto.getPrecio() is None:
             raise ValueError("Error: El producto no tiene un precio definido.")
 
-        Fabrica.cuentaBancaria.setSaldo(Fabrica.cuentaBancaria.getSaldo() - producto.precio)
-        return producto.precio
+        Fabrica.cuentaBancaria.setSaldo(Fabrica.cuentaBancaria.getSaldo() - producto.getPrecio())
+        return producto.getPrecio()
 
     @staticmethod
     def calcularExcedente(productos, valor: float) -> float:
@@ -114,6 +114,9 @@ class Fabrica:
         return [Producto(producto.nombre, producto.precio, producto.estado, 
                          producto.tipo, producto.categoria, producto.peso) 
                 for _ in range(cantidad_a_enviar)]
+    
+
+"""""
 mi_vendedor = Vendedor("Juan Pérez", 123456789, 30, "1234567890")
 mi_tienda = Tienda(
     nombre="Supermercado La Estrella",
@@ -144,4 +147,4 @@ mi_tienda.agregarProducto(producto5)
 mi_tienda.agregarProducto(producto6)
 mi_tienda.agregarProducto(producto7)
 mi_tienda.agregarProducto(producto8)
-
+"""""
