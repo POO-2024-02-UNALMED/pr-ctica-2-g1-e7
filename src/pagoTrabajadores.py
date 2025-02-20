@@ -163,7 +163,7 @@ def pagoTrabajadores():
                 break
                     
         while True:
-                print("\n¿Qué desea hacer? \n1. Pagar a otro trabajador de la misma categoría. \n2. Volver a elegir tipo de trabajador. \n0. Volver al menú principal.")
+                print("\n¿Qué desea hacer? \n1. Pagar a otro trabajador. \n0. Volver al menú principal.")
                 opcionPT4 = input("» ")
                 
                 if not opcionPT4.isdigit():
@@ -172,8 +172,6 @@ def pagoTrabajadores():
                 
                 opcionPT4 = int(opcionPT4)
                 if opcionPT4 == 1:
-                    continue
-                elif opcionPT4 == 2:
                     break
                 elif opcionPT4 == 0:
                     print("Volviendo al menú principal.")
