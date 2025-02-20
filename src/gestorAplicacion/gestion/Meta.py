@@ -48,3 +48,21 @@ class Meta:
     
     def setPago(self, pago: float):
         self._pago = pago
+
+# Instancias estáticas de las metas para operario
+metaOperario1 = Meta("Facil", 5, 10000)
+metaOperario2 = Meta("Normal", 10, 17000)
+metaOperario3 = Meta("Dificil", 15, 25000)
+metaOperario4 = Meta("Muy Dificil", 20, 35000)
+
+# Instancias estáticas de las metas para Vendedor
+metaVendedor1 = Meta("Facil", 5, 9000)
+metaVendedor2 = Meta("Normal", 10, 15000)
+metaVendedor3 = Meta("Dificil", 15, 22000)
+metaVendedor4 = Meta("Muy Dificil", 20, 30000)
+
+# Instancias estáticas de las metas para conductor
+metaConductor1 = Meta("Facil", 30, 8000)
+metaConductor2 = Meta("Normal", 50, 13500)
+metaConductor3 = Meta("Dificil", 60, 21000)
+metaConductor4 = Meta("Muy Dificil", 100, 28500)

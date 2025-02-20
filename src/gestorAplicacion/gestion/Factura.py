@@ -274,4 +274,10 @@ class Factura(IMostrarProductos):
     def setPrecioEnvio(self, precioEnvio):
         self._precioEnvio=precioEnvio
 
-    
+#fecha = datetime.date(2024, 10, 2)
+#fecha2 = datetime.date(2024, 10, 5)
+#fecha3 = datetime.date(2024, 10, 8)
+
+#f1 = Factura(tienda1, cliente1, transporte1, listaProductosTienda1, transporte1.tipo_transporte.precio_envio, fecha)
+#f2 = Factura(tienda2, csliente2, transporte2, listaProductosTienda2, transporte2.tipo_transporte.precio_envio, fecha2)
+#f3 = Factura(tienda2, cliente1, transporte3, listaProductosTienda3, transporte3.tipo_transporte.precio_envio, fecha3)

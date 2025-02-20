@@ -8,6 +8,7 @@ class Tienda():
     def __init__(self, nombre=None, vendedor=None, cuentaBancaria=None,
                  capacidadMaximaMaterial=None, capacidadMaximaConsumible=None,
                  capacidadMaximaLimpieza=None):
+        from gestorAplicacion.produccion.Fabrica import Fabrica
 
         if all(param is not None for param in [nombre, vendedor, cuentaBancaria,
                                                capacidadMaximaMaterial, capacidadMaximaConsumible,
@@ -29,6 +30,8 @@ class Tienda():
             self._productosPorCategoria = []
             self._categorias = []
             self._conteoCategorias = []
+
+
 
     # Getters
     def getNombre(self):

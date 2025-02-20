@@ -73,8 +73,8 @@ def enviar_pedidos():
                     print("\nSaliendo...")
                     time.sleep(2)
                     return
-                elif 0 < opcion <= len(Fabrica.listaTienda): #llamar el atriburo listaTienda de la clase fabrica
-                    tiendaSeleccionada = Fabrica.listaTienda[opcion - 1]#llamar el atriburo listaTienda de la clase fabrica
+                elif 0 < opcion <= len(Fabrica.getListaTienda()): #llamar el atriburo listaTienda de la clase fabrica
+                    tiendaSeleccionada = Fabrica.getListaTienda()[opcion - 1]#llamar el atriburo listaTienda de la clase fabrica
                     break  # Tienda seleccionada correctamente
                 else:
                     print("\nNúmero fuera de rango. Por favor, elija una tienda válida.")
@@ -267,10 +267,10 @@ def enviar_pedidos():
         time.sleep(1)  # Pausa de 1000 milisegundos (1 segundo)
         print("\n¡Factura creada con éxito! A continuación, se mostrará la factura:\n")
         print(tiendaSeleccionada.enviarPedido(listaProductosPedidos,
-                                                transporteSeleccionado,
-                                                clienteSeleccionado,
-                                                precioEnvio,
-                                                fechaVenta))
+                                      transporteSeleccionado,
+                                      clienteSeleccionado,
+                                      precioEnvio,
+                                      fechaVenta))  
 
         # Aumentar la carga de trabajo del vendedor y conductor
         tiendaSeleccionada.getVendedor().aumentarCargaTrabajo()

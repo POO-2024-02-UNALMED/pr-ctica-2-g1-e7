@@ -81,5 +81,20 @@ class Cliente:
         """
         if producto in self.__listaProductos:
             self.__listaProductos.remove(producto)
+            
+from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
 
-cliente1 = Cliente(nombre="Juan Pérez", edad=30, cedula="12345678", cuentaBancaria="987654321")
+
+cuentaCliente1 = CuentaBancaria(10001, 5000)
+cuentaCliente2 = CuentaBancaria(10002, 15000)
+cuentaCliente3 = CuentaBancaria(10003, 8000)
+cuentaCliente4 = CuentaBancaria(10004, 2000)
+cuentaCliente5 = CuentaBancaria(10005, 12000)
+
+cliente1 = Cliente("Juan Pérez", 30, 987654321, cuentaCliente1)
+cliente2 = Cliente("María López", 25, 123456789, cuentaCliente2)
+cliente3 = Cliente("Carlos García", 40, 567890123, cuentaCliente3)
+cliente4 = Cliente("Ana Rodríguez", 35, 654321987, cuentaCliente4)
+cliente5 = Cliente("Luis Fernández", 28, 192837465, cuentaCliente5)
+
+
