@@ -6,12 +6,12 @@ class Persona(ABC):
     listaPersonas = []
     
     def __init__(self, nombre: str, cedula: int, edad: int, cuenta_bancaria):
-        self.__nombre = nombre
-        self.__cedula = cedula
-        self.__edad = edad
-        self.__cuentaBancaria = cuenta_bancaria
-        self.__cantidadTrabajo = 0
-        self.__indiceMeta = 0
+        self._nombre = nombre
+        self._cedula = cedula
+        self._edad = edad
+        self._cuentaBancaria = cuenta_bancaria
+        self._cantidadTrabajo = 0
+        self._indiceMeta = 0
         
         Persona.personasTotales += 1
         Persona.listaPersonas.append(self)
@@ -30,41 +30,41 @@ class Persona(ABC):
     
     # Getters y Setters
     def getNombre(self) -> str:
-        return self.__nombre
+        return self._nombre
     
     def setNombre(self, nombre: str):
-        self.__nombre = nombre
+        self._nombre = nombre
     
     def getCedula(self) -> int:
-        return self.__cedula
+        return self._cedula
     
     def setCedula(self, cedula: int):
-        self.__cedula = cedula
+        self._cedula = cedula
     
     def getEdad(self) -> int:
-        return self.__edad
+        return self._edad
     
     def setEdad(self, edad: int):
-        self.__edad = edad
+        self._edad = edad
     
     def getCantidadTrabajo(self) -> int:
-        return self.__cantidadTrabajo
+        return self._cantidadTrabajo
     
     def setCantidadTrabajo(self, cantidad_trabajo: int):
-        self.__cantidadTrabajo = cantidad_trabajo
+        self._cantidadTrabajo = cantidad_trabajo
     
     def getCuentaBancaria(self):
-        return self.__cuentaBancaria
+        return self._cuentaBancaria
     
     def setCuentaBancaria(self, cuenta_bancaria):
-        self.__cuentaBancaria = cuenta_bancaria
+        self._cuentaBancaria = cuenta_bancaria
     
     @classmethod
     def getSalarioBase(cls) -> int:
         return cls.SALARIO_BASE
     
     def getIndiceMeta(self) -> float:
-        return self.__indiceMeta
+        return self._indiceMeta
     
     def setIndiceMeta(self, indice_meta: float):
         self.indice_meta = indice_meta
