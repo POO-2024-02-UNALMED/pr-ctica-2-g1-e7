@@ -1,5 +1,6 @@
 class Fabrica:
     # Atributos estáticos compartidos por todas las instancias
+    listaFabrica =[]
     _cuentaBancaria = None
     _listaTienda = []
     _productosDisponibles = []
@@ -10,6 +11,7 @@ class Fabrica:
         self.idFabrica = idFabrica
         self.nombre = nombre
         self.direccion = direccion
+        Fabrica.listaFabrica.append(self)
 
         # Modificar atributos estáticos correctamente
         if cuentaBancariaFabrica is not None:
@@ -134,7 +136,7 @@ class Fabrica:
         return [Producto(producto.nombre, producto.precio, producto.estado,
                          producto.tipo, producto.categoria, producto.peso)
                 for _ in range(cantidad_a_enviar)]
-
+"""
 import datetime
 from gestorAplicacion.gestion.Vendedor import Vendedor
 from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
@@ -401,4 +403,4 @@ conductor9.setCantidadTrabajo(13)
 conductor9.setIndiceMeta(50)
 
 conductor10.setCantidadTrabajo(6)
-conductor10.setIndiceMeta(18)
+conductor10.setIndiceMeta(18)"""

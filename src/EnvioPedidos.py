@@ -7,6 +7,7 @@ from gestorAplicacion.produccion.TipoTransporte import TipoTransporte
 from gestorAplicacion.gestion.Cliente import Cliente
 from gestorAplicacion.produccion.Producto import Producto
 from gestorAplicacion.gestion.Conductor import Conductor
+from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
 
 def enviar_pedidos():
     while True:
@@ -286,9 +287,10 @@ def enviar_pedidos():
         # Mensaje final
         print("¡Genial! 🎉 Los productos han sido enviados con éxito.")
         print("Si desea volver al menú principal, ingrese 1.")
+
         opcion_salir = 0
 
-        while opcion_salir != 1:
+        """while opcion_salir != 1:
             print("\n» ", end="")
             opcion_salir = int(input())
             if opcion_salir == 1:
@@ -297,6 +299,7 @@ def enviar_pedidos():
                 return  # Sale del método, pero no del ciclo principal
             else:
                 print("Opción no válida. ¡Intenta de nuevo! 🤔")
-                print("Si desea volver al menú principal, ingrese 1.")
+                print("Si desea volver al menú principal, ingrese 1.")"""
+ 
 
 enviar_pedidos()

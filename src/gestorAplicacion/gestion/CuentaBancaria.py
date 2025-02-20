@@ -1,7 +1,9 @@
 class CuentaBancaria:
+    listaCuentasBancarias=[]
     def __init__(self, numeroCuenta, saldo=0):
         self._numeroCuenta = numeroCuenta
         self._saldo = saldo
+        CuentaBancaria.listaCuentasBancarias.append(self)
         
     def calcularPago(self, persona):
         tipoPersona = type(persona).__name__  # Obtiene el nombre de la clase como string
