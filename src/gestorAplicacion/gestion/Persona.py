@@ -67,7 +67,7 @@ class Persona(ABC):
         return self._indiceMeta
     
     def setIndiceMeta(self, indice_meta: float):
-        self.indice_meta = indice_meta
+        self._indiceMeta = indice_meta
     
     @classmethod
     def getPersonasTotales(cls) -> int:

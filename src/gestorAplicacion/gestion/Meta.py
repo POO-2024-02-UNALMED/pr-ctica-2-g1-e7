@@ -3,7 +3,7 @@ class Meta:
         self._nivelDeDificultad = nivel_de_dificultad
         self._indice = indice
         self._pago = pago
-        self._rificador = False
+        self._verificador = False
     
     def cumpleMeta(self, indice_de_trabajo: float) -> bool:
         return self._indice <= indice_de_trabajo
