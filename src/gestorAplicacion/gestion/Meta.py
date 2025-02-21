@@ -1,10 +1,12 @@
 class Meta:
+    listaMetas=[]
     def __init__(self, nivel_de_dificultad: str, indice: float, pago: float):
         self._nivelDeDificultad = nivel_de_dificultad
         self._indice = indice
         self._pago = pago
         self._verificador = False
-    
+        Meta.listaMetas.append(self)   
+
     def cumpleMeta(self, indice_de_trabajo: float) -> bool:
         return self._indice <= indice_de_trabajo
     

@@ -66,23 +66,7 @@ class Conductor(Persona):
     
     def setLicencia(self, licencia: str):
         self._licencia = licencia
-transporte1 = Transporte(TipoTransporte.CAMION, 16000, 15000)
-transporte2 = Transporte(TipoTransporte.AVION, 60000, 30000)
-transporte3 = Transporte(TipoTransporte.BICICLETA, 30, 5000)
-transporte4 = Transporte(TipoTransporte.PATINES, 15, 3000)
-transporte5 = Transporte(TipoTransporte.BARCO, 100000, 20000)
-transporte6 = Transporte(TipoTransporte.HELICOPTERO, 5000, 70000)
-transporte7 = Transporte(TipoTransporte.TREN, 50000, 20000)
-transporte8 = Transporte(TipoTransporte.AUTOMOVIL, 400, 9000)
-transporte9 = Transporte(TipoTransporte.CAMIONETA, 600, 12000)
 
-# Crear conductores individualmente y asignarlos a transportes
-conductor1 = Conductor("Juan Pérez", 12345678, 35, "123-456-789", "Fábrica X", transporte1, "Licencia A")
-conductor2 = Conductor("María Gómez", 87654321, 40, "987-654-321", "Fábrica Y", transporte2, "Licencia B")
-conductor3 = Conductor("Carlos Rodríguez", 11223344, 29, "112-233-445", "Fábrica Z", transporte3, "Licencia C")
-conductor4 = Conductor("Laura Sánchez", 55667788, 33, "556-677-889", "Fábrica W", transporte4, "Licencia D")
-conductor5 = Conductor("Andrés Ramírez", 99887766, 45, "998-877-665", "Fábrica V", transporte5, "Licencia E")
-conductor6 = Conductor("Sofía Herrera", 33445566, 38, "334-455-667", "Fábrica U", transporte6, "Licencia F")
-conductor7 = Conductor("Ricardo Torres", 77889900, 42, "778-899-001", "Fábrica T", transporte7, "Licencia G")
-conductor8 = Conductor("Valeria Martínez", 44332211, 31, "443-322-110", "Fábrica S", transporte8, "Licencia H")
-conductor9 = Conductor("Gabriel Castillo", 66554433, 27, "665-544-332", "Fábrica R", transporte9, "Licencia I")
+from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
+from gestorAplicacion.gestion.Meta import Meta
+

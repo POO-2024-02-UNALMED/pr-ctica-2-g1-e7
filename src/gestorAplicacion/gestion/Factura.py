@@ -3,8 +3,8 @@ from gestorAplicacion.gestion.IMostrarProductos import IMostrarProductos
 
 class Factura(IMostrarProductos):
     # Variables de clase (atributos estáticos)
-    _totalCreadas = 0
-    _listaFacturas = []
+    totalCreadas = 0
+    listaFacturas = []
 
     def __init__(self, tienda, cliente, transporte, lista_productos: list, precio_envio: float, fecha: datetime):
         self._tienda = tienda
@@ -14,7 +14,7 @@ class Factura(IMostrarProductos):
         self._precioEnvio = precio_envio
 
         # Si ya existen más de dos facturas, se ordenan por fecha.
-        if len(Factura.listaFacturas) > 2:
+        if len(Factura.getListaFacturas()) > 2:
             Factura.ordenar_facturas_por_fecha()
 
         self._fecha = fecha
@@ -25,7 +25,7 @@ class Factura(IMostrarProductos):
         self._id = Factura.totalCreadas
 
         # Se agrega la factura a la lista de facturas
-        Factura._listaFacturas.append(self)
+        Factura.listaFacturas.append(self)
 
     
     @classmethod
@@ -34,28 +34,27 @@ class Factura(IMostrarProductos):
         Método que ordena la lista de facturas (lista_facturas) utilizando
         el algoritmo de la burbuja, comparando la propiedad 'fecha'.
         """
-        n = len(cls._listaFacturas)
+        n = len(cls.listaFacturas)
         for i in range(n - 1):
             for j in range(n - i - 1):
-                if cls._listaFacturas[j].fecha > cls.lista_facturas[j + 1].fecha:
+                if cls.listaFacturas[j].fecha > cls.lista_facturas[j + 1].fecha:
                     # Intercambio de posiciones
-                    cls._listaFacturas[j], cls.lista_facturas[j + 1] = cls.lista_facturas[j + 1], cls.lista_facturas[j]
+                    cls.listaFacturas[j], cls.lista_facturas[j + 1] = cls.lista_facturas[j + 1], cls.lista_facturas[j]
 
     @classmethod
     def mostrarFacturas(cls): 
         string=""
         n=1
-        for factura in Factura._listaFacturas: 
+        for factura in Factura.listaFacturas: 
             string+= str(n),". ", factura.getCliente().getNombre(), "ID: ", factura.getID() 
             n+=1
         return string 
     
     @classmethod
     def seleccionarFactura(cls,num:int):
-        return cls._listaFacturas[num-1] 
+        return cls.listaFacturas[num-1] 
     
     def calcularTotal(self): 
-        from gestorAplicacion.produccion.Producto import Producto
         total=0
         for producto in self._listaProductos: 
             total+=producto.getPrecio()
@@ -91,13 +90,13 @@ class Factura(IMostrarProductos):
         """
         Método que obtiene la fecha mínima de la factura.
         """
-        return min(f.getFecha() for f in self._listaFacturas)
+        return min(f.getFecha() for f in self.listaFacturas)
     
     def getFechaMaxima(self) -> datetime:
         """
         Método que obtiene la fecha máxima de la factura.
         """
-        return max(f.getFecha() for f in self._listaFacturas)
+        return max(f.getFecha() for f in self.listaFacturas)
     
     def getFacturasEntreFechas(self, fecha_min: datetime, fecha_max: datetime):
         """
@@ -186,10 +185,10 @@ class Factura(IMostrarProductos):
         factura.append("=====================================\n")
 
         # Encabezado del cliente y detalles
-        factura.append(f"| ID Factura: {self.id:<24} |\n")
+        factura.append(f"| ID Factura: {self._id:<24} |\n")
         factura.append(f"| Cliente: {self._cliente.getNombre():<26} |\n")
         factura.append(f"| Cédula: {self._cliente.getCedula():<26} |\n")
-        factura.append(f"| Fecha: {self.fecha.strftime('%Y-%m-%d'):<28} |\n")
+        factura.append(f"| Fecha: {self._fecha.strftime('%Y-%m-%d'):<28} |\n")
         factura.append(f"| Transporte: {self._transporte.getTipoTransporte().getNombre():<22} |\n")
         factura.append("========================================================\n")
 
@@ -242,11 +241,11 @@ class Factura(IMostrarProductos):
     
     @staticmethod
     def getListaFacturas():
-        return Factura._listaFacturas
+        return Factura.listaFacturas
     
     @staticmethod
     def getTotalCreadas():
-        return Factura._totalCreadas
+        return Factura.totalCreadas
     
 
     #setters:
@@ -274,4 +273,6 @@ class Factura(IMostrarProductos):
     def setPrecioEnvio(self, precioEnvio):
         self._precioEnvio=precioEnvio
 
-    
+    @staticmethod
+    def setTotalCreadas(cls, totalCreadas):
+        cls.totalCreadas=totalCreadas

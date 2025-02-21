@@ -8,6 +8,7 @@ class Tienda():
     def __init__(self, nombre=None, vendedor=None, cuentaBancaria=None,
                  capacidadMaximaMaterial=None, capacidadMaximaConsumible=None,
                  capacidadMaximaLimpieza=None):
+        from gestorAplicacion.produccion.Fabrica import Fabrica
 
         if all(param is not None for param in [nombre, vendedor, cuentaBancaria,
                                                capacidadMaximaMaterial, capacidadMaximaConsumible,
@@ -29,6 +30,8 @@ class Tienda():
             self._productosPorCategoria = []
             self._categorias = []
             self._conteoCategorias = []
+
+
 
     # Getters
     def getNombre(self):
@@ -258,8 +261,9 @@ class Tienda():
 
                 resultado += " productos\n"
             return resultado
+    #falla aqui la actualizacion de productos por categoria
     def getCantidadActualPorCategoria(self, categoria):
-            cantidad = sum(1 for producto in self._listaProducto if producto.getCategorias() == categoria)
+            cantidad = sum(1 for producto in self._listaProducto if producto.getCategoria() == categoria)
             return cantidad
     def cantidadProductos(self):
             """

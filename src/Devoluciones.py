@@ -43,7 +43,7 @@ def devoluciones():
 
         # Mostrar las facturas disponibles
         for i, factura in enumerate(Factura.listaFacturas):
-            print(f"{i+1}. Factura ID: {factura.id}, Cliente: {factura.getCliente().getNombre()}")
+            print(f"{i+1}. Factura ID: {factura.getID()}, Cliente: {factura.getCliente().getNombre()}")
 
         try:
             opcion = int(input("Ingrese una opción: "))

@@ -7,36 +7,8 @@ from gestorAplicacion.produccion.Transporte import Transporte  # Importar la cla
 from gestorAplicacion.gestion.Conductor import Conductor  # Importar la clase Conductor
 from gestorAplicacion.gestion.Vendedor import Vendedor #prueba
 from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria#prueba
-
-cuentaBancaria2=CuentaBancaria(1002 , 10002)
-
-mi_vendedor2 = Vendedor("Juan Pablo", 1037121919, 20, cuentaBancaria2)
-
-
-producto10 = Producto("Laptop", 3000, "Nuevo", "Electrónica", 2.5)
-producto11= Producto("Laptop", 3000, "Nuevo", "Electrónica", 2.5)
-producto12 = Producto("Teléfono", 1000, "Usado", "Electrónica", 0.3)
-producto13= Producto("Mesa", 500, "Nuevo", "Muebles", 20.0)
-producto14= Producto("Mesa", 500, "Nuevo", "Muebles", 20.0)
-producto15= Producto("Audífonos", 200, "Nuevo", "Electrónica", 0.2)
-product16= Producto("Monitor", 400, "Nuevo", "Electrónica", 5.0)
-producto17 = Producto("Monitor", 400, "Nuevo", "Electrónica", 5.0)
-
-mi_tienda2 = Tienda(
-    nombre="Supermercado La Estrella",
-    vendedor=mi_vendedor2,
-    cuentaBancaria="9876543210",
-    capacidadMaximaMaterial=100,
-    capacidadMaximaConsumible=200,
-    capacidadMaximaLimpieza=150
-)
-
-
-Fabrica.getListaTienda().append(mi_tienda2)
-Fabrica.getProductosDisponibles().append(producto10)
-Fabrica.getProductosDisponibles().append(producto11)
-Fabrica.getProductosDisponibles().append(producto12)
-    
+import traceback
+   
 def main():
     salir = False
     
@@ -173,6 +145,7 @@ def main():
                                         conteoCategoriasTemporal[2] += cantidadAEnviar
                             except Exception as e:
                                 print("Entrada inválida. Por favor, ingrese un número.")
+                                traceback.print_exc()
                 except Exception as e:
                     print("Entrada inválida. Por favor, ingrese un número.")
 
@@ -224,10 +197,10 @@ def main():
 
                     conductorSeleccionado = None
                     for conductor in Conductor.getListaConductores():
-                        if conductor.getTransporte().tipoTransporte == transporteSeleccionado:
+                        if conductor.getTransporte().getTipoTransporte() == transporteSeleccionado:
                             conductorSeleccionado = conductor
                             break
-
+#error
                     if conductorSeleccionado is None:
                         print("No se encontró un conductor con el transporte seleccionado.")
                         transporteSeleccionado = None
@@ -255,10 +228,10 @@ def main():
                         transporte = conductorSeleccionado.getTransporte()
                         transporte.abastecerProducto(tiendaSeleccionada, productosGenerados)
 
-                        conductorSeleccionado.setIndiceMeta(conductorSeleccionado.indiceMeta + pesoTotalProductos)
-                        conductorSeleccionado.cantidadTrabajo += 1
-                        Fabrica.getOperario().setIndiceMeta(Fabrica.getOperario().indiceMeta + 1)
-                        Fabrica.getOperario().cantidadTrabajo += 1
+                        """conductorSeleccionado.setIndiceMeta(conductorSeleccionado.getIndiceMeta() + pesoTotalProductos)
+                        conductorSeleccionado.getCantidadTrabajo() += 1
+                        Fabrica.getOperario().setIndiceMeta(Fabrica.getOperario().getIndiceMeta() + 1)
+                        Fabrica.getOperario().getCantidadTrabajo() += 1"""
 
                         tiendaSeleccionada.descargarProducto(transporte)
                         print(f"PRODUCTOS DESCARGADOS EN LA TIENDA {tiendaSeleccionada.getNombre()}")
@@ -272,6 +245,7 @@ def main():
                         continue
             except Exception as e:
                 print("Entrada inválida. Por favor, ingrese un número.")
+                traceback.print_exc()
 
         print("========================================")
         print("¿Desea volver al menú principal o realizar otro proceso de abastecer alguna tienda?")

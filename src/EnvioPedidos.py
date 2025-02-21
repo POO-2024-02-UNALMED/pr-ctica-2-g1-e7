@@ -7,6 +7,7 @@ from gestorAplicacion.produccion.TipoTransporte import TipoTransporte
 from gestorAplicacion.gestion.Cliente import Cliente
 from gestorAplicacion.produccion.Producto import Producto
 from gestorAplicacion.gestion.Conductor import Conductor
+from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
 
 def enviar_pedidos():
     while True:
@@ -73,8 +74,8 @@ def enviar_pedidos():
                     print("\nSaliendo...")
                     time.sleep(2)
                     return
-                elif 0 < opcion <= len(Fabrica.listaTienda): #llamar el atriburo listaTienda de la clase fabrica
-                    tiendaSeleccionada = Fabrica.listaTienda[opcion - 1]#llamar el atriburo listaTienda de la clase fabrica
+                elif 0 < opcion <= len(Fabrica.getListaTienda()): #llamar el atriburo listaTienda de la clase fabrica
+                    tiendaSeleccionada = Fabrica.getListaTienda()[opcion - 1]#llamar el atriburo listaTienda de la clase fabrica
                     break  # Tienda seleccionada correctamente
                 else:
                     print("\nNúmero fuera de rango. Por favor, elija una tienda válida.")
@@ -267,10 +268,10 @@ def enviar_pedidos():
         time.sleep(1)  # Pausa de 1000 milisegundos (1 segundo)
         print("\n¡Factura creada con éxito! A continuación, se mostrará la factura:\n")
         print(tiendaSeleccionada.enviarPedido(listaProductosPedidos,
-                                                transporteSeleccionado,
-                                                clienteSeleccionado,
-                                                precioEnvio,
-                                                fechaVenta))
+                                      transporteSeleccionado,
+                                      clienteSeleccionado,
+                                      precioEnvio,
+                                      fechaVenta))  
 
         # Aumentar la carga de trabajo del vendedor y conductor
         tiendaSeleccionada.getVendedor().aumentarCargaTrabajo()
@@ -286,9 +287,10 @@ def enviar_pedidos():
         # Mensaje final
         print("¡Genial! 🎉 Los productos han sido enviados con éxito.")
         print("Si desea volver al menú principal, ingrese 1.")
+
         opcion_salir = 0
 
-        while opcion_salir != 1:
+        """while opcion_salir != 1:
             print("\n» ", end="")
             opcion_salir = int(input())
             if opcion_salir == 1:
@@ -297,6 +299,7 @@ def enviar_pedidos():
                 return  # Sale del método, pero no del ciclo principal
             else:
                 print("Opción no válida. ¡Intenta de nuevo! 🤔")
-                print("Si desea volver al menú principal, ingrese 1.")
+                print("Si desea volver al menú principal, ingrese 1.")"""
+ 
 
 enviar_pedidos()
