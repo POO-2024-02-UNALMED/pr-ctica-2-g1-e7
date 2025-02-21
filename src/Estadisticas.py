@@ -4,6 +4,7 @@ from gestorAplicacion.gestion.Cliente import Cliente
 from gestorAplicacion.produccion.Tienda import Tienda
 from gestorAplicacion.produccion.Transporte import Transporte
 from datetime import datetime
+import time
 
 class Estadisticas:
     def __init__(self):
@@ -66,33 +67,41 @@ class Estadisticas:
         self.asignarFechas()
         print(f"Las fechas seleccionadas son {fechaInicio} y {fechaFinal}")
         while(True):
-            self.menu()
-            sel = input("Ingrese el número de la opción que desea seleccionar: ")
-            if sel == "1":
-                print("Ganancias Discretas")
-                print(Factura.gananciasDiscretas(fecha_min=fechaInicio, fecha_max=fechaFinal))
-            elif sel == "2":
-                print("Ganancias totales")
-                print(Factura.gananciaTotal(fechaInicio, fechaFinal))
-            elif sel == "3":
-                print("Promedio de ganancias")
-                print(Factura.promedioDeGanancias(fechaInicio, fechaFinal))
-            elif sel == "4":
-                print("Vriaciones porcentuales")
-                print(Factura.aumentosPorcentuales(fechaInicio, fechaFinal))
-            elif sel == "5":
-                print("Modas")
-                print("Producto más vendido: ")
-                print(Factura.modaProductos(fechaInicio, fechaFinal))
-                print("Cliente con más facturaciones: ")
-                print(Factura.modaClientes(fechaInicio, fechaFinal))
-            elif sel == "6":
-                self.asignarFechas()
-            elif sel == "0":
+            try:
+                self.menu()
+                sel = input("Ingrese el número de la opción que desea seleccionar: ")
+                if sel == "1":
+                    print("Ganancias Discretas")
+                    print(Factura.gananciasDiscretas(fecha_min=fechaInicio, fecha_max=fechaFinal))
+                elif sel == "2":
+                    print("Ganancias totales")
+                    print(Factura.gananciaTotal(fechaInicio, fechaFinal))
+                elif sel == "3":
+                    print("Promedio de ganancias")
+                    print(Factura.promedioDeGanancias(fechaInicio, fechaFinal))
+                elif sel == "4":
+                    print("Vriaciones porcentuales")
+                    print(Factura.aumentosPorcentuales(fechaInicio, fechaFinal))
+                elif sel == "5":
+                    print("Modas")
+                    print("Producto más vendido: ")
+                    print(Factura.modaProductos(fechaInicio, fechaFinal))
+                    print("Cliente con más facturaciones: ")
+                    print(Factura.modaClientes(fechaInicio, fechaFinal))
+                elif sel == "6":
+                    self.asignarFechas()
+                elif sel == "0":
+                    print("Saliendo del módulo de estadísticas")
+                    time.sleep(2)
+                    break
+            except ValueError:
+                    print("Entrada inválida")
+            
+            print("Desea realizar otra consulta? \ns \npulse cualquier tecla para salir")
+            sel2 = input()
+            if sel2 == "n":
                 break
-            else:
-                print("Entrada inválida")
-    
+                
 
 if __name__ == "__main__":
     f1 = Factura(tienda=Tienda(nombre="Tienda 1"), cliente=Cliente(nombre="Cliente 1"), fecha=datetime(2021, 5, 1).strftime("%d-%m-%Y"), transporte=Transporte(), lista_productos=[Producto(nombre="Producto 1", precio=3000, peso=3, tipo="Prod", categoria="Inmueble"), Producto(nombre="Producto 2", precio=3000, peso=3, tipo="Prod", categoria="Inmueble")], precio_envio=1000)

@@ -156,9 +156,7 @@ class ventana_inicio(Tk):
 
     # OCASIONA EL CAMBIO EN LA POSICION DE LAS IMAGENES DEL SISTEMA
     def cambio(self, a):
-        self.acumulador += 1
-        if self.acumulador == 5:
-            self.acumulador = 0
+        self.acumulador = (self.acumulador + 1) % len(self.chang_posiciones)
         self.nueva_ventana.config(image=self.chang_posiciones[self.acumulador])
 
     def abrirVentanaSecundaria(self):
