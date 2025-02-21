@@ -5,6 +5,7 @@ class Cliente:
     def __init__(self, nombre=None, edad=None, cedula=None, cuentaBancaria=None):
         if all(param is not None for param in [nombre, edad, cedula, cuentaBancaria]):
             self.__nombre = nombre
+            self._nombre = self.__nombre
             self.__edad = edad
             self.__cedula = cedula
             self.__cuentaBancaria = cuentaBancaria
@@ -32,7 +33,7 @@ class Cliente:
 
     # Getters
     def getNombre(self):
-        return self.__nombre
+        return self._nombre
 
     def getEdad(self):
         return self.__edad

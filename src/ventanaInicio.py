@@ -113,7 +113,25 @@ class VentanaInicio(Tk):
             messagebox.showinfo("Información", "La ventana secundaria ya está abierta.")
 
 
+def centrar_ventana(vent):
+    """
+    Basado en https://stackoverflow.com/a/10018670.
+    """
+    vent.update_idletasks()
+    width = vent.winfo_width()
+    frm_width = vent.winfo_rootx() - vent.winfo_x()
+    win_width = width + 2*frm_width
+    height = vent.winfo_height()
+    titlebar_height = vent.winfo_rooty() - vent.winfo_y()
+    win_height = height + titlebar_height + frm_width
+    x = vent.winfo_screenwidth()//2 - win_width//2
+    y = vent.winfo_screenheight()//2 - win_height//2
+    vent.geometry('{}x{}+{}+{}'.format(width, height, x, y))
+    vent.deiconify()
+
 # Ejecutar la aplicación
 if __name__ == "__main__":
     app = VentanaInicio()
+    centrar_ventana(app)
+
     app.mainloop()

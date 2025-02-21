@@ -37,7 +37,7 @@ class Factura(IMostrarProductos):
         n = len(cls.listaFacturas)
         for i in range(n - 1):
             for j in range(n - i - 1):
-                if cls.listaFacturas[j].fecha > cls.lista_facturas[j + 1].fecha:
+                if cls.listaFacturas[j].getFecha() > cls.lista_facturas[j + 1].getFecha():
                     # Intercambio de posiciones
                     cls.listaFacturas[j], cls.lista_facturas[j + 1] = cls.lista_facturas[j + 1], cls.lista_facturas[j]
 
@@ -80,29 +80,34 @@ class Factura(IMostrarProductos):
     
     #Métodos para la funcionalidad estadística
 
-    def convertirStrAFecha(self, fecha: str) -> datetime:
+    def convertirFecha(self, fecha: datetime) -> datetime:
         """
         Método que convierte una cadena de texto en una fecha.
         """
-        return datetime.strptime(fecha, "%d-%m-%y")
+        return fecha.strptime("%dd-%mm-%yyyy")
     
-    def getFechaMinima(self) -> datetime:
+    @staticmethod
+    def getFechaMinima() -> datetime:
         """
         Método que obtiene la fecha mínima de la factura.
         """
-        return min(f.getFecha() for f in self.listaFacturas)
+        return Factura.listaFacturas[0].getFecha()
+        #return min(f.getFecha() for f in Factura.listaFacturas)
     
-    def getFechaMaxima(self) -> datetime:
+    @staticmethod
+    def getFechaMaxima() -> datetime:
         """
         Método que obtiene la fecha máxima de la factura.
         """
-        return max(f.getFecha() for f in self.listaFacturas)
+        return Factura.listaFacturas[-1].getFecha()
+        #return max(f.getFecha() for f in Factura.listaFacturas)
     
-    def getFacturasEntreFechas(self, fecha_min: datetime, fecha_max: datetime):
+    @staticmethod
+    def getFacturasEntreFechas(fecha_min: datetime, fecha_max: datetime):
         """
         Método que obtiene las facturas que se encuentran entre dos fechas.
         """
-        return [f for f in Factura.lista_facturas if fecha_min <= f.fecha <= fecha_max]
+        return [f for f in Factura.getListaFacturas() if fecha_min <= f.getFecha() <= fecha_max]
     
     def getListaFechas(self, fecha_min: datetime, fecha_max: datetime):
         """
@@ -110,63 +115,69 @@ class Factura(IMostrarProductos):
         """
         return [f.getFecha() for f in Factura.lista_facturas if fecha_min <= f.getFecha() <= fecha_max]
     
-    def gananciasDiscretas(self, fecha_min: datetime, fecha_max: datetime):
+    @staticmethod
+    def gananciasDiscretas(fecha_min: datetime, fecha_max: datetime):
         """
         Método que calcula las ganancias entre dos fechas.
         """
-        facturas = self.getFacturasEntreFechas(fecha_min, fecha_max)
+        facturas = Factura.getFacturasEntreFechas(fecha_min, fecha_max)
         ganancias: list[list[datetime, float]] = []
         for f in facturas:
             ganancias.append([f.getFecha(), f.getTotal()])
         return ganancias
     
-    def gananciaTotal(self, fecha_min: datetime, fecha_max: datetime):
+    @staticmethod
+    def gananciaTotal(fecha_min: datetime, fecha_max: datetime):
         """
         Método que calcula la ganancia total entre dos fechas.
         """
-        facturas = self.getFacturasEntreFechas(fecha_min, fecha_max)
+        facturas = Factura.getFacturasEntreFechas(fecha_min, fecha_max)
         return sum(f.getTotal() for f in facturas)
     
-    def promedioDeGanancias(self, fecha_min: datetime, fecha_max: datetime):
+    @staticmethod
+    def promedioDeGanancias(fecha_min: datetime, fecha_max: datetime):
         """
         Método que calcula el promedio de ganancias entre dos fechas.
         """
-        facturas = self.getFacturasEntreFechas(fecha_min, fecha_max)
+        facturas = Factura.getFacturasEntreFechas(fecha_min, fecha_max)
         return sum(f.getTotal() for f in facturas) / len(facturas)
     
-    def aumentosPorcentuales(self, fecha_min: datetime, fecha_max: datetime):
+    @staticmethod
+    def aumentosPorcentuales(fecha_min: datetime, fecha_max: datetime):
         """
         Método que calcula los aumentos porcentuales entre dos fechas.
         """
-        facturas = self.getFacturasEntreFechas(fecha_min, fecha_max)
+        facturas = Factura.getFacturasEntreFechas(fecha_min, fecha_max)
         aumentos = []
         for i in range(1, len(facturas)):
             aumento = (facturas[i].getTotal() - facturas[i - 1].getTotal()) / facturas[i - 1].getTotal() * 100
-            aumentos.append([facturas[i].fecha, aumento])
+            aumentos.append([facturas[i].getFecha(), aumento])
         return aumentos
     
-    def modaProductos(self):
+    @staticmethod
+    def modaProductos(fecha_min: datetime, fecha_max: datetime):
         """
         Método que calcula la moda de los productos.
         """
-        productos = [p.nombre for p in self._listaProductos]
+        productos = [p.getNombre() for f in Factura.getFacturasEntreFechas(fecha_min, fecha_max) for p in f.getListaProductos()]
         moda = max(set(productos), key=productos.count)
         return moda
     
-    def modaClientes(self):
-        from gestion.Cliente import Cliente
+    @staticmethod
+    def modaClientes(fecha_min: datetime, fecha_max: datetime):
         """
         Método que calcula la moda de los clientes.
         """
-        clientes = [f.getCliente().getNombre() for f in Factura.getListaFacturas()]
+        clientes = [f.getCliente().getNombre() for f in Factura.getFacturasEntreFechas(fecha_min, fecha_max)]
         moda = max(set(clientes), key=clientes.count)
         return moda
     
-    def modaTiendas(self):
+    @staticmethod
+    def modaTiendas(fecha_min: datetime, fecha_max: datetime):
         """
         Método que calcula la moda de las tiendas.
         """
-        tiendas = [f.getTienda().getNombre() for f in Factura.getListaFacturas()]
+        tiendas = [f.getTienda().getNombre() for f in Factura.getFacturasEntreFechas(fecha_min, fecha_max)]
         moda = max(set(tiendas), key=tiendas.count)
         return moda
     
