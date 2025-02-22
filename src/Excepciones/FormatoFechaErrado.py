@@ -1,4 +1,4 @@
-from ErrorAplicacion import ErrorAplicacion
+from .ErrorAplicacion import ErrorAplicacion
 
 class FormatoFechaErrado(ErrorAplicacion):
     def __init__(self, mensaje):

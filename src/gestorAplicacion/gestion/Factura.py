@@ -17,7 +17,7 @@ class Factura(IMostrarProductos):
         if len(Factura.getListaFacturas()) > 2:
             Factura.ordenar_facturas_por_fecha()
         if type(fecha) is not datetime:
-            self._fecha = self.convertirFecha(fecha)
+            self._fecha: datetime = fecha
         self._fecha = fecha
         self._total = self.calcularTotal()
 
@@ -92,6 +92,7 @@ class Factura(IMostrarProductos):
         """
         Método que obtiene la fecha mínima de la factura.
         """
+        #fecha = datetime.strptime(Factura.listaFacturas[0].getFecha(), "%d-%m-%y")
         return Factura.listaFacturas[0].getFecha()
         #return min(f.getFecha() for f in Factura.listaFacturas)
     
@@ -233,7 +234,7 @@ class Factura(IMostrarProductos):
     def getID(self):
         return self._id
     
-    def getFecha(self):
+    def getFecha(self) -> datetime :
         return self._fecha
     
     def getTotal(self):

@@ -1,15 +1,24 @@
 from tkinter import Tk, Label,messagebox, ttk, Button
 from gestorAplicacion.gestion.Factura import Factura
+from gestorAplicacion.gestion.Operario import Operario
+from gestorAplicacion.gestion.Vendedor import Vendedor
+from gestorAplicacion.gestion.Conductor import Conductor
+from gestorAplicacion.produccion.Fabrica import Fabrica
+from gestorAplicacion.gestion.Meta import Meta
+from tkinter import messagebox
+
+
 class Admin:
     pagina_actual = 0
 
     @staticmethod
-    def destruirVentanaPrincipal(ventanaPrincipal:Tk): 
+    def destruirVentanaPrincipal(ventanaPrincipal:Tk):
         from seleccionFuncionalidad import VentanaSecundaria
         ventanaPrincipal.destroy()
         nuevaVentana=VentanaSecundaria()
+
     @staticmethod
-    def volverVentanaInicio(ventanaSecundaria:Tk): 
+    def volverVentanaInicio(ventanaSecundaria:Tk):
         from ventanaInicio import VentanaInicio
         ventanaSecundaria.destroy()
         ventana_inicio=VentanaInicio()
@@ -17,8 +26,6 @@ class Admin:
     @staticmethod
     def salirDelSistema(): 
         pass #Este es el método que se encarga de serializar los objetos cuando se cierre el programa. Implementacion pendiente 
-        
-
     @staticmethod
     def obtenerFacturas():
         """Devuelve todas las facturas en una lista formateada."""
@@ -48,8 +55,8 @@ class Admin:
         """Retrocede a la página anterior si no está en la primera."""
         if cls.pagina_actual > 0:
             cls.pagina_actual -= 1
+
     @staticmethod
-   
     def obtenerFactura(num, frameInteraccion): 
         try:
             num_factura = int(num)  # Convertir a entero
@@ -92,4 +99,61 @@ class Admin:
         messagebox.showinfo("Producto Seleccionado", f"Has seleccionado: {producto_seleccionado}")
     
 
+    # 🔹 Nuevos métodos para el pago de trabajadores
+    @staticmethod
+    def obtenerListaTrabajadores(tipo):
+        """
+        Devuelve la lista de trabajadores según el tipo especificado.
+        :param tipo: 1 para Operarios, 2 para Conductores, 3 para Vendedores.
+        :return: Lista de trabajadores.
+        """
+        if tipo == 1:
+            return Operario.getListaOperarios()
+        elif tipo == 2:
+            return Conductor.getListaConductores()
+        elif tipo == 3:
+            return Vendedor.getListaVendedores()
+        else:
+            return []
+
+    @staticmethod
+    def calcularPagoTrabajador(trabajador):
+        """
+        Calcula el pago potencial de un trabajador (salario base + pago por trabajo realizado).
+        :param trabajador: El trabajador al que se le calculará el pago.
+        :return: El pago potencial.
+        """
+        return trabajador.getCuentaBancaria().calcularPago(trabajador) + trabajador.getSalarioBase()
+
+    @staticmethod
+    def revisarMetasTrabajador(trabajador):
+        """
+        Devuelve las metas no pagadas de un trabajador.
+        :param trabajador: El trabajador cuyas metas se revisarán.
+        :return: Lista de metas no pagadas.
+        """
+        return [meta for meta in trabajador.getMeta() if not meta.getVerificador()]
+
+    @staticmethod
+    def cumplirMeta(trabajador, meta):
+        """
+        Marca una meta como cumplida y agrega el pago correspondiente.
+        :param trabajador: El trabajador al que pertenece la meta.
+        :param meta: La meta que se marcará como cumplida.
+        :return: True si la meta fue cumplida, False en caso contrario.
+        """
+        if meta.cumpleMeta(trabajador.getIndiceMeta()):
+            meta.setVerificador(True)
+            return True
+        return False
+
+    @staticmethod
+    def realizarPago(trabajador, pago_total):
+        """
+        Realiza el pago al trabajador y actualiza la cuenta bancaria de la fábrica.
+        :param trabajador: El trabajador al que se le realizará el pago.
+        :param pago_total: El monto total a pagar.
+        """
+        Fabrica.cuentaBancaria.descontarDinero(pago_total)
+        trabajador.recibirSueldo(pago_total)
 
