@@ -1,12 +1,14 @@
 import tkinter as tk
-from tkinter import ttk, messagebox, Tk
+from tkinter import ttk, messagebox, Tk, Frame
+from Admin import Admin 
 
 class VentanaSecundaria(Tk):
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
         # Configuración de la ventana
-        self.geometry("700x500")
+        self.geometry("800x600")
         self.title("Nombre de la Aplicación")
+        self.pagina_actual=0
 
         # 🔹 ZONA 0 - Título de la aplicación
         self.frame_titulo = tk.Frame(self, relief="solid", bd=1)
@@ -32,7 +34,7 @@ class VentanaSecundaria(Tk):
         # Menú Procesos y Consultas
         menu_procesos = tk.Menu(self.menubar, tearoff=0)
         menu_procesos.add_command(label="Opción 1")
-        menu_procesos.add_command(label="Opción 2")
+        menu_procesos.add_command(label="Gestor de devoluciones", command=self.devoluciones)
         menu_procesos.add_command(label="Opción 3")
         menu_procesos.add_command(label="Opción 4", command=self.mostrar_abastecimiento)
         menu_procesos.add_command(label="Estadísticas", command=self.mostrar_estadisticas)
@@ -99,11 +101,74 @@ class VentanaSecundaria(Tk):
         tk.Button(self.frame_interaccion, text="Confirmar Envío",
                   command=lambda: messagebox.showinfo("Éxito", "Abastecimiento confirmado")).pack(pady=10)
         tk.Button(self.frame_interaccion, text="Volver al Menú", command=self.mostrar_menu).pack()
+    
+    #Funcionalidad de devoluciones: 
+    def devoluciones(self): 
+        self.limpiar_frame_interaccion()
+        self.titulo.config(text="Bienvenido al gestor de devoluciones")
+        tk.Label(self.frame_interaccion,text="Desde este menú podrá gestionar reembolsos o cambios de los productos de los clientes",font=("Arial",10)).pack(pady=10)
+        tk.Label(self.frame_interaccion,text="Seleccione el Id de la factura a la que desea hacer la devolucion",font=("Arial", 14)).pack(pady=10)        
+        self.frameFacturas = Frame(self.frame_interaccion)
+        self.frameFacturas.pack()
+        self.frameBotones = tk.Frame(self.frame_interaccion)
+        self.frameBotones.pack(pady=10)  
+        # Botón "Atrás"
+        self.botonAtras = tk.Button(self.frameBotones, text="Atrás", command=self.mostrarFacturasAtras)
+        self.botonAtras.pack(side="left", padx=20)  # Separación entre botones
 
+        # Botón "Siguiente"
+        self.botonSiguiente = tk.Button(self.frameBotones, text="Siguiente", command=self.mostrarFacturasSiguiente)
+        self.botonSiguiente.pack(side="right", padx=20)
+
+        self.mostrarFacturas()
+
+        self.factura_seleccionada = tk.StringVar()
+
+        tk.Label(self.frame_interaccion, text="Ingrese el número de la factura de la que quiere devolver el producto",
+         font=("Arial", 12)).pack(anchor="s")
+
+        # Campo de entrada asociado a la variable
+        entry_factura = tk.Entry(self.frame_interaccion, textvariable=self.factura_seleccionada)
+        entry_factura.pack()
+
+        # Botón para procesar la factura seleccionada
+        tk.Button(self.frame_interaccion, text="Seleccionar Factura", 
+          command=lambda: Admin.obtenerFactura(self.factura_seleccionada.get())).pack()
+        
+  
+    def mostrarFacturas(self):
+     """Obtiene las facturas desde Admin y las muestra en pantalla."""
+    
+    # Limpiar el frame antes de agregar nuevos elementos
+     for widget in self.frameFacturas.winfo_children():
+            widget.destroy()
+
+     facturas = Admin.mostrarFacturas()
+
+    # Agregar líneas antes y después de las facturas
+     tk.Label(self.frameFacturas, text="----------------------------").pack(anchor="n")
+    
+     for factura in facturas:
+        tk.Label(self.frameFacturas, text=factura, font=("Arial", 12)).pack()
+    
+     tk.Label(self.frameFacturas, text="----------------------------").pack(anchor="s")
+
+
+    def mostrarFacturasSiguiente(self):
+        """Maneja el avance de página."""
+        Admin.avanzarPagina()
+        self.mostrarFacturas()
+
+    def mostrarFacturasAtras(self):
+        """Maneja el retroceso de página."""
+        Admin.retrocederPagina()
+        self.mostrarFacturas()
+
+    
     # 🔹 Funcionalidad de estadísticas (a implementar)
     def mostrar_estadisticas(self):
         self.limpiar_frame_interaccion()
-        tk.Label(self.frame_interaccion, text="Interfaz de Estadísticas", font=("Arial", 14)).pack(pady=10)
+        tk.Label(self.frame_interaccion, text="Interfaz de Estadísticas", font=("Arial", 14)).pack()
         tk.Label(self.frame_interaccion, text="Aquí se mostrarán las estadísticas del sistema").pack()
 
     # 🔹 Función para volver a la interfaz principal
