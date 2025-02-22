@@ -1,4 +1,4 @@
-from tkinter import Tk, Label,messagebox, ttk
+from tkinter import Tk, Label,messagebox, ttk, Button
 from gestorAplicacion.gestion.Factura import Factura
 class Admin:
     pagina_actual = 0
@@ -61,7 +61,7 @@ class Admin:
             messagebox.showerror("Error", "Número de factura inválido.")
 
     @staticmethod
-    def mostrarProductosFactura(factura, frameInteraccion):
+    def mostrarProductosFactura(factura:Factura, frameInteraccion):
         # Limpiar solo los widgets relacionados con productos (NO eliminar todo el frame)
         for widget in frameInteraccion.winfo_children():
                 widget.destroy()
@@ -73,8 +73,23 @@ class Admin:
         Label(frameInteraccion,text="Selecciona el producto de la factura que deseas cambiar: ",font=("Arial",12)).pack(pady=10)
         combobox = ttk.Combobox(frameInteraccion)
         combobox["values"] = productos
-        combobox.current(0)  
         combobox["state"] = "readonly"  
         combobox.pack()
+         # 🔹 Botón para seleccionar el producto
+        btnSeleccionarProducto = Button(frameInteraccion, text="Seleccionar Producto",
+                                       command=lambda: Admin.obtenerProducto(combobox))
+        btnSeleccionarProducto.pack(pady=5)
+        
+    @staticmethod
+    def obtenerProducto(combobox): 
+        """Obtiene el producto seleccionado en el Combobox y muestra un mensaje de confirmación."""
+        producto_seleccionado = combobox.get()  # Obtener texto del combobox
+    
+        if not producto_seleccionado:
+         messagebox.showerror("Error", "Seleccione un producto válido.")
+         return
+
+        messagebox.showinfo("Producto Seleccionado", f"Has seleccionado: {producto_seleccionado}")
+    
 
 

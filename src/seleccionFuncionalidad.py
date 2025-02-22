@@ -130,12 +130,10 @@ class VentanaSecundaria(Tk):
         # Campo de entrada asociado a la variable
         entry_factura = tk.Entry(self.frame_interaccion, textvariable=self.factura_seleccionada)
         entry_factura.pack()
-        combo=ttk.Combobox(self.frame_interaccion)
 
         # Botón para procesar la factura seleccionada
         tk.Button(self.frame_interaccion, text="Seleccionar Factura", 
           command=lambda: Admin.obtenerFactura(self.factura_seleccionada.get(), self.frame_interaccion)).pack()
-
         
 
   

@@ -87,6 +87,7 @@ def devoluciones():
                         print("El producto ya ha sido devuelto, elija otro.")
                     else:
                         print(f"Eligió el producto: {producto.getNombre()}")
+                        
                         print("Indique el motivo de la devolución:")
                         
                         # Mostrar los motivos de devolución
