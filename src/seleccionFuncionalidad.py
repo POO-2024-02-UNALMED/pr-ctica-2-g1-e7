@@ -1,10 +1,9 @@
 import tkinter as tk
-from tkinter import ttk, messagebox,Toplevel
+from tkinter import ttk, messagebox, Tk
 
-class VentanaSecundaria(Toplevel):
-    def __init__(self, master=None):
-        super().__init__(master)
-        
+class VentanaSecundaria(Tk):
+    def __init__(self,*args,**kwargs):
+        super().__init__(*args,**kwargs)
         # Configuración de la ventana
         self.geometry("700x500")
         self.title("Nombre de la Aplicación")
@@ -71,6 +70,10 @@ class VentanaSecundaria(Toplevel):
     def mostrar_autores(self):
         messagebox.showinfo("Acerca de", "Autores: Equipo de Desarrollo JJAYC")
 
+    def cerrarVentana(self): 
+        from Admin import Admin
+        Admin.volverVentanaInicio(self)
+
     # 🔹 Función para limpiar el frame de interacción antes de cargar otra interfaz
     def limpiar_frame_interaccion(self):
         for widget in self.frame_interaccion.winfo_children():
@@ -114,18 +117,9 @@ class VentanaSecundaria(Toplevel):
         texto_resultados = tk.Text(frame_resultados, wrap="word", height=10)
         texto_resultados.pack(fill="both", expand=True, padx=5, pady=5)
     
-    def cerrarVentana(self):
-        """ Reinicia la variable en la ventana principal cuando se cierra esta ventana. """
-        self.master.ventanaSecundaria = None
-        self.destroy()
 
 
 # Ejecutar la aplicación desde una ventana principal
 if __name__ == "__main__":
-    root = tk.Tk()
-    root.geometry("300x200")
-    root.title("Ventana Principal")
-
-    tk.Button(root, text="Abrir Ventana Secundaria", command=lambda: VentanaSecundaria(root)).pack(pady=20)
-
-    root.mainloop()
+    ventanaSecundaria=VentanaSecundaria()
+    ventanaSecundaria.mainloop()

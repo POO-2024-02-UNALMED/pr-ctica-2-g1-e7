@@ -1,10 +1,11 @@
 from tkinter import *
-from Admin import Admin
 from tkinter import messagebox, Tk
 
-class ventana_inicio(Tk):
+class VentanaInicio(Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        #ventana secundaria
+        self.ventanaSecundaria=None
         # CONFIGURACION PARAMETROS PRINCIPALES DE LA VENTANA
         self.geometry("800x500")
         self.title("Inicio")
@@ -81,7 +82,7 @@ class ventana_inicio(Tk):
         ]
         self.chang_posiciones = []
 
-        # RECORRIDO SOBRE LA LISTA direcciones PARA OBTENER LAS IMAGENES SEGUN LA REFERENIA DEL DESARROLLADOR
+        # RECORRIDO SOBRE LA LISTA direcciones PARA OBTENER LAS IMAGENES SEGUN LA REFERENCIA DEL DESARROLLADOR
         for i in self.direcciones:
             imagen = PhotoImage(file=i)
             self.cambio_posiciones.append(imagen)
@@ -119,8 +120,7 @@ class ventana_inicio(Tk):
 
     # GENERA LA SALIDA DE LA VENTANA DE INICIO DANDO CULMINADO EL FUNCIONAMIENTO DE LA APLICACION
     def salir(self):
-        Admin.salirDelSistema()
-        return super().destroy()
+        self.destroy()
 
     # SUSCITA EL CAMBIO DE INFORMACIÓN DE LA HOJA DE VIDA E IMAGENES DE LOS DESARROLLADORES
     def cambioHDV(self, b):
@@ -159,13 +159,10 @@ class ventana_inicio(Tk):
         self.acumulador = (self.acumulador + 1) % len(self.chang_posiciones)
         self.nueva_ventana.config(image=self.chang_posiciones[self.acumulador])
 
+
     def abrirVentanaSecundaria(self):
-        from seleccionFuncionalidad import VentanaSecundaria
-        """ Abre la ventana secundaria sin cerrar la principal. """
-        if self.ventanaSecundaria is None or not self.ventanaSecundaria.winfo_exists():
-            self.ventanaSecundaria = VentanaSecundaria(self)
-        else:
-            messagebox.showinfo("Información", "La ventana secundaria ya está abierta.")
+        from Admin import Admin
+        Admin.destruirVentanaPrincipal(self)
 
 
 def centrar_ventana(vent):
@@ -187,7 +184,7 @@ def centrar_ventana(vent):
 # Ejecutar la aplicación
 
 if __name__ == "__main__":
-    ventana_inicios = ventana_inicio()
+    ventana_inicio = VentanaInicio()
 
-    centrar_ventana(ventana_inicios)
-    ventana_inicios.mainloop()
+    centrar_ventana(ventana_inicio)
+    ventana_inicio.mainloop()
