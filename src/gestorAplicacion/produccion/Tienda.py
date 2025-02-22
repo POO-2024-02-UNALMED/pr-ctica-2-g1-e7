@@ -1,38 +1,47 @@
-from typing import List
-from gestorAplicacion.produccion.Producto import Producto
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
-class Tienda():
+ # Importar Fabrica al inicio
+from gestorAplicacion.produccion.Producto import Producto  # Importar Fabrica al inicio
 
-    numTiendas = 0  # Contador de tiendas
+class Tienda:
+    numTiendas = 0 # Atributo estático para contar el número de tiendas
 
-    def __init__(self, nombre=None, vendedor=None, cuentaBancaria=None,
-                 capacidadMaximaMaterial=None, capacidadMaximaConsumible=None,
-                 capacidadMaximaLimpieza=None):
-        from gestorAplicacion.produccion.Fabrica import Fabrica
+    def __init__(self, nombre, vendedor, cuentaBancaria,
+                 capacidadMaximaMaterial, capacidadMaximaConsumible,
+                 capacidadMaximaLimpieza):
+        """
+        Constructor de la clase Tienda.
+        :param nombre: Nombre de la tienda.
+        :param vendedor: Vendedor asignado a la tienda.
+        :param cuentaBancaria: Cuenta bancaria de la tienda.
+        :param capacidadMaximaMaterial: Capacidad máxima para materiales.
+        :param capacidadMaximaConsumible: Capacidad máxima para consumibles.
+        :param capacidadMaximaLimpieza: Capacidad máxima para productos de limpieza.
+        """
+        self._nombre = nombre
+        self._vendedor = vendedor
+        self._cuentaBancaria = cuentaBancaria
+        self._capacidadMaximaMaterial = capacidadMaximaMaterial
+        self._capacidadMaximaConsumible = capacidadMaximaConsumible
+        self._capacidadMaximaLimpieza = capacidadMaximaLimpieza
 
-        if all(param is not None for param in [nombre, vendedor, cuentaBancaria,
-                                               capacidadMaximaMaterial, capacidadMaximaConsumible,
-                                               capacidadMaximaLimpieza]):
-            self._nombre = nombre
-            self._vendedor = vendedor
-            self._cuentaBancaria = cuentaBancaria
-            self._capacidadMaximaMaterial = capacidadMaximaMaterial
-            self._capacidadMaximaConsumible = capacidadMaximaConsumible
-            self._capacidadMaximaLimpieza = capacidadMaximaLimpieza
+        # Incrementar el contador de tiendas
+        Tienda.numTiendas += 1
 
-            # Se asigna la tienda al vendedor si tiene el método
-            if hasattr(vendedor, "setTienda"):
-                vendedor.setTienda(self)
+        # Inicializar listas de productos y categorías
+        self._listaProducto = []
+        self._productosPorCategoria = []
+        self._categorias = []
+        self._conteoCategorias = []
+        self.agregar()
 
-            Tienda.numTiendas += 1
-
-            self._listaProducto = []
-            self._productosPorCategoria = []
-            self._categorias = []
-            self._conteoCategorias = []
-
-
-
+        # Agregar la tienda a la lista de la fábrica
+    def agregar(self):  
+        from .Fabrica import Fabrica   
+        Fabrica.getListaTienda().append(self)
+        
     # Getters
     def getNombre(self):
         return self._nombre
@@ -172,12 +181,6 @@ class Tienda():
         factura = Factura(self, clienteSeleccionado, transporteSeleccionado, listaProductosPedidos, precioEnvio, dia)
         return str(factura)
 
-    
-
-#class Tienda:
-    #def __init__(self):
-        #self.listaProducto = []
-
     def agregarProductosParaCambio(self, precio_cambio: float, seleccion_productos: List[int], productos_disponibles):
             from gestorAplicacion.produccion.Producto import Producto
             """
@@ -291,9 +294,3 @@ class Tienda():
             """Agrega el producto a la lista sin preocuparse por duplicados"""
             self._listaProducto.append(producto)
 
-
-
-
-#from .Producto import Producto
-#tienda = Tienda()
-#tienda.productosPorCategoria([Producto("Martillo", 10, "Herramientas"), Producto("Silla", 20, "Muebles"), Producto("Escoba", 30, "Aseo")]

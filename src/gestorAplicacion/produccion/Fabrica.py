@@ -1,30 +1,31 @@
-class Fabrica:
-    # Atributos estáticos compartidos por todas las instancias
-    listaFabrica =[]
-    _cuentaBancaria = None
-    _listaTienda = []
-    _productosDisponibles = []
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
-    def __init__(self, idFabrica=None, nombre=None, direccion=None,
-                 cuentaBancariaFabrica=None, productosDisponibles=None,
-                 listaTienda=None, operario=None):
+
+
+class Fabrica:
+    listaFabrica = []
+    _cuentaBancaria = None
+    _productosDisponibles = []
+    _listaTienda=[]
+
+    def __init__(self, idFabrica, nombre, direccion, cuentaBancariaFabrica, productosDisponibles, operario):
         self.idFabrica = idFabrica
         self.nombre = nombre
         self.direccion = direccion
+        self.operario = operario  
+
         Fabrica.listaFabrica.append(self)
+        Fabrica._cuentaBancaria = cuentaBancariaFabrica
+        Fabrica._productosDisponibles.extend(productosDisponibles)
 
-        # Modificar atributos estáticos correctamente
-        if cuentaBancariaFabrica is not None:
-            Fabrica._cuentaBancaria = cuentaBancariaFabrica
-        if productosDisponibles is not None:
-            Fabrica._productosDisponibles = productosDisponibles
-        if listaTienda is not None:
-            Fabrica._listaTienda = listaTienda
+        operario.setFabrica(self)
 
-        if operario is not None:
-            self.operario = operario  # Este sí es de instancia
-            operario.setFabrica(self)
     # Getters y Setters para atributos privados (estáticos)
+    @staticmethod
+    def agregarTienda(tienda):
+        Fabrica.getListaTienda().append(tienda)
     @staticmethod
     def getCuentaBancaria():
         return Fabrica._cuentaBancaria
@@ -36,11 +37,6 @@ class Fabrica:
     @staticmethod
     def getListaTienda():
         return Fabrica._listaTienda
-
-    @staticmethod
-    def setListaTienda(listaTienda):
-        Fabrica._listaTienda = listaTienda
-
     @staticmethod
     def getProductosDisponibles():
         return Fabrica._productosDisponibles
@@ -136,7 +132,7 @@ class Fabrica:
         return [Producto(producto.getNombre, producto.getPrecio, producto.getEstado,
                          producto.getTipo, producto.getCategoria, producto.getPeso)
                 for _ in range(cantidad_a_enviar)]
-"""
+
 import datetime
 from gestorAplicacion.gestion.Vendedor import Vendedor
 from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
@@ -278,7 +274,7 @@ catalogo = [
 listaTiendas = [tienda1, tienda2, tienda3]
 
 # Crear fábrica
-fabrica = Fabrica("F001", "Fábrica Principal", "Calle Principal 123", cuentaFabrica, catalogo, listaTiendas, operario1)
+fabrica = Fabrica("F001", "Fábrica Principal", "Calle Principal 123", cuentaFabrica, catalogo, operario1)
 
 # Crear cuentas bancarias para los conductores
 cuentaConductor1 = CuentaBancaria(12345, 5000)
@@ -403,4 +399,4 @@ conductor9.setCantidadTrabajo(13)
 conductor9.setIndiceMeta(50)
 
 conductor10.setCantidadTrabajo(6)
-conductor10.setIndiceMeta(18)"""
+conductor10.setIndiceMeta(18)

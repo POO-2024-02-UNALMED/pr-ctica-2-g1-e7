@@ -182,7 +182,7 @@ def pagoTrabajadores():
                     continue
 
 
-
+"""
 # 🔹 CREACIÓN DE OBJETOS NECESARIOS PARA LA FUNCIONALIDAD
 p1=Producto("a",12,"dispo","venta","si",12)
 p2=Producto("a",12,"dispo","venta","si",12)
@@ -223,4 +223,4 @@ vendedor2.setIndiceMeta(4)
 vendedor2.setCantidadTrabajo(4)
 
 print(vendedor1.getIndiceMeta())
-pagoTrabajadores()
+pagoTrabajadores()"""

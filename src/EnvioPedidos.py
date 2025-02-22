@@ -60,7 +60,7 @@ def enviar_pedidos():
         print("\nSeleccione la tienda desde la cual se enviará el pedido. Si no desea continuar, presione 0 para salir.")
         print("\nListado de Tiendas:")
         print("0. Salir")
-        print(Fabrica.mostrarTiendasSinProductos())#llamar el metodo mostrarTiendas
+        print(Tienda.mostrarTiendasSinProductos())#llamar el metodo mostrarTiendas
 
         opcion = -1
         tiendaSeleccionada = None
@@ -299,7 +299,7 @@ def enviar_pedidos():
                 return  # Sale del método, pero no del ciclo principal
             else:
                 print("Opción no válida. ¡Intenta de nuevo! 🤔")
-                print("Si desea volver al menú principal, ingrese 1.")"""
- 
+                print("Si desea volver al menú principal, ingrese 1.")
+"""
 
 enviar_pedidos()

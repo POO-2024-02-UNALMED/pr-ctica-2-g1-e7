@@ -1,3 +1,7 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+
 class Cliente:
     listaClientes = []      # Variable de clase: lista de todos los clientes
     totalCreados = 0        # Variable de clase: contador de clientes creados
@@ -81,10 +85,9 @@ class Cliente:
         """
         if producto in self.__listaProductos:
             self.__listaProductos.remove(producto)
-            
+
 from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
-
-
+'''
 cuentaCliente1 = CuentaBancaria(10001, 5000)
 cuentaCliente2 = CuentaBancaria(10002, 15000)
 cuentaCliente3 = CuentaBancaria(10003, 8000)
@@ -96,5 +99,11 @@ cliente2 = Cliente("María López", 25, 123456789, cuentaCliente2)
 cliente3 = Cliente("Carlos García", 40, 567890123, cuentaCliente3)
 cliente4 = Cliente("Ana Rodríguez", 35, 654321987, cuentaCliente4)
 cliente5 = Cliente("Luis Fernández", 28, 192837465, cuentaCliente5)
+'''
+print("Clientes al guardar:", Cliente.listaClientes)
 
-
+from  baseDatos.Deserializarcion import cargar_datos
+from  baseDatos.Serialización import guardar_datos
+guardar_datos()
+cargar_datos()
+print(Cliente.listaClientes)

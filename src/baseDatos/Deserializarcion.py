@@ -6,49 +6,44 @@ import pickle
 # Agregar la carpeta 'src' al sys.path para que Python encuentre 'gestorAplicacion'
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-# Cargar los datos desde los archivos serializados
-with open("Clientes.pkl", "rb") as archivo:
-    listaClientes = pickle.load(archivo)
+import pickle
+import os
 
-with open("Conductores.pkl", "rb") as archivo:
-    listaConductores = pickle.load(archivo)
 
-with open("Facturas.pkl", "rb") as archivo:
-    listaFacturas = pickle.load(archivo)
+def cargar_datos():
 
-with open("Metas.pkl", "rb") as archivo:
-    listaMetas = pickle.load(archivo)
+    from gestorAplicacion.gestion.Cliente import Cliente
+    from gestorAplicacion.gestion.Conductor import Conductor
+    from gestorAplicacion.gestion.Factura import Factura
+    from gestorAplicacion.gestion.Operario import Operario
+    from gestorAplicacion.gestion.Persona import Persona
+    from gestorAplicacion.gestion.Vendedor import Vendedor
+    from gestorAplicacion.gestion.Meta import Meta
+    from gestorAplicacion.produccion.Fabrica import Fabrica
+    from gestorAplicacion.produccion.Transporte import Transporte
+    if not os.path.exists("datos.pkl"):
+        print("⚠️ Archivo de datos no encontrado. Se inicializarán listas vacías.")
+        return
 
-with open("Operarios.pkl", "rb") as archivo:
-    listaOperarios = pickle.load(archivo)
+    try:
+        with open("datos.pkl", "rb") as archivo:
+            datos = pickle.load(archivo)
 
-with open("Personas.pkl", "rb") as archivo:
-    listaPersonas = pickle.load(archivo)
+        # ✅ Asignación directa en lugar de extend() para evitar duplicados
+        Cliente.listaClientes = datos.get("Clientes", [])
+        Conductor.listaConductores = datos.get("Conductores", [])
+        Factura._listaFacturas = datos.get("Facturas", [])
+        Meta.listaMetas = datos.get("Metas", [])
+        Operario.listaOperarios = datos.get("Operarios", [])
+        Persona.listaPersonas = datos.get("Personas", [])
+        Vendedor.listaVendedores = datos.get("Vendedores", [])
+        Fabrica.listaFabrica = datos.get("Fabrica", [])
+        Transporte.listaTransportes = datos.get("Transporte", [])
+        Fabrica._listaTienda = datos.get("Tiendas", [])
+        Fabrica._productosDisponibles = datos.get("ProductosDisponibles", [])
 
-with open("Vendedores.pkl", "rb") as archivo:
-    listaVendedores = pickle.load(archivo)
+        print("✅ Datos cargados correctamente.")
 
-with open("Fabrica.pkl", "rb") as archivo:
-    listaFabrica = pickle.load(archivo)
+    except (EOFError, pickle.UnpicklingError):
+        print("⚠️ Error al cargar los datos. El archivo puede estar corrupto.")
 
-with open("Transporte.pkl", "rb") as archivo:
-    listaTransportes = pickle.load(archivo)
-
-with open("Tiendas.pkl", "rb") as archivo:
-    listaTiendas = pickle.load(archivo)
-
-with open("ProductosDisponibles.pkl", "rb") as archivo:
-    productosDisponibles = pickle.load(archivo)
-
-# Imprimir para verificar la carga
-print("Clientes:", listaClientes)
-print("Conductores:", listaConductores)
-print("Facturas:", listaFacturas)
-print("Metas:", listaMetas)
-print("Operarios:", listaOperarios)
-print("Personas:", listaPersonas)
-print("Vendedores:", listaVendedores)
-print("Fábricas:", listaFabrica)
-print("Transportes:", listaTransportes)
-print("Tiendas:", listaTiendas)
-print("Productos Disponibles:", productosDisponibles)
