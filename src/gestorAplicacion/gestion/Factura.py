@@ -291,15 +291,19 @@ class Factura(IMostrarProductos):
 
 #Creacion provisional de facturas para probar la interfaz de devoluciones 
 from gestorAplicacion.gestion.Cliente import Cliente
-f1=Factura("tienda",Cliente("Juan",13,123,"si"),"transporte",[],12,datetime(2024,10,12))
-f2=Factura("tienda",Cliente("Pepe",13,123,"si"),"transporte",[],12,datetime(2024,11,12))
-f3=Factura("tienda",Cliente("Juan",13,123,"si"),"transporte",[],12,datetime(2024,10,12))
-f4=Factura("tienda",Cliente("Pepe",13,123,"si"),"transporte",[],12,datetime(2024,11,12))
-f5=Factura("tienda",Cliente("Juan",13,123,"si"),"transporte",[],12,datetime(2024,10,12))
-f6=Factura("tienda",Cliente("Pepe",13,123,"si"),"transporte",[],12,datetime(2024,11,12))
-f7=Factura("tienda",Cliente("Juan",13,123,"si"),"transporte",[],12,datetime(2024,10,12))
-f8=Factura("tienda",Cliente("Pepe",13,123,"si"),"transporte",[],12,datetime(2024,11,12))
-f9=Factura("tienda",Cliente("Juan",13,123,"si"),"transporte",[],12,datetime(2024,10,12))
-f10=Factura("tienda",Cliente("Pepe",13,123,"si"),"transporte",[],12,datetime(2024,11,12))
-f11=Factura("tienda",Cliente("Juan",13,123,"si"),"transporte",[],12,datetime(2024,10,12))
-f12=Factura("tienda",Cliente("Pepe",13,123,"si"),"transporte",[],12,datetime(2024,11,12))
+from gestorAplicacion.produccion.Producto import Producto
+p1=Producto("Jabon",12,"disponible","aseo","consumible",12)
+p2=Producto("Esponja",12,"disponible","aseo","consumible",12)
+p3=Producto("Shampoo",12,"disponible","aseo","consumible",12)
+
+f1=Factura("tienda",Cliente("Juan",13,123,"si"),"transporte",[p1,p2],12,datetime(2024,10,12))
+f2=Factura("tienda",Cliente("Pepe",13,123,"si"),"transporte",[p2,p3],12,datetime(2024,11,12))
+f3=Factura("tienda",Cliente("Juan",13,123,"si"),"transporte",[p1],12,datetime(2024,10,12))
+f4=Factura("tienda",Cliente("Pepe",13,123,"si"),"transporte",[p2],12,datetime(2024,11,12))
+f5=Factura("tienda",Cliente("Juan",13,123,"si"),"transporte",[p3],12,datetime(2024,10,12))
+f6=Factura("tienda",Cliente("Juan",13,123,"si"),"transporte",[p1,p2],12,datetime(2024,10,12))
+f8=Factura("tienda",Cliente("Pepe",13,123,"si"),"transporte",[p2,p3],12,datetime(2024,11,12))
+f9=Factura("tienda",Cliente("Juan",13,123,"si"),"transporte",[p1],12,datetime(2024,10,12))
+f10=Factura("tienda",Cliente("Pepe",13,123,"si"),"transporte",[p2],12,datetime(2024,11,12))
+f11=Factura("tienda",Cliente("Juan",13,123,"si"),"transporte",[p3],12,datetime(2024,10,12))
+

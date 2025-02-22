@@ -1,4 +1,4 @@
-from tkinter import Tk, Label,messagebox
+from tkinter import Tk, Label,messagebox, ttk
 from gestorAplicacion.gestion.Factura import Factura
 class Admin:
     pagina_actual = 0
@@ -13,6 +13,7 @@ class Admin:
         from ventanaInicio import VentanaInicio
         ventanaSecundaria.destroy()
         ventana_inicio=VentanaInicio()
+
     @staticmethod
     def salirDelSistema(): 
         pass #Este es el método que se encarga de serializar los objetos cuando se cierre el programa. Implementacion pendiente 
@@ -24,7 +25,7 @@ class Admin:
         facturas = []
         n = 1
         for factura in Factura.listaFacturas:
-            facturas.append(f"{n}. {factura.getCliente().getNombre()} - ID: {factura.getID()}")
+            facturas.append(f"{n}. {factura.getCliente().getNombre()} - Tienda: {factura.getTienda()} - ID: {factura.getID()}")
             n += 1
         return facturas
 
@@ -48,14 +49,32 @@ class Admin:
         if cls.pagina_actual > 0:
             cls.pagina_actual -= 1
     @staticmethod
-    def obtenerFactura(num): 
+   
+    def obtenerFactura(num, frameInteraccion): 
         try:
             num_factura = int(num)  # Convertir a entero
-            factura:Factura = Factura.seleccionarFactura(num_factura)  # Obtener la factura
-            Admin.mostrarProductosFactura(factura)  # Llamar a otro método para mostrar productos. Pendiente
-
+            factura = Factura.seleccionarFactura(num_factura)  # Obtener la factura 
+            Admin.mostrarProductosFactura(factura, frameInteraccion)  # Llamar a otro método para mostrar productos
         except ValueError:
             messagebox.showerror("Error", "Por favor, ingrese un número válido.")
         except IndexError:
             messagebox.showerror("Error", "Número de factura inválido.")
+
+    @staticmethod
+    def mostrarProductosFactura(factura, frameInteraccion):
+        # Limpiar solo los widgets relacionados con productos (NO eliminar todo el frame)
+        for widget in frameInteraccion.winfo_children():
+                widget.destroy()
+
+        # Obtener la lista de productos en formato de lista para el combobox
+        productos = factura.mostrarProductosFactura().split("\n")
+
+        # Crear y mostrar el combobox
+        Label(frameInteraccion,text="Selecciona el producto de la factura que deseas cambiar: ",font=("Arial",12)).pack(pady=10)
+        combobox = ttk.Combobox(frameInteraccion)
+        combobox["values"] = productos
+        combobox.current(0)  
+        combobox["state"] = "readonly"  
+        combobox.pack()
+
 

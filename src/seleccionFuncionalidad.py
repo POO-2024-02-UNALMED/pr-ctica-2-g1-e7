@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, messagebox, Tk, Frame
+from tkinter import ttk, messagebox, Tk, Frame, ttk
 from Admin import Admin 
 
 class VentanaSecundaria(Tk):
@@ -107,7 +107,7 @@ class VentanaSecundaria(Tk):
         self.limpiar_frame_interaccion()
         self.titulo.config(text="Bienvenido al gestor de devoluciones")
         tk.Label(self.frame_interaccion,text="Desde este menú podrá gestionar reembolsos o cambios de los productos de los clientes",font=("Arial",10)).pack(pady=10)
-        tk.Label(self.frame_interaccion,text="Seleccione el Id de la factura a la que desea hacer la devolucion",font=("Arial", 14)).pack(pady=10)        
+        tk.Label(self.frame_interaccion,text="Seleccione el número de la factura a la que desea hacer la devolucion",font=("Arial", 14)).pack(pady=10)        
         self.frameFacturas = Frame(self.frame_interaccion)
         self.frameFacturas.pack()
         self.frameBotones = tk.Frame(self.frame_interaccion)
@@ -130,11 +130,14 @@ class VentanaSecundaria(Tk):
         # Campo de entrada asociado a la variable
         entry_factura = tk.Entry(self.frame_interaccion, textvariable=self.factura_seleccionada)
         entry_factura.pack()
+        combo=ttk.Combobox(self.frame_interaccion)
 
         # Botón para procesar la factura seleccionada
         tk.Button(self.frame_interaccion, text="Seleccionar Factura", 
-          command=lambda: Admin.obtenerFactura(self.factura_seleccionada.get())).pack()
+          command=lambda: Admin.obtenerFactura(self.factura_seleccionada.get(), self.frame_interaccion)).pack()
+
         
+
   
     def mostrarFacturas(self):
      """Obtiene las facturas desde Admin y las muestra en pantalla."""
@@ -170,6 +173,7 @@ class VentanaSecundaria(Tk):
         self.limpiar_frame_interaccion()
         tk.Label(self.frame_interaccion, text="Interfaz de Estadísticas", font=("Arial", 14)).pack()
         tk.Label(self.frame_interaccion, text="Aquí se mostrarán las estadísticas del sistema").pack()
+
 
     # 🔹 Función para volver a la interfaz principal
     def mostrar_menu(self):
