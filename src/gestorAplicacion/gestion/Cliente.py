@@ -32,7 +32,7 @@ class Cliente:
 
 
     # Getters
-    def getNombre(self):
+    def getNombre(self) -> str:
         return self._nombre
 
     def getEdad(self):

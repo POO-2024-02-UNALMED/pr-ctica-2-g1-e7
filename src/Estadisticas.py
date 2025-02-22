@@ -3,8 +3,12 @@ from gestorAplicacion.produccion.Producto import Producto
 from gestorAplicacion.gestion.Cliente import Cliente
 from gestorAplicacion.produccion.Tienda import Tienda
 from gestorAplicacion.produccion.Transporte import Transporte
+from Excepciones import FechaFueraDeRango
+
 from datetime import datetime
 import time
+
+
 
 class Estadisticas:
     def __init__(self):
@@ -22,14 +26,19 @@ class Estadisticas:
                     fechaFinal = Factura.getFechaMaxima()
                     break
                 elif sel1 == "n":
-                    FechaInicio = input("Ingrese la fecha de inicio (dd-mm-yyyy): ")
-                    fechaInicio = datetime.strptime(FechaInicio, "%d-%m-%Y")
                     while(True):
                         try:
-                            if fechaInicio < Factura.getFechaMinima():
+                            FechaInicio = input("Ingrese la fecha de inicio (dd-mm-yyyy): ")
+                            fechaInicio = datetime.strptime(FechaInicio, "%d-%m-%Y")
+                            if fechaInicio < datetime.strptime(Factura.getFechaMinima(), "%d-%m-%Y"):
                                 print("La fecha de inicio debe ser mayor o igual a la de inicio por defecto")
+                                #raise FechaFueraDeRango("menor", "de inicio")
+                            elif fechaInicio > datetime.strptime(Factura.getFechaMaxima(), "%d-%m-%Y"):
+                                print("La fecha de inicio debe ser menor o igual a la de fin por defecto")
                             else:
                                 break
+                        #except FechaFueraDeRango as ffr:
+                            #print(ffr)
                         except ValueError:
                             print("formato de fecha inválido")
 
@@ -39,8 +48,13 @@ class Estadisticas:
                             fechaFinal = datetime.strptime(FechaFinal, "%d-%m-%Y")
                             if fechaFinal < fechaInicio:
                                 print("La fecha de finalización debe ser mayor o igual a la de inicio")
+                                #raise FechaFueraDeRango("menor", "de inicio")
+                            elif fechaFinal > datetime.strptime(Factura.getFechaMaxima(), "%d-%m-%Y"):
+                                print("La fecha de finalización debe ser menor o igual a la de fin por defecto")
                             else:
                                 break
+                        #except FechaFueraDeRango as ffr:
+                            #print(ffr)
                         except ValueError:
                             print("formato de fecha inválido")
                         
@@ -48,6 +62,8 @@ class Estadisticas:
                     print("Entrada inválida")
             except ValueError:
                 print("Entrada inválida")
+        
+            break
 
     def menu(self):
         print("Seleccione la estadística que desea consultar: ")
@@ -97,9 +113,9 @@ class Estadisticas:
             except ValueError:
                     print("Entrada inválida")
             
-            print("Desea realizar otra consulta? \ns \npulse cualquier tecla para salir")
+            print("Desea realizar otra consulta? \ns | pulse cualquier tecla para salir")
             sel2 = input()
-            if sel2 == "n":
+            if sel2 != "s":
                 break
                 
 
