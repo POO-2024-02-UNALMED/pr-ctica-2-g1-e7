@@ -1,5 +1,5 @@
-from tkinter import ttk, messagebox, Tk, Frame, ttk
-from Admin import Admin 
+from tkinter import Tk, Label,messagebox, ttk
+from gestorAplicacion.gestion.Factura import Factura
 from gestorAplicacion.gestion.Operario import Operario
 from gestorAplicacion.gestion.Vendedor import Vendedor
 from gestorAplicacion.gestion.Conductor import Conductor
