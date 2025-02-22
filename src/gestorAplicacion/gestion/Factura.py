@@ -16,7 +16,8 @@ class Factura(IMostrarProductos):
         # Si ya existen más de dos facturas, se ordenan por fecha.
         if len(Factura.getListaFacturas()) > 2:
             Factura.ordenar_facturas_por_fecha()
-
+        if type(fecha) is not datetime:
+            self._fecha = self.convertirFecha(fecha)
         self._fecha = fecha
         self._total = self.calcularTotal()
 
