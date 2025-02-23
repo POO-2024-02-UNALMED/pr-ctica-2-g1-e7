@@ -35,6 +35,11 @@ def devoluciones():
     from gestorAplicacion.gestion.Factura import Factura
     from gestorAplicacion.gestion.Vendedor import Vendedor
     from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
+    from  baseDatos.Deserializarcion import cargar_datos
+    from  baseDatos.Serialización import guardar_datos
+    cargar_datos()
+    
+
     """
     Implementa la funcionalidad de devoluciones en la consola.
     """
@@ -265,6 +270,9 @@ def devoluciones():
 
         else:
             print("Opción inválida. Intente nuevamente.")
+        guardar_datos()
+
+        
 
 #🔹 Ejemplo de ejecución del método en la terminal:
 devoluciones()
