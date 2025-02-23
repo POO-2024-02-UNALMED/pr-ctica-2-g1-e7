@@ -36,7 +36,7 @@ def main():
                 if 1 <= tiendaSeleccionadaIndex <= len(Fabrica.getListaTienda()):
                     break  # Número válido, salir del bucle
                 else:
-                    print(f"Número inválido. Ingrese un número entre 1 y {len(Fabrica.listaTienda)}.")
+                    print(f"Número inválido. Ingrese un número entre 1 y {len(Fabrica.getListaTienda())}.")
             
             except ValueError:
                 print("Entrada inválida. Por favor, ingrese un número.")
