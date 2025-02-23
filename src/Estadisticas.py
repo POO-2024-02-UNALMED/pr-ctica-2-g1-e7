@@ -1,15 +1,15 @@
+from gestorAplicacion.gestion.Factura import Factura
+from gestorAplicacion.produccion.Producto import Producto
+from gestorAplicacion.gestion.Cliente import Cliente
+from gestorAplicacion.produccion.Tienda import Tienda
+from gestorAplicacion.produccion.Transporte import Transporte
+from Excepciones import FechaFueraDeRango
 from datetime import datetime
 import time
 
 
 
 class Estadisticas:
-    from gestorAplicacion.gestion.Factura import Factura
-    from gestorAplicacion.produccion.Producto import Producto
-    from gestorAplicacion.gestion.Cliente import Cliente
-    from gestorAplicacion.produccion.Tienda import Tienda
-    from gestorAplicacion.produccion.Transporte import Transporte
-    from Excepciones import FechaFueraDeRango
     def __init__(self):
         pass
 
@@ -117,6 +117,7 @@ class Estadisticas:
             if sel2 != "s":
                 break
                 
+
 if __name__ == "__main__":
     f1 = Factura(tienda=Tienda(nombre="Tienda 1"), cliente=Cliente(nombre="Cliente 1"), fecha=datetime(2021, 5, 1).strftime("%d-%m-%Y"), transporte=Transporte(), lista_productos=[Producto(nombre="Producto 1", precio=3000, peso=3, tipo="Prod", categoria="Inmueble"), Producto(nombre="Producto 2", precio=3000, peso=3, tipo="Prod", categoria="Inmueble")], precio_envio=1000)
     f2 = Factura(tienda=Tienda(nombre="Tienda 2"), cliente=Cliente(nombre="Cliente 2"), fecha=datetime(2021, 5, 2).strftime("%d-%m-%Y"), transporte=Transporte(), lista_productos=[Producto(nombre="Producto 3", precio=3000, peso=3, tipo="Prod", categoria="Inmueble"), Producto(nombre="Producto 3", precio=3000, peso=3, tipo="Prod", categoria="Inmueble")], precio_envio=2000)
