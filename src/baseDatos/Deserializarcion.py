@@ -41,7 +41,7 @@ def cargar_datos():
         # Verificar lo que se está cargando
         print("📂 Datos cargados desde el archivo:")
         for key, value in datos.items():
-            print(f"🔹 {key}: {len(value)} elementos")
+            print(f"🔹 {key}: {len(value) if isinstance(value, list) else '1'} elementos")
 
         # ✅ Asignación de listas
         Cliente.listaClientes = datos.get("Clientes", [])
@@ -55,6 +55,7 @@ def cargar_datos():
         Transporte.listaTransportes = datos.get("Transporte", [])
         Fabrica._listaTienda = datos.get("Tiendas", [])
         Fabrica._productosDisponibles = datos.get("ProductosDisponibles", [])
+        Fabrica._cuentaBancaria = datos.get("CuentaBancariaFabrica", None)  # ✅ Cargar la cuenta bancaria
 
         print("✅ Datos cargados correctamente.")
 
