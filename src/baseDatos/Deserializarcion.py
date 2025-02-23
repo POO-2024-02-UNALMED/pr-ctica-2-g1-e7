@@ -1,14 +1,13 @@
 import sys
 import os
 import pickle
-
-
-# Agregar la carpeta 'src' al sys.path para que Python encuentre 'gestorAplicacion'
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
-
-import pickle
-import os
 import traceback
+
+# Obtener la ruta absoluta de la carpeta donde está este script
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+
+# Ruta del archivo de datos.pkl
+ruta_datos = os.path.join(BASE_DIR, "datos.pkl")
 
 if "baseDatos.Deserializarcion" in sys.modules:
     print("❌ Módulo ya importado, evitando recarga.")
@@ -26,15 +25,17 @@ def cargar_datos():
     from gestorAplicacion.gestion.Meta import Meta
     from gestorAplicacion.produccion.Fabrica import Fabrica
     from gestorAplicacion.produccion.Transporte import Transporte
+
     traceback.print_stack()
     print("🔄 Ejecutando cargar_datos()")
+    print(f"🔍 Buscando archivo en: {ruta_datos}")
 
-    if not os.path.exists("datos.pkl"):
-        print("⚠️ Archivo de datos no encontrado. Se inicializarán listas vacías.")
+    if not os.path.exists(ruta_datos):
+        print(f"⚠️ Archivo de datos no encontrado en {ruta_datos}. Se inicializarán listas vacías.")
         return
 
     try:
-        with open("datos.pkl", "rb") as archivo:
+        with open(ruta_datos, "rb") as archivo:
             datos = pickle.load(archivo)
 
         # Verificar lo que se está cargando
@@ -43,11 +44,6 @@ def cargar_datos():
             print(f"🔹 {key}: {len(value)} elementos")
 
         # ✅ Asignación de listas
-        print(f"📂 Antes de cargar: {Cliente.listaClientes}")
-
-        Cliente.listaClientes = datos.get("Clientes", [])
-
-        print(f"📂 Después de cargar: {Cliente.listaClientes}")
         Cliente.listaClientes = datos.get("Clientes", [])
         Conductor.listaConductores = datos.get("Conductores", [])
         Factura.listaFacturas = datos.get("Facturas", [])
