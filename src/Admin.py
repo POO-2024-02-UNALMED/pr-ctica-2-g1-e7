@@ -6,7 +6,7 @@ from gestorAplicacion.gestion.Conductor import Conductor
 from gestorAplicacion.produccion.Fabrica import Fabrica
 from gestorAplicacion.gestion.Meta import Meta
 from tkinter import messagebox
-
+#from ventanaInicio import centrar_ventana
 
 class Admin:
     pagina_actual = 0
@@ -16,12 +16,15 @@ class Admin:
         from seleccionFuncionalidad import VentanaSecundaria
         ventanaPrincipal.destroy()
         nuevaVentana=VentanaSecundaria()
+        #centrar_ventana(nuevaVentana)
+
 
     @staticmethod
     def volverVentanaInicio(ventanaSecundaria:Tk):
         from ventanaInicio import VentanaInicio
         ventanaSecundaria.destroy()
         ventana_inicio=VentanaInicio()
+        #centrar_ventana(ventana_inicio)
 
     @staticmethod
     def salirDelSistema(): 
