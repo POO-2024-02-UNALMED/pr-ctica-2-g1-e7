@@ -314,20 +314,22 @@ class VentanaSecundaria(Tk):
 
         tk.Label(self.frame_interaccion, text=f"Trabajador seleccionado: {trabajador.getNombre()}", font=("Arial", 14)).pack(pady=20)
         tk.Label(self.frame_interaccion, text=f"Pago potencial: {pago_potencial} por {trabajador.getCantidadTrabajo()} trabajos realizados.",
-                 font=("Arial", 12)).pack(pady=10)
+                font=("Arial", 12)).pack(pady=10)
 
-        # Botón para revisar metas
-        tk.Button(self.frame_interaccion, text="Revisar Metas", 
-                  command=lambda: self.mostrar_metas_trabajador(trabajador),
-                  width=20, height=2).pack(pady=10)
+        # Botón para revisar metas (solo si no hay metas cumplidas)
+        if self._pago_por_metas == 0:
+            tk.Button(self.frame_interaccion, text="Revisar Metas", 
+                    command=lambda: self.mostrar_metas_trabajador(trabajador),
+                    width=20, height=2).pack(pady=10)
 
         # Botón para realizar el pago
         tk.Button(self.frame_interaccion, text="Realizar Pago", 
-                  command=lambda: self.realizar_pago(trabajador, pago_potencial),
-                  width=20, height=2).pack(pady=10)
+                command=lambda: self.realizar_pago(trabajador, pago_potencial),
+                width=20, height=2).pack(pady=10)
 
-        # Botón para volver
-        tk.Button(self.frame_interaccion, text="Volver", command=self.pagoTrabajadores, width=20, height=2).pack(pady=10)
+        # 🔹 Botón para volver (solo si no hay metas cumplidas)
+        if self._pago_por_metas == 0:
+            tk.Button(self.frame_interaccion, text="Volver", command=self.pagoTrabajadores, width=20, height=2).pack(pady=10)
 
 
     def mostrar_metas_trabajador(self, trabajador):
@@ -335,7 +337,7 @@ class VentanaSecundaria(Tk):
         self.limpiar_frame_interaccion()
 
         # Usamos Admin.revisarMetasTrabajador para obtener las metas no pagadas
-        metas_no_pagas = Admin.revisarMetasTrabajador(trabajador)
+        metas_no_pagas = [meta for meta in trabajador.getMeta() if not meta.getVerificador()]
 
         if not metas_no_pagas:
             tk.Label(self.frame_interaccion, text="El trabajador no tiene metas pendientes.", font=("Arial", 14)).pack(pady=20, fill="x", padx=10)
@@ -379,6 +381,12 @@ class VentanaSecundaria(Tk):
             tk.Button(frame_meta, text="Revisar Meta", command=lambda m=meta: self.revisar_meta(trabajador, m),
                     width=20, height=1).pack(pady=5)
 
+        # 🔹 Botón para proceder con el pago (si hay metas cumplidas)
+        if self._pago_por_metas > 0:
+            tk.Button(self.frame_interaccion, text="Proceder con el Pago", 
+                    command=lambda: self.seleccionar_trabajador(trabajador),
+                    width=20, height=2).pack(pady=10)
+
         # Botón para volver
         tk.Button(self.frame_interaccion, text="Volver", command=lambda: self.seleccionar_trabajador(trabajador),
                 width=20, height=2).pack(pady=10)
@@ -403,17 +411,30 @@ class VentanaSecundaria(Tk):
             # Sumar el valor de la meta al pago por metas
             self._pago_por_metas += meta.getPago()  # Aquí se suma el valor de la meta
 
-            # Eliminar la meta cumplida de la lista de metas del trabajador
-            trabajador.getMeta().remove(meta)  # Solo se elimina la meta del trabajador seleccionado
+            # 🔹 No eliminar la meta de la lista, solo marcarla como cumplida
+
+            # 🔹 Opciones después de cumplir una meta
+            frame_opciones = tk.Frame(self.frame_interaccion)
+            frame_opciones.pack(pady=10)
+
+            # Botón para revisar otra meta
+            tk.Button(frame_opciones, text="Revisar Otra Meta", 
+                    command=lambda: self.mostrar_metas_trabajador(trabajador),
+                    width=20, height=2).pack(side="left", padx=10)
+
+            # Botón para proceder con el pago
+            tk.Button(frame_opciones, text="Proceder con el Pago", 
+                    command=lambda: self.seleccionar_trabajador(trabajador),
+                    width=20, height=2).pack(side="left", padx=10)
         else:
             # Mostrar información de la meta no cumplida
             tk.Label(frame_meta, text=f"Meta No Cumplida: {str(meta)}", font=("Arial", 12), justify="left").pack(pady=5, padx=10, fill="x")
             tk.Label(frame_meta, text=meta.porcentajeCumplidos(trabajador.getCantidadTrabajo()), font=("Arial", 12), justify="left").pack(pady=5, padx=10, fill="x")
 
-        # Botón para volver a la lista de metas (sin la meta cumplida)
-        tk.Button(self.frame_interaccion, text="Volver", command=lambda: self.mostrar_metas_trabajador(trabajador),
-                width=20, height=2).pack(pady=10)
-
+            # 🔹 Botón para volver a la lista de metas
+            tk.Button(self.frame_interaccion, text="Volver a Metas", command=lambda: self.mostrar_metas_trabajador(trabajador),
+                    width=20, height=2).pack(pady=10)
+        
     def realizar_pago(self, trabajador, pago_potencial):
         """Realiza el pago al trabajador y muestra el comprobante."""
         # Sumar el pago por metas al pago total
@@ -432,7 +453,7 @@ class VentanaSecundaria(Tk):
         tk.Label(self.frame_interaccion, text=f"- {pago_potencial} por las veces trabajadas", font=("Arial", 12)).pack(pady=5)
         tk.Label(self.frame_interaccion, text=f"- {self._pago_por_metas} por las metas cumplidas", font=("Arial", 12)).pack(pady=5)
 
-        # Reiniciar el valor de las metas cumplidas
+        # 🔹 Reiniciar el valor de las metas cumplidas
         self._pago_por_metas = 0
 
         # Botón para volver al menú principal
