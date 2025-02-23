@@ -2,7 +2,7 @@ import sys
 import os
 
 # Agregar la carpeta 'src' al sys.path para que Python encuentre 'gestorAplicacion'
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 import pickle
 import os
@@ -18,6 +18,7 @@ def guardar_datos():
     from gestorAplicacion.gestion.Meta import Meta
     from gestorAplicacion.produccion.Fabrica import Fabrica
     from gestorAplicacion.produccion.Transporte import Transporte
+
     datos = {
         "Clientes": Cliente.listaClientes,
         "Conductores": Conductor.listaConductores,
@@ -32,7 +33,11 @@ def guardar_datos():
         "ProductosDisponibles": Fabrica.getProductosDisponibles()
     }
 
+    # Verificar que las listas no estén vacías antes de guardar
+    for key, value in datos.items():
+        print(f"📌 {key}: {len(value)} elementos guardados")
+
     with open("datos.pkl", "wb") as archivo:
         pickle.dump(datos, archivo)
-    print("✅ Datos guardados correctamente.")
 
+    print("✅ Datos guardados correctamente.")

@@ -132,7 +132,7 @@ class Fabrica:
         return [Producto(producto.getNombre, producto.getPrecio, producto.getEstado,
                          producto.getTipo, producto.getCategoria, producto.getPeso)
                 for _ in range(cantidad_a_enviar)]
-
+'''
 import datetime
 from gestorAplicacion.gestion.Vendedor import Vendedor
 from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
@@ -400,3 +400,4 @@ conductor9.setIndiceMeta(50)
 
 conductor10.setCantidadTrabajo(6)
 conductor10.setIndiceMeta(18)
+'''

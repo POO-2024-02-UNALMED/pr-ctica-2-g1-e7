@@ -2,19 +2,17 @@ import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 from gestorAplicacion.gestion.Persona import Persona
-from gestorAplicacion.produccion.Transporte import Transporte
-from gestorAplicacion.produccion.TipoTransporte import TipoTransporte
 
 class Conductor(Persona):
     listaConductores = []
     def __init__(self, nombre: str, cedula: int, edad: int, cuentaBancaria, fabrica, transporte, licencia: str = None):
-        #from produccion.Transporte import Transporte
+        from gestorAplicacion.produccion.Transporte import Transporte
         super().__init__(nombre, cedula, edad, cuentaBancaria)
         self._transporte: Transporte = transporte
         self._fabrica = fabrica
         self._metaConductor = []
         self._licencia = licencia
-        Transporte.setConductor(self)
+        transporte.setConductor(self)
         Conductor.listaConductores.append(self)
     
     def mostrarMetas(self) -> str:

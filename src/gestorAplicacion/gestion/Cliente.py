@@ -1,7 +1,9 @@
 import sys
 import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+import traceback
 
+print(f"🔍 Cliente.py ejecutándose como: {'Principal' if __name__ == '__main__' else 'Módulo importado'}")
 class Cliente:
     listaClientes = []      # Variable de clase: lista de todos los clientes
     totalCreados = 0        # Variable de clase: contador de clientes creados
@@ -9,6 +11,7 @@ class Cliente:
     def __init__(self, nombre=None, edad=None, cedula=None, cuentaBancaria=None):
         if all(param is not None for param in [nombre, edad, cedula, cuentaBancaria]):
             self.__nombre = nombre
+            self._nombre = self.__nombre
             self.__edad = edad
             self.__cedula = cedula
             self.__cuentaBancaria = cuentaBancaria
@@ -35,8 +38,8 @@ class Cliente:
 
 
     # Getters
-    def getNombre(self):
-        return self.__nombre
+    def getNombre(self) -> str:
+        return self._nombre
 
     def getEdad(self):
         return self.__edad
@@ -85,9 +88,8 @@ class Cliente:
         """
         if producto in self.__listaProductos:
             self.__listaProductos.remove(producto)
-
-from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
 '''
+from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
 cuentaCliente1 = CuentaBancaria(10001, 5000)
 cuentaCliente2 = CuentaBancaria(10002, 15000)
 cuentaCliente3 = CuentaBancaria(10003, 8000)
@@ -100,10 +102,8 @@ cliente3 = Cliente("Carlos García", 40, 567890123, cuentaCliente3)
 cliente4 = Cliente("Ana Rodríguez", 35, 654321987, cuentaCliente4)
 cliente5 = Cliente("Luis Fernández", 28, 192837465, cuentaCliente5)
 '''
-print("Clientes al guardar:", Cliente.listaClientes)
-
-from  baseDatos.Deserializarcion import cargar_datos
-from  baseDatos.Serialización import guardar_datos
-guardar_datos()
-cargar_datos()
-print(Cliente.listaClientes)
+traceback.print_stack()
+if __name__ == "__main__":
+    from  baseDatos.Deserializarcion import cargar_datos
+    cargar_datos()
+    print(Cliente.listaClientes)

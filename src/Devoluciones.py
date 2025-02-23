@@ -1,28 +1,22 @@
-from gestorAplicacion.gestion.Cliente import Cliente 
-from gestorAplicacion.produccion.Fabrica import Fabrica
-from gestorAplicacion.produccion.Tienda import Tienda
-from gestorAplicacion.produccion.Producto import Producto
-from gestorAplicacion.gestion.Operario import Operario
-from gestorAplicacion.gestion.Factura import Factura
-from gestorAplicacion.gestion.Vendedor import Vendedor
-from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
 import tkinter as tk
 from tkinter import ttk, messagebox
 from datetime import datetime
 import time 
+
 """
+
 # 🔹 CREACIÓN DE OBJETOS NECESARIOS PARA LA FUNCIONALIDAD
-p1=Producto("a",12,"venta","si",12)
-p2=Producto("a",12,"venta","si",12)
-p3=Producto("a",12,"venta","si",12)
-p4=Producto("a",12,"venta","si",12)
-p5=Producto("a",12,"venta","si",12)
-p6=Producto("a",12,"venta","si",12)
-p7=Producto("a",12,"venta","si",12)
-p8=Producto("a",12,"venta","si",12)
-p9=Producto("a",12,"venta","si",12)
-p0=Producto("a",12,"venta","si",12)
-p10=Producto("b",10,"a","venta",10)
+p1=Producto("a",12,"venta","otro","si",12)
+p2=Producto("a",12,"venta","otro","si",12)
+p3=Producto("a",12,"venta","otro","si",12)
+p4=Producto("a",12,"venta","otro","si",12)
+p5=Producto("a",12,"venta","otro","si",12)
+p6=Producto("a",12,"venta","otro","si",12)
+p7=Producto("a",12,"venta","otro","si",12)
+p8=Producto("a",12,"venta","otro","si",12)
+p9=Producto("a",12,"venta","otro","si",12)
+p10=Producto("b",12,"venta","otro","si",12)
+
 
 listaProductos=[p1,p2,p3,p10]
 tienda=Tienda("tienda 1",Vendedor("juan",123,12,CuentaBancaria(124,1000000)),CuentaBancaria(12,100000),10,10,10)
@@ -31,7 +25,16 @@ fabrica=Fabrica(1,"si","Av del rio",CuentaBancaria(12,100000),[p1,p2,p3,p4,p5,p6
 
 factura=Factura(tienda,Cliente("Juan",12,1234,CuentaBancaria(12,1000)),"si",[p1,p2,p3,p4,p5,p6,p7,p8,p10],20,datetime.now())"""
 
+
 def devoluciones():
+    from gestorAplicacion.gestion.Cliente import Cliente 
+    from gestorAplicacion.produccion.Fabrica import Fabrica
+    from gestorAplicacion.produccion.Tienda import Tienda
+    from gestorAplicacion.produccion.Producto import Producto
+    from gestorAplicacion.gestion.Operario import Operario
+    from gestorAplicacion.gestion.Factura import Factura
+    from gestorAplicacion.gestion.Vendedor import Vendedor
+    from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
     """
     Implementa la funcionalidad de devoluciones en la consola.
     """
@@ -87,6 +90,7 @@ def devoluciones():
                         print("El producto ya ha sido devuelto, elija otro.")
                     else:
                         print(f"Eligió el producto: {producto.getNombre()}")
+                        
                         print("Indique el motivo de la devolución:")
                         
                         # Mostrar los motivos de devolución
@@ -116,7 +120,7 @@ def devoluciones():
                             print("Por el motivo indicado, se le hará el reembolso del dinero.")
                             cliente:Cliente = tienda.devolverProducto(factura, producto)
                             valorADevolver = Fabrica.descontarDineroCuenta(producto)
-                            Fabrica.cuentaBancaria.devolverDinero(valorADevolver, cliente)
+                            Fabrica.getCuentaBancaria().devolverDinero(valorADevolver, cliente)
                             cliente.removerProducto(producto)
                             print(f"Se le devolverá el valor de su producto: ${producto.getPrecio()}")
                             print("----Devolviendo el dinero...----")
@@ -234,7 +238,7 @@ def devoluciones():
                             else:
                                 print("El total no supera el precio del producto original. No se devuelve dinero.")
                             cliente=factura.getCliente() 
-                            cliente.getCuentaBancaria().transferirDinero(excedente, Fabrica.cuentaBancaria)
+                            cliente.getCuentaBancaria().transferirDinero(excedente, Fabrica.getCuentaBancaria())
                             cliente.removerProducto(producto)
                             producto.setDevuelto(True)
 

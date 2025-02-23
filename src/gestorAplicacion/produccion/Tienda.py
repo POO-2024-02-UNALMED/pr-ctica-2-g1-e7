@@ -3,7 +3,6 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
  # Importar Fabrica al inicio
-from gestorAplicacion.produccion.Producto import Producto  # Importar Fabrica al inicio
 
 class Tienda:
     numTiendas = 0 # Atributo estático para contar el número de tiendas
@@ -133,6 +132,7 @@ class Tienda:
     # Crea una lista con los productos disponibles en la tienda y la cantidad de cada uno.
     # Si un producto ya existe en la lista, incrementa su contador; de lo contrario, lo agrega como un nuevo elemento.
     def listaProductosTienda(self):
+        from gestorAplicacion.produccion.Producto import Producto  # Importar Fabrica al inicio
         listaProductos = []
         
         for producto in self._listaProducto:
@@ -213,7 +213,7 @@ class Tienda:
             return productos_seleccionados
 
         
-    def productosPorCategoria(self, productos : List[Producto], conteoTemporal=None):
+    def productosPorCategoria(self, productos, conteoTemporal=None):
             """
             Muestra los productos por categoría en formato: (cantidad actual/capacidad máxima).
             Si conteoTemporal se proporciona, se usa en lugar del conteo normal.

@@ -1,15 +1,20 @@
 import time
 import datetime
-from gestorAplicacion.produccion.Tienda import Tienda
-from gestorAplicacion.produccion.Fabrica import Fabrica
-from gestorAplicacion.produccion.Transporte import Transporte
-from gestorAplicacion.produccion.TipoTransporte import TipoTransporte
-from gestorAplicacion.gestion.Cliente import Cliente
-from gestorAplicacion.produccion.Producto import Producto
-from gestorAplicacion.gestion.Conductor import Conductor
-from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
+
 
 def enviar_pedidos():
+    from gestorAplicacion.produccion.Tienda import Tienda
+    from gestorAplicacion.produccion.Fabrica import Fabrica
+    from gestorAplicacion.produccion.Transporte import Transporte
+    from gestorAplicacion.produccion.TipoTransporte import TipoTransporte
+    from gestorAplicacion.gestion.Cliente import Cliente
+    from gestorAplicacion.produccion.Producto import Producto
+    from gestorAplicacion.gestion.Conductor import Conductor
+    from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
+    from  baseDatos.Deserializarcion import cargar_datos
+    from  baseDatos.Serialización import guardar_datos
+
+    cargar_datos()
     while True:
         print("\nEligió la opción de envio de pedidos. \n\nSeleccione al cliente que realizó el pedido. Oprima 0 para salir.")
         print("\n0. Salir")
@@ -60,7 +65,7 @@ def enviar_pedidos():
         print("\nSeleccione la tienda desde la cual se enviará el pedido. Si no desea continuar, presione 0 para salir.")
         print("\nListado de Tiendas:")
         print("0. Salir")
-        print(Tienda.mostrarTiendasSinProductos())#llamar el metodo mostrarTiendas
+        print(Fabrica.mostrarTiendasSinProductos())#llamar el metodo mostrarTiendas
 
         opcion = -1
         tiendaSeleccionada = None
@@ -283,7 +288,7 @@ def enviar_pedidos():
 
         # Eliminar los productos vendidos del inventario
         tiendaSeleccionada.eliminarProductosPorNombre(listaProductosPedidos)
-
+        guardar_datos()
         # Mensaje final
         print("¡Genial! 🎉 Los productos han sido enviados con éxito.")
         print("Si desea volver al menú principal, ingrese 1.")
