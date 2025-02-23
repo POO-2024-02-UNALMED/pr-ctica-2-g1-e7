@@ -8,6 +8,7 @@ from gestorAplicacion.produccion.Producto import Producto
 class VentanaSecundaria(Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self._pago_por_metas = 0
         cargar_datos()
         # Configuración de la ventana
         self.geometry("800x600")
@@ -399,8 +400,8 @@ class VentanaSecundaria(Tk):
             # Marcar la meta como cumplida
             meta.setVerificador(True)
 
-            # Añadir el pago de la meta al pago total del trabajador 
-            
+            # Sumar el valor de la meta al pago por metas
+            self._pago_por_metas += meta.getPago()  # Aquí se suma el valor de la meta
 
             # Eliminar la meta cumplida de la lista de metas del trabajador
             trabajador.getMeta().remove(meta)  # Solo se elimina la meta del trabajador seleccionado
@@ -415,22 +416,27 @@ class VentanaSecundaria(Tk):
 
     def realizar_pago(self, trabajador, pago_potencial):
         """Realiza el pago al trabajador y muestra el comprobante."""
-        # Usamos Admin.realizarPago para realizar el pago
-        pago_por_metas = sum(meta.getPago() for meta in trabajador.getMeta() if meta.getVerificador())
-        pago_total = pago_potencial + pago_por_metas
+        # Sumar el pago por metas al pago total
+        pago_total = pago_potencial + self._pago_por_metas
 
+        # Realizar el pago
         Admin.realizarPago(trabajador, pago_total)
 
+        # Limpiar el frame de interacción
         self.limpiar_frame_interaccion()
 
+        # Mostrar el comprobante de pago
         tk.Label(self.frame_interaccion, text="COMPROBANTE DE PAGO", font=("Arial", 16)).pack(pady=20)
         tk.Label(self.frame_interaccion, text=f"Trabajador: {trabajador.getNombre()}", font=("Arial", 14)).pack(pady=10)
         tk.Label(self.frame_interaccion, text=f"Total pagado: {pago_total}", font=("Arial", 14)).pack(pady=10)
         tk.Label(self.frame_interaccion, text=f"- {pago_potencial} por las veces trabajadas", font=("Arial", 12)).pack(pady=5)
-        tk.Label(self.frame_interaccion, text=f"- {pago_por_metas} por las metas cumplidas", font=("Arial", 12)).pack(pady=5)
+        tk.Label(self.frame_interaccion, text=f"- {self._pago_por_metas} por las metas cumplidas", font=("Arial", 12)).pack(pady=5)
 
+        # Reiniciar el valor de las metas cumplidas
+        self._pago_por_metas = 0
+
+        # Botón para volver al menú principal
         tk.Button(self.frame_interaccion, text="Volver al Menú Principal", command=self.mostrar_menu, width=20, height=2).pack(pady=20)
-
 
 # Ejecutar la aplicación desde una ventana principal
 if __name__ == "__main__":
