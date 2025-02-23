@@ -69,7 +69,7 @@ class Transporte:
 
     def getConductor(self):
         return self.__conductor
-
+    
     def setConductor(self, conductor):
         self.__conductor = conductor
 

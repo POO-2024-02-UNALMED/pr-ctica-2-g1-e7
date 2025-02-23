@@ -9,6 +9,14 @@ from gestorAplicacion.produccion.Tienda import Tienda
 
 
 def pagoTrabajadores():
+    from gestorAplicacion.gestion.Operario import Operario
+    from gestorAplicacion.gestion.Vendedor import Vendedor
+    from gestorAplicacion.gestion.Conductor import Conductor
+    from gestorAplicacion.produccion.Fabrica import Fabrica
+    from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
+    from gestorAplicacion.gestion.Meta import Meta
+    from gestorAplicacion.produccion.Producto import Producto
+    from gestorAplicacion.produccion.Tienda import Tienda
     print("\nEligió la opción de pagar a sus trabajadores.")
     while True:
         listaTrabajadores = []
@@ -169,3 +177,47 @@ def pagoTrabajadores():
                 else:
                     print("Seleccione una opción válida.")
                     continue
+
+
+"""
+# 🔹 CREACIÓN DE OBJETOS NECESARIOS PARA LA FUNCIONALIDAD
+p1=Producto("a",12,"dispo","venta","si",12)
+p2=Producto("a",12,"dispo","venta","si",12)
+p3=Producto("a",12,"dispo","venta","si",12)
+p4=Producto("a",12,"dispo","venta","si",12)
+p5=Producto("a",12,"dispo","venta","si",12)
+p6=Producto("a",12,"dispo","venta","si",12)
+p7=Producto("a",12,"dispo","venta","si",12)
+p8=Producto("a",12,"dispo","venta","si",12)
+p9=Producto("a",12,"dispo","venta","si",12)
+p0=Producto("a",12,"dispo","venta","si",12)
+
+listaProductos=[p1,p2,p3]
+tienda=Tienda("tienda 1",Vendedor("juan",123,12,CuentaBancaria(124,1000000)),CuentaBancaria(12,100000),10,10,10)
+tienda.__listaProducto=listaProductos
+fabrica=Fabrica(1,"si","Av del rio",CuentaBancaria(12,100000),[p1,p2,p3,p4,p5,p6,p7,p8],[tienda],Operario("Juan",12,12,CuentaBancaria(2,2000),None))
+
+#Creacion de vendedores
+meta1 = Meta("facil", 5, 10000)
+meta2 = Meta("Dificil", 10, 20000)
+
+cuenta1 = CuentaBancaria(123456, 10000)
+cuenta2 = CuentaBancaria(123457, 20000)
+
+vendedor1 = Vendedor("carlos", 10356, 19, cuenta1)
+vendedor2 = Vendedor("Juan", 98765, 20, cuenta2)
+
+vendedor1.setMetaVendedor(meta1)
+vendedor1.setMetaVendedor(meta2)
+
+vendedor2.setMetaVendedor(meta1)
+vendedor2.setMetaVendedor(meta2)
+
+vendedor1.setIndiceMeta(6)
+vendedor1.setCantidadTrabajo(6)
+
+vendedor2.setIndiceMeta(4)
+vendedor2.setCantidadTrabajo(4)
+
+print(vendedor1.getIndiceMeta())
+pagoTrabajadores()"""

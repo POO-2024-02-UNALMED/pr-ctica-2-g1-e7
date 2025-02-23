@@ -1,15 +1,18 @@
 import time
-from gestorAplicacion.produccion.Fabrica import Fabrica  # Importar la clase Fabrica
-from gestorAplicacion.produccion.Tienda import Tienda    # Importar la clase Tienda
-from gestorAplicacion.produccion.Producto import Producto  # Importar la clase Producto
-from gestorAplicacion.produccion.TipoTransporte import TipoTransporte  # Importar la clase TipoTransporte
-from gestorAplicacion.produccion.Transporte import Transporte  # Importar la clase Transporte
-from gestorAplicacion.gestion.Conductor import Conductor  # Importar la clase Conductor
-from gestorAplicacion.gestion.Vendedor import Vendedor #prueba
-from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria#prueba
 import traceback
    
 def main():
+    from gestorAplicacion.produccion.Fabrica import Fabrica  # Importar la clase Fabrica
+    from gestorAplicacion.produccion.Tienda import Tienda    # Importar la clase Tienda
+    from gestorAplicacion.produccion.Producto import Producto  # Importar la clase Producto
+    from gestorAplicacion.produccion.TipoTransporte import TipoTransporte  # Importar la clase TipoTransporte
+    from gestorAplicacion.produccion.Transporte import Transporte  # Importar la clase Transporte
+    from gestorAplicacion.gestion.Conductor import Conductor  # Importar la clase Conductor
+    from gestorAplicacion.gestion.Vendedor import Vendedor #prueba
+    from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria#prueba
+    from  baseDatos.Deserializarcion import cargar_datos
+    from  baseDatos.Serialización import guardar_datos
+    cargar_datos()
     salir = False
     
     while not salir:
@@ -36,7 +39,7 @@ def main():
                 if 1 <= tiendaSeleccionadaIndex <= len(Fabrica.getListaTienda()):
                     break  # Número válido, salir del bucle
                 else:
-                    print(f"Número inválido. Ingrese un número entre 1 y {len(Fabrica.listaTienda)}.")
+                    print(f"Número inválido. Ingrese un número entre 1 y {len(Fabrica.getListaTienda())}.")
             
             except ValueError:
                 print("Entrada inválida. Por favor, ingrese un número.")
@@ -270,9 +273,9 @@ def main():
         except Exception as e:
             print("Entrada inválida. Volviendo al menú principal...")
             salir = True
+        guardar_datos()
 
 if __name__ == "__main__":
     main()
  
-
 

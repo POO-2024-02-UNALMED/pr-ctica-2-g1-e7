@@ -1,3 +1,4 @@
-python ventanaInicio.py
 @echo off
+cd /d %~dp0
+python ventanaInicio.py
 pause

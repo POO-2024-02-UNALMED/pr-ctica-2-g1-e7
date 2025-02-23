@@ -4,7 +4,6 @@ from gestorAplicacion.gestion.Cliente import Cliente
 from gestorAplicacion.produccion.Tienda import Tienda
 from gestorAplicacion.produccion.Transporte import Transporte
 from Excepciones import FechaFueraDeRango
-
 from datetime import datetime
 import time
 

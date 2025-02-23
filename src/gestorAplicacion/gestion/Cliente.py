@@ -1,3 +1,9 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+import traceback
+
+print(f"🔍 Cliente.py ejecutándose como: {'Principal' if __name__ == '__main__' else 'Módulo importado'}")
 class Cliente:
     listaClientes = []      # Variable de clase: lista de todos los clientes
     totalCreados = 0        # Variable de clase: contador de clientes creados
@@ -82,10 +88,8 @@ class Cliente:
         """
         if producto in self.__listaProductos:
             self.__listaProductos.remove(producto)
-            
+
 from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
-
-
 cuentaCliente1 = CuentaBancaria(10001, 5000)
 cuentaCliente2 = CuentaBancaria(10002, 15000)
 cuentaCliente3 = CuentaBancaria(10003, 8000)

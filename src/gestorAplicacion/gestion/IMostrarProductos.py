@@ -10,8 +10,8 @@ class IMostrarProductos(ABC):
 
     def mostrarProductosFactura(self) -> str:
         texto = [
-            f"{i + 1}. {p.getNombre()} (devuelto)" if p.getDevuelto() else f"{i + 1}. {p.getNombre()}"
-            for i, p in enumerate(self.getListaProductos())
+            f" {p.getNombre()} (devuelto)" if p.getDevuelto() else f" {p.getNombre()}"
+            for p in self.getListaProductos()
         ]
         
         return "\n".join(texto)

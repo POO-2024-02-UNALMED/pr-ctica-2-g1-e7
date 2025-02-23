@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 from datetime import datetime
 from gestorAplicacion.gestion.IMostrarProductos import IMostrarProductos
 
@@ -289,7 +292,7 @@ class Factura(IMostrarProductos):
     @staticmethod
     def setTotalCreadas(cls, totalCreadas):
         cls.totalCreadas=totalCreadas
-
+'''
 #Creacion provisional de facturas para probar la interfaz de devoluciones 
 from gestorAplicacion.gestion.Cliente import Cliente
 from gestorAplicacion.produccion.Producto import Producto
@@ -308,3 +311,4 @@ f9=Factura("tienda",Cliente("Juan",13,123,"si"),"transporte",[p1],12,datetime(20
 f10=Factura("tienda",Cliente("Pepe",13,123,"si"),"transporte",[p2],12,datetime(2024,11,12))
 f11=Factura("tienda",Cliente("Juan",13,123,"si"),"transporte",[p3],12,datetime(2024,10,12))
 
+'''
