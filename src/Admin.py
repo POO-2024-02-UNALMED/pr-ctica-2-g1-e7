@@ -5,6 +5,9 @@ from gestorAplicacion.gestion.Vendedor import Vendedor
 from gestorAplicacion.gestion.Conductor import Conductor
 from gestorAplicacion.produccion.Fabrica import Fabrica
 from gestorAplicacion.gestion.Meta import Meta
+from  baseDatos.Deserializarcion import cargar_datos
+from  baseDatos.Serialización import guardar_datos
+cargar_datos()
 from tkinter import messagebox
 
 
@@ -84,19 +87,21 @@ class Admin:
         combobox.pack()
          # 🔹 Botón para seleccionar el producto
         btnSeleccionarProducto = Button(frameInteraccion, text="Seleccionar Producto",
-                                       command=lambda: Admin.obtenerProducto(combobox))
+                                       command=lambda: Admin.obtenerProducto(combobox,frameInteraccion))
         btnSeleccionarProducto.pack(pady=5)
         
     @staticmethod
-    def obtenerProducto(combobox): 
+    def obtenerProducto(combobox,frameInteraccion): 
+        from seleccionFuncionalidad import VentanaSecundaria
         """Obtiene el producto seleccionado en el Combobox y muestra un mensaje de confirmación."""
         producto_seleccionado = combobox.get()  # Obtener texto del combobox
-    
+            
         if not producto_seleccionado:
          messagebox.showerror("Error", "Seleccione un producto válido.")
          return
+        VentanaSecundaria.mostrarMotivosDevolucion(frameInteraccion)
+   
 
-        messagebox.showinfo("Producto Seleccionado", f"Has seleccionado: {producto_seleccionado}")
     
 
     # 🔹 Nuevos métodos para el pago de trabajadores

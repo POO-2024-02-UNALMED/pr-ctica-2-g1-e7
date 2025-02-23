@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk, messagebox, Tk, Frame, ttk
 from Admin import Admin 
-
+  
 class VentanaSecundaria(Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -9,7 +9,6 @@ class VentanaSecundaria(Tk):
         self.geometry("800x600")
         self.title("Distribuidora JJAYC")
         self.pagina_actual = 0
-
         # 🔹 ZONA 0 - Título de la aplicación
         self.frame_titulo = tk.Frame(self, relief="solid", bd=1)
         self.frame_titulo.pack(fill="x", padx=5, pady=5)
@@ -153,6 +152,8 @@ class VentanaSecundaria(Tk):
             tk.Label(self.frameFacturas, text=factura, font=("Arial", 12)).pack()
 
         tk.Label(self.frameFacturas, text="----------------------------").pack(anchor="s")
+    
+  
 
     def mostrarFacturasSiguiente(self):
         """Maneja el avance de página."""
@@ -162,7 +163,18 @@ class VentanaSecundaria(Tk):
     def mostrarFacturasAtras(self):
         """Maneja el retroceso de página."""
         Admin.retrocederPagina()
-        self.mostrarFacturas()
+        self.mostrarFacturas()  
+
+    @staticmethod
+    def mostrarMotivosDevolucion(frameInteraccion):
+        from gestorAplicacion.produccion.Producto import Producto
+        motivos= Producto.getMotivosDevolucion()
+        tk.Label(frameInteraccion,text="¿Por qué desea devolver el producto?",font=("Arial",10)).pack()
+        motivos=ttk.Combobox(frameInteraccion,values=motivos,width=50,state="readonly").pack()
+        
+
+        
+
 
     # 🔹 Funcionalidad de estadísticas (a implementar)
     def mostrar_estadisticas(self):
