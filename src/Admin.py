@@ -197,6 +197,6 @@ class Admin:
         :param trabajador: El trabajador al que se le realizará el pago.
         :param pago_total: El monto total a pagar.
         """
-        Fabrica.cuentaBancaria.descontarDinero(pago_total)
+        Fabrica._cuentaBancaria.descontarDinero(pago_total)
         trabajador.recibirSueldo(pago_total)
 

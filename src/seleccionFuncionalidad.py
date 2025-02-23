@@ -337,29 +337,81 @@ class VentanaSecundaria(Tk):
         metas_no_pagas = Admin.revisarMetasTrabajador(trabajador)
 
         if not metas_no_pagas:
-            tk.Label(self.frame_interaccion, text="El trabajador no tiene metas pendientes.", font=("Arial", 14)).pack(pady=20)
+            tk.Label(self.frame_interaccion, text="El trabajador no tiene metas pendientes.", font=("Arial", 14)).pack(pady=20, fill="x", padx=10)
             tk.Button(self.frame_interaccion, text="Volver", command=lambda: self.seleccionar_trabajador(trabajador),
-                      width=20, height=2).pack(pady=10)
+                    width=20, height=2).pack(pady=10)
             return
 
-        tk.Label(self.frame_interaccion, text="Metas del trabajador:", font=("Arial", 14)).pack(pady=20)
+        # Título de las metas
+        tk.Label(self.frame_interaccion, text="Metas del trabajador:", font=("Arial", 14)).pack(pady=10, fill="x", padx=10)
 
+        # Crear un Canvas y un Scrollbar para hacer el contenido desplazable
+        canvas = tk.Canvas(self.frame_interaccion)
+        scrollbar = tk.Scrollbar(self.frame_interaccion, orient="vertical", command=canvas.yview)
+        scrollable_frame = tk.Frame(canvas)
+
+        # Configurar el Canvas y el Scrollbar
+        scrollable_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+        )
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        # Empaquetar el Canvas y el Scrollbar
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
+        # Configurar el grid en el frame desplazable
+        scrollable_frame.grid_columnconfigure(0, weight=1)  # Centrar el contenido en la columna 0
+
+        # Mostrar cada meta en el frame desplazable
         for i, meta in enumerate(metas_no_pagas):
-            tk.Button(self.frame_interaccion, text=f"Meta {i + 1}: {meta.getDescripcion()} - Pago: {meta.getPago()}",
-                      command=lambda m=meta: self.revisar_meta(trabajador, m), width=40, height=2).pack(pady=5)
+            # Crear un Frame para cada meta
+            frame_meta = tk.Frame(scrollable_frame, borderwidth=2, relief="groove")
+            frame_meta.grid(row=i, column=0, pady=5, padx=10, sticky="ew")
 
+            # Mostrar la información de la meta en un Label
+            tk.Label(frame_meta, text=f"Meta {i + 1}: {str(meta)}", font=("Arial", 12), justify="left").pack(pady=5, padx=10, fill="x")
+
+            # Botón para revisar la meta
+            tk.Button(frame_meta, text="Revisar Meta", command=lambda m=meta: self.revisar_meta(trabajador, m),
+                    width=20, height=1).pack(pady=5)
+
+        # Botón para volver
         tk.Button(self.frame_interaccion, text="Volver", command=lambda: self.seleccionar_trabajador(trabajador),
-                  width=20, height=2).pack(pady=10)
-
+                width=20, height=2).pack(pady=10)
+        
     def revisar_meta(self, trabajador, meta):
         """Revisa si la meta seleccionada ha sido cumplida."""
-        # Usamos Admin.cumplirMeta para marcar la meta como cumplida
-        if Admin.cumplirMeta(trabajador, meta):
-            messagebox.showinfo("Meta Cumplida", f"La meta '{meta.getDescripcion()}' ha sido cumplida. Se ha añadido {meta.getPago()} al pago total.")
-        else:
-            messagebox.showinfo("Meta No Cumplida", f"La meta '{meta.getDescripcion()}' no ha sido cumplida.")
+        self.limpiar_frame_interaccion()
 
-        self.mostrar_metas_trabajador(trabajador)
+        # Crear un nuevo frame para mostrar la información de la meta
+        frame_meta = tk.Frame(self.frame_interaccion, borderwidth=2, relief="groove")
+        frame_meta.pack(pady=10, padx=10, fill="x")
+
+        # Verificar si la meta ha sido cumplida
+        if meta.cumpleMeta(trabajador.getCantidadTrabajo()):  # Usar el índice de trabajo del trabajador
+            # Mostrar información de la meta cumplida
+            tk.Label(frame_meta, text=f"Meta Cumplida: {str(meta)}", font=("Arial", 12), justify="left").pack(pady=5, padx=10, fill="x")
+            tk.Label(frame_meta, text=f"Se ha añadido {meta.getPago()} al pago total.", font=("Arial", 12), justify="left").pack(pady=5, padx=10, fill="x")
+
+            # Marcar la meta como cumplida
+            meta.setVerificador(True)
+
+            # Añadir el pago de la meta al pago total del trabajador 
+            
+
+            # Eliminar la meta cumplida de la lista de metas del trabajador
+            trabajador.getMeta().remove(meta)  # Solo se elimina la meta del trabajador seleccionado
+        else:
+            # Mostrar información de la meta no cumplida
+            tk.Label(frame_meta, text=f"Meta No Cumplida: {str(meta)}", font=("Arial", 12), justify="left").pack(pady=5, padx=10, fill="x")
+            tk.Label(frame_meta, text=meta.porcentajeCumplidos(trabajador.getCantidadTrabajo()), font=("Arial", 12), justify="left").pack(pady=5, padx=10, fill="x")
+
+        # Botón para volver a la lista de metas (sin la meta cumplida)
+        tk.Button(self.frame_interaccion, text="Volver", command=lambda: self.mostrar_metas_trabajador(trabajador),
+                width=20, height=2).pack(pady=10)
 
     def realizar_pago(self, trabajador, pago_potencial):
         """Realiza el pago al trabajador y muestra el comprobante."""
