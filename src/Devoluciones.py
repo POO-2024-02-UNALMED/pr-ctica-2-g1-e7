@@ -244,7 +244,7 @@ def devoluciones():
                                 print("El total no supera el precio del producto original. No se devuelve dinero.")
                             cliente=factura.getCliente() 
                             print(cliente.getNombre())
-                            break
+                        
                             cliente.getCuentaBancaria().transferirDinero(excedente, Fabrica.getCuentaBancaria())
                             cliente.removerProducto(producto)
                             producto.setDevuelto(True)

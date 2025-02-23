@@ -2,9 +2,7 @@ import tkinter as tk
 from tkinter import ttk, Frame
 
 class FieldFrame(Frame):
-    """
-    Componente genérico para gestionar listas de atributos-valor en una interfaz gráfica sin diccionarios.
-    """
+    
 
     def __init__(self, parent, tituloCriterios, criterios, tituloValores, valores=None, habilitado=None):
         """
@@ -19,7 +17,7 @@ class FieldFrame(Frame):
         """
         super().__init__(parent)
         self.criterios = criterios
-        self.entradas = []  # Lista en lugar de diccionario
+        self.entradas = []  
 
         # 🔹 Encabezados de la tabla
         tk.Label(self, text=tituloCriterios, font=("Arial", 10, "bold")).grid(row=0, column=0, padx=10, pady=5)

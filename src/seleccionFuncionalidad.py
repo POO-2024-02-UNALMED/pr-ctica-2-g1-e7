@@ -3,6 +3,7 @@ from tkinter import ttk, messagebox, Tk, Frame, ttk
 from Admin import Admin 
 from  baseDatos.Deserializarcion import cargar_datos
 from  baseDatos.Serialización import guardar_datos
+from gestorAplicacion.produccion.Producto import Producto
 
 class VentanaSecundaria(Tk):
     def __init__(self, *args, **kwargs):
@@ -173,10 +174,68 @@ class VentanaSecundaria(Tk):
         from gestorAplicacion.produccion.Producto import Producto
         motivos= Producto.getMotivosDevolucion()
         tk.Label(frameInteraccion,text="¿Por qué desea devolver el producto?",font=("Arial",10)).pack()
-        motivos=ttk.Combobox(frameInteraccion,values=motivos,width=50,state="readonly").pack()
-        
+        comboboxMotivos=ttk.Combobox(frameInteraccion,values=motivos,width=50,state="readonly")
+        comboboxMotivos.pack()
+        tk.Button(frameInteraccion, text="Confirmar Motivo",
+              command=lambda: VentanaSecundaria.verificarMotivo(comboboxMotivos, frameInteraccion)).pack(pady=5)
+    
+    @staticmethod
+    def verificarMotivo(comboboxMotivos, frameInteraccion):
+        """
+        Verifica el motivo seleccionado y si es 'Otro motivo', muestra un FieldFrame para ingresarlo.
+        """
+        motivoSeleccionado = comboboxMotivos.get()  # Obtener el motivo elegido
 
-        
+        if not motivoSeleccionado:
+            messagebox.showerror("Error", "Seleccione un motivo válido.")
+            return
+
+        # 🔹 Si el usuario elige el último motivo ("Otro motivo"), mostrar FieldFrame para escribirlo
+        from fieldFrame import FieldFrame
+        from gestorAplicacion.produccion.Producto import Producto
+
+        if motivoSeleccionado.lower() == "otro motivo":
+
+            # 🔹 Crear un FieldFrame con el campo para escribir el motivo personalizado
+            criterios = ["Ingrese su motivo"]
+            fieldFrame = FieldFrame(frameInteraccion, "Criterio", criterios, "Valor")
+            fieldFrame.pack(pady=10)
+
+            # 🔹 Botón para confirmar el motivo personalizado
+            tk.Button(frameInteraccion, text="Confirmar Motivo Personalizado",
+                    command=lambda: VentanaSecundaria.obtenerMotivoPersonalizado(fieldFrame)).pack(pady=5)
+        else: 
+            Admin.evaluarMotivo(motivoSeleccionado,frameInteraccion)
+            return 
+
+    
+    @staticmethod
+    def obtenerMotivoPersonalizado(fieldFrame):
+        """
+        Obtiene el motivo personalizado del FieldFrame y confirma la selección.
+        """
+        motivoPersonalizado = fieldFrame.getValue("Ingrese su motivo")
+
+        if not motivoPersonalizado.strip():
+            messagebox.showerror("Error", "Debe ingresar un motivo válido.")
+            return
+        Admin.productoSeleccionado.setMotivoDevolucion(motivoPersonalizado)
+
+    @staticmethod
+    def procesarReembolso(producto:Producto,frameInteraccion): 
+        tk.Label(frameInteraccion,text="Por el motivo seleccionado se le hará el reembolso del dinero, el cual es de $"+ str(producto.getPrecio()),
+                 font=("Arial",12)).pack()
+        Admin.procesarReembolso()
+        tk.Label(frameInteraccion, text="Su dinero se ha reembolsado exitosamente",font=("Arial",14).pack())
+
+    
+    @staticmethod
+    def procesarCambio(producto:Producto): 
+        pass
+    
+    @classmethod
+    def mostrarProductosTienda(cls,frameInteraccion):
+        pass
 
 
     # 🔹 Funcionalidad de estadísticas (a implementar)

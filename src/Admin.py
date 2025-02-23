@@ -1,4 +1,4 @@
-from tkinter import Tk, Label,messagebox, ttk, Button
+from tkinter import Tk, Label,messagebox, ttk, Button, Frame
 
 
 
@@ -11,7 +11,10 @@ from tkinter import messagebox
 class Admin:
     from gestorAplicacion.gestion.Factura import Factura
     from gestorAplicacion.gestion.Meta import Meta
+    from gestorAplicacion.produccion.Producto import Producto
     pagina_actual = 0
+    productoSeleccionado:Producto=None
+    facturaSeleccionada:Factura=None 
 
     @staticmethod
     def destruirVentanaPrincipal(ventanaPrincipal:Tk):
@@ -65,6 +68,7 @@ class Admin:
         try:
             num_factura = int(num)  # Convertir a entero
             factura = Factura.seleccionarFactura(num_factura)  # Obtener la factura 
+            Admin.facturaSeleccionada=factura 
             Admin.mostrarProductosFactura(factura, frameInteraccion)  # Llamar a otro método para mostrar productos
         except ValueError:
             messagebox.showerror("Error", "Por favor, ingrese un número válido.")
@@ -86,23 +90,48 @@ class Admin:
         combobox["values"] = productos
         combobox["state"] = "readonly"  
         combobox.pack()
+        listaProductos=factura.getListaProductos()
          # 🔹 Botón para seleccionar el producto
         btnSeleccionarProducto = Button(frameInteraccion, text="Seleccionar Producto",
-                                       command=lambda: Admin.obtenerProducto(combobox,frameInteraccion))
+                                       command=lambda: Admin.obtenerProducto(combobox,listaProductos,frameInteraccion))
         btnSeleccionarProducto.pack(pady=5)
-        
-    @staticmethod
-    def obtenerProducto(combobox,frameInteraccion): 
-        from seleccionFuncionalidad import VentanaSecundaria
-        """Obtiene el producto seleccionado en el Combobox y muestra un mensaje de confirmación."""
-        producto_seleccionado = combobox.get()  # Obtener texto del combobox
-            
-        if not producto_seleccionado:
-         messagebox.showerror("Error", "Seleccione un producto válido.")
-         return
-        VentanaSecundaria.mostrarMotivosDevolucion(frameInteraccion)
-   
 
+    @staticmethod
+    def obtenerProducto(combobox, lista_objetos_productos, frameInteraccion):
+        from seleccionFuncionalidad import VentanaSecundaria
+        from gestorAplicacion.produccion.Producto import Producto
+
+        """Obtiene el objeto seleccionado en el Combobox y lo almacena en una variable."""
+        indice_seleccionado = combobox.current()  # Obtener el índice seleccionado
+        if indice_seleccionado == -1:  # Si no se ha seleccionado nada
+            messagebox.showerror("Error", "Seleccione un producto válido.")
+            return
+
+        # Obtener el objeto correspondiente al índice seleccionado
+        producto_seleccionado:Producto = lista_objetos_productos[indice_seleccionado]
+        Admin.productoSeleccionado = producto_seleccionado
+        VentanaSecundaria.mostrarMotivosDevolucion(frameInteraccion)
+
+    @staticmethod
+    def evaluarMotivo(motivoDevolucion,frameInteraccion:Frame): 
+        from gestorAplicacion.produccion.Producto import Producto
+        from seleccionFuncionalidad import VentanaSecundaria
+        motivos=Producto.getMotivosDevolucion()
+        for widget in frameInteraccion.winfo_children(): 
+            widget.destroy()
+        if motivoDevolucion==motivos[0] or motivoDevolucion==motivos[1] or motivoDevolucion==motivos[2]: 
+            VentanaSecundaria.procesarReembolso(Admin.productoSeleccionado,frameInteraccion)
+    
+    @classmethod
+    def procesarReembolso(cls): 
+        from gestorAplicacion.produccion.Tienda import Tienda 
+        from gestorAplicacion.gestion.Cliente import Cliente
+        from gestorAplicacion.produccion.Fabrica import Fabrica
+        tienda:Tienda=Admin.facturaSeleccionada.getTienda()
+        cliente: Cliente=tienda.devolverProducto(Admin.facturaSeleccionada,Admin.productoSeleccionado)
+        valorADevolver = Fabrica.descontarDineroCuenta(Admin.productoSeleccionado)
+        Fabrica.getCuentaBancaria().devolverDinero(valorADevolver, cliente)
+        cliente.removerProducto(Admin.productoSeleccionado)
     
 
     # 🔹 Nuevos métodos para el pago de trabajadores
