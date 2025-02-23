@@ -10,6 +10,15 @@ from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria#prueba
 import traceback
    
 def main():
+    from gestorAplicacion.produccion.Fabrica import Fabrica  # Importar la clase Fabrica
+    from gestorAplicacion.produccion.Tienda import Tienda    # Importar la clase Tienda
+    from gestorAplicacion.produccion.Producto import Producto  # Importar la clase Producto
+    from gestorAplicacion.produccion.TipoTransporte import TipoTransporte  # Importar la clase TipoTransporte
+    from gestorAplicacion.produccion.Transporte import Transporte  # Importar la clase Transporte
+    from gestorAplicacion.gestion.Conductor import Conductor  # Importar la clase Conductor
+    from gestorAplicacion.gestion.Vendedor import Vendedor #prueba
+    from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria#prueba
+    
     salir = False
     
     while not salir:
@@ -270,9 +279,9 @@ def main():
         except Exception as e:
             print("Entrada inválida. Volviendo al menú principal...")
             salir = True
-
+'''
 if __name__ == "__main__":
     main()
  
-
+'''
 

@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 from datetime import datetime
 from gestorAplicacion.gestion.IMostrarProductos import IMostrarProductos
 
@@ -16,7 +19,8 @@ class Factura(IMostrarProductos):
         # Si ya existen más de dos facturas, se ordenan por fecha.
         if len(Factura.getListaFacturas()) > 2:
             Factura.ordenar_facturas_por_fecha()
-
+        if type(fecha) is not datetime:
+            self._fecha: datetime = fecha
         self._fecha = fecha
         self._total = self.calcularTotal()
 
@@ -37,16 +41,16 @@ class Factura(IMostrarProductos):
         n = len(cls.listaFacturas)
         for i in range(n - 1):
             for j in range(n - i - 1):
-                if cls.listaFacturas[j].getFecha() > cls.lista_facturas[j + 1].getFecha():
+                if cls.listaFacturas[j].getFecha() > cls.listaFacturas[j + 1].getFecha():
                     # Intercambio de posiciones
-                    cls.listaFacturas[j], cls.lista_facturas[j + 1] = cls.lista_facturas[j + 1], cls.lista_facturas[j]
+                    cls.listaFacturas[j], cls.listaFacturas[j + 1] = cls.listaFacturas[j + 1], cls.listaFacturas[j]
 
     @classmethod
     def mostrarFacturas(cls): 
         string=""
         n=1
         for factura in Factura.listaFacturas: 
-            string+= str(n),". ", factura.getCliente().getNombre(), "ID: ", factura.getID() 
+            string += f"{n}. {factura.getCliente().getNombre()} - Tienda: {factura.getTienda()} - ID: {factura.getID()}\n"   
             n+=1
         return string 
     
@@ -91,6 +95,7 @@ class Factura(IMostrarProductos):
         """
         Método que obtiene la fecha mínima de la factura.
         """
+        #fecha = datetime.strptime(Factura.listaFacturas[0].getFecha(), "%d-%m-%y")
         return Factura.listaFacturas[0].getFecha()
         #return min(f.getFecha() for f in Factura.listaFacturas)
     
@@ -232,7 +237,7 @@ class Factura(IMostrarProductos):
     def getID(self):
         return self._id
     
-    def getFecha(self):
+    def getFecha(self) -> datetime :
         return self._fecha
     
     def getTotal(self):
@@ -287,3 +292,23 @@ class Factura(IMostrarProductos):
     @staticmethod
     def setTotalCreadas(cls, totalCreadas):
         cls.totalCreadas=totalCreadas
+'''
+#Creacion provisional de facturas para probar la interfaz de devoluciones 
+from gestorAplicacion.gestion.Cliente import Cliente
+from gestorAplicacion.produccion.Producto import Producto
+p1=Producto("Jabon",12,"disponible","aseo","consumible",12)
+p2=Producto("Esponja",12,"disponible","aseo","consumible",12)
+p3=Producto("Shampoo",12,"disponible","aseo","consumible",12)
+
+f1=Factura("tienda",Cliente("Juan",13,123,"si"),"transporte",[p1,p2],12,datetime(2024,10,12))
+f2=Factura("tienda",Cliente("Pepe",13,123,"si"),"transporte",[p2,p3],12,datetime(2024,11,12))
+f3=Factura("tienda",Cliente("Juan",13,123,"si"),"transporte",[p1],12,datetime(2024,10,12))
+f4=Factura("tienda",Cliente("Pepe",13,123,"si"),"transporte",[p2],12,datetime(2024,11,12))
+f5=Factura("tienda",Cliente("Juan",13,123,"si"),"transporte",[p3],12,datetime(2024,10,12))
+f6=Factura("tienda",Cliente("Juan",13,123,"si"),"transporte",[p1,p2],12,datetime(2024,10,12))
+f8=Factura("tienda",Cliente("Pepe",13,123,"si"),"transporte",[p2,p3],12,datetime(2024,11,12))
+f9=Factura("tienda",Cliente("Juan",13,123,"si"),"transporte",[p1],12,datetime(2024,10,12))
+f10=Factura("tienda",Cliente("Pepe",13,123,"si"),"transporte",[p2],12,datetime(2024,11,12))
+f11=Factura("tienda",Cliente("Juan",13,123,"si"),"transporte",[p3],12,datetime(2024,10,12))
+
+'''

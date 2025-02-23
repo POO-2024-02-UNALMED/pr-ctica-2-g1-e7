@@ -3,8 +3,11 @@ from gestorAplicacion.produccion.Producto import Producto
 from gestorAplicacion.gestion.Cliente import Cliente
 from gestorAplicacion.produccion.Tienda import Tienda
 from gestorAplicacion.produccion.Transporte import Transporte
+from Excepciones import FechaFueraDeRango
 from datetime import datetime
 import time
+
+
 
 class Estadisticas:
     def __init__(self):
@@ -18,38 +21,48 @@ class Estadisticas:
             
             try:
                 if sel1 == "s":
-                    print(Factura.getFechaMaxima())
                     fechaInicio = Factura.getFechaMinima()
                     fechaFinal = Factura.getFechaMaxima()
                     break
                 elif sel1 == "n":
-                    FechaInicio = datetime(input("Ingrese la fecha de inicio (dd-mm-yyyy): "))
                     while(True):
                         try:
-                            if FechaInicio < Factura.getFechaMinima():
+                            FechaInicio = input("Ingrese la fecha de inicio (dd-mm-yyyy): ")
+                            fechaInicio = datetime.strptime(FechaInicio, "%d-%m-%Y")
+                            if fechaInicio < datetime.strptime(Factura.getFechaMinima(), "%d-%m-%Y"):
                                 print("La fecha de inicio debe ser mayor o igual a la de inicio por defecto")
+                                #raise FechaFueraDeRango("menor", "de inicio")
+                            elif fechaInicio > datetime.strptime(Factura.getFechaMaxima(), "%d-%m-%Y"):
+                                print("La fecha de inicio debe ser menor o igual a la de fin por defecto")
                             else:
                                 break
+                        #except FechaFueraDeRango as ffr:
+                            #print(ffr)
                         except ValueError:
                             print("formato de fecha inválido")
 
                     while(True):
                         try:
-                            FechaFinal = datetime(input("Ingrese la fecha de finalización (dd-mm-yyyy): "))
-                            if FechaFinal < FechaInicio:
+                            FechaFinal = input("Ingrese la fecha de finalización (dd-mm-yyyy): ")
+                            fechaFinal = datetime.strptime(FechaFinal, "%d-%m-%Y")
+                            if fechaFinal < fechaInicio:
                                 print("La fecha de finalización debe ser mayor o igual a la de inicio")
+                                #raise FechaFueraDeRango("menor", "de inicio")
+                            elif fechaFinal > datetime.strptime(Factura.getFechaMaxima(), "%d-%m-%Y"):
+                                print("La fecha de finalización debe ser menor o igual a la de fin por defecto")
                             else:
                                 break
+                        #except FechaFueraDeRango as ffr:
+                            #print(ffr)
                         except ValueError:
                             print("formato de fecha inválido")
-
-                    fechaInicio = FechaInicio
-                    fechaFinal = FechaFinal
                         
                 else:
                     print("Entrada inválida")
             except ValueError:
                 print("Entrada inválida")
+        
+            break
 
     def menu(self):
         print("Seleccione la estadística que desea consultar: ")
@@ -71,23 +84,25 @@ class Estadisticas:
                 self.menu()
                 sel = input("Ingrese el número de la opción que desea seleccionar: ")
                 if sel == "1":
-                    print("Ganancias Discretas")
+                    print("Las Ganancias Discretas son: ")
                     print(Factura.gananciasDiscretas(fecha_min=fechaInicio, fecha_max=fechaFinal))
                 elif sel == "2":
-                    print("Ganancias totales")
+                    print("Las Ganancias totales son: ")
                     print(Factura.gananciaTotal(fechaInicio, fechaFinal))
                 elif sel == "3":
-                    print("Promedio de ganancias")
+                    print("El Promedio de ganancias es: ")
                     print(Factura.promedioDeGanancias(fechaInicio, fechaFinal))
                 elif sel == "4":
-                    print("Vriaciones porcentuales")
+                    print("Las Variaciones porcentuales son: ")
                     print(Factura.aumentosPorcentuales(fechaInicio, fechaFinal))
                 elif sel == "5":
-                    print("Modas")
+                    print("Estas son los valores moda: ")
                     print("Producto más vendido: ")
                     print(Factura.modaProductos(fechaInicio, fechaFinal))
                     print("Cliente con más facturaciones: ")
                     print(Factura.modaClientes(fechaInicio, fechaFinal))
+                    print("Tienda con más facturaciones: ")
+                    print(Factura.modaTiendas(fechaInicio, fechaFinal))
                 elif sel == "6":
                     self.asignarFechas()
                 elif sel == "0":
@@ -97,9 +112,9 @@ class Estadisticas:
             except ValueError:
                     print("Entrada inválida")
             
-            print("Desea realizar otra consulta? \ns \npulse cualquier tecla para salir")
+            print("Desea realizar otra consulta? \ns | pulse cualquier tecla para salir")
             sel2 = input()
-            if sel2 == "n":
+            if sel2 != "s":
                 break
                 
 

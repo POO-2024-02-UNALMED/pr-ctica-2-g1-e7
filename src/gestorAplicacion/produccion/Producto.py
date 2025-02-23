@@ -13,7 +13,7 @@ class Producto:
         """
         Se pueden utilizar cuatro formas de construcción:
           1. Constructor posicional: 
-             Producto(nombre, precio, tipo, categoria, peso)
+             Producto(nombre, precio, estado, tipo, categoria, peso)
           2. Constructor con palabras clave.
           3. Constructor de copia: Producto(otro_producto) donde otro_producto es una instancia de Producto.
           4. Constructor vacío: sin parámetros, solo incrementa el contador.

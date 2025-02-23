@@ -6,12 +6,17 @@ from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
 from gestorAplicacion.gestion.Meta import Meta
 from gestorAplicacion.produccion.Producto import Producto
 from gestorAplicacion.produccion.Tienda import Tienda
-import time
 
-
-import time
 
 def pagoTrabajadores():
+    from gestorAplicacion.gestion.Operario import Operario
+    from gestorAplicacion.gestion.Vendedor import Vendedor
+    from gestorAplicacion.gestion.Conductor import Conductor
+    from gestorAplicacion.produccion.Fabrica import Fabrica
+    from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
+    from gestorAplicacion.gestion.Meta import Meta
+    from gestorAplicacion.produccion.Producto import Producto
+    from gestorAplicacion.produccion.Tienda import Tienda
     print("\nEligió la opción de pagar a sus trabajadores.")
     while True:
         listaTrabajadores = []
@@ -28,7 +33,6 @@ def pagoTrabajadores():
             opcionPT = int(opcionPT)
             if opcionPT == 0:
                 print("Volviendo al menú principal.\n")
-                time.sleep(1)
                 return
             elif opcionPT == 1:
                 listaTrabajadores = Operario.getListaOperarios()
@@ -45,13 +49,10 @@ def pagoTrabajadores():
             trabajadores = Fabrica.busquedaTrabajo(listaTrabajadores)
             if not trabajadores:
                 print("\nNo hay trabajadores de este tipo para pagarles.")
-                time.sleep(0.65)
                 break
             
             print("Mostrando trabajadores...")
-            time.sleep(1)
             print(Fabrica.mostrarPersonas(trabajadores))
-            time.sleep(1)
             
             print(f"Elija el trabajador que desea pagarle. Seleccione un número entre: [1 - {len(trabajadores)}] \n0. Volver al menú.")
             opcionPT2 = input("» ")
@@ -87,7 +88,6 @@ def pagoTrabajadores():
                 opcionPT3 = int(opcionPT3)
                 if opcionPT3 == 0:
                     print("Volviendo al menú principal.\n")
-                    time.sleep(1)
                     return
                 elif opcionPT3 == 3:
                     break
@@ -108,7 +108,6 @@ def pagoTrabajadores():
                             break
                         
                         print(trabajadorSeleccionado.mostrarMetas())
-                        time.sleep(1)
                         
                         print(f"\nSeleccione una meta entre [1 - {len(metasNoPagas)}] \n{len(metasNoPagas)+1}. Proceder con el pago. \n0. Volver al menú.")
                         opcionPT4 = input("» ")
@@ -151,7 +150,6 @@ def pagoTrabajadores():
             if opcionPT3 == 2 or opcionPT3 == 1:    
                 pagoTotal = pagoPotencial + pagoPorMetas
                 print("Procesando pago...")
-                time.sleep(1.5)
                 Fabrica.cuentaBancaria.descontarDinero(pagoTotal)
                 trabajadorSeleccionado.recibirSueldo(pagoTotal)
                 print("\n------------------------------------------------------------")
@@ -175,14 +173,13 @@ def pagoTrabajadores():
                     break
                 elif opcionPT4 == 0:
                     print("Volviendo al menú principal.")
-                    time.sleep(1)
                     return
                 else:
                     print("Seleccione una opción válida.")
                     continue
 
 
-
+"""
 # 🔹 CREACIÓN DE OBJETOS NECESARIOS PARA LA FUNCIONALIDAD
 p1=Producto("a",12,"dispo","venta","si",12)
 p2=Producto("a",12,"dispo","venta","si",12)
@@ -223,4 +220,4 @@ vendedor2.setIndiceMeta(4)
 vendedor2.setCantidadTrabajo(4)
 
 print(vendedor1.getIndiceMeta())
-pagoTrabajadores()
+pagoTrabajadores()"""
