@@ -6,6 +6,11 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")
 
 import pickle
 import os
+# Obtener la ruta del directorio donde está este script
+ruta_base = os.path.dirname(os.path.abspath(__file__))
+
+# Construir la ruta relativa al archivo de datos
+ruta_datos = os.path.join(ruta_base, "datos.pkl")
 
 
 def guardar_datos():

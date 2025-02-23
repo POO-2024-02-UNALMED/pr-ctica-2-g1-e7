@@ -1,14 +1,13 @@
 from tkinter import Tk, Label,messagebox, ttk, Button
-from gestorAplicacion.gestion.Factura import Factura
-from gestorAplicacion.gestion.Operario import Operario
-from gestorAplicacion.gestion.Vendedor import Vendedor
-from gestorAplicacion.gestion.Conductor import Conductor
-from gestorAplicacion.produccion.Fabrica import Fabrica
-from gestorAplicacion.gestion.Meta import Meta
+
+
+
 from tkinter import messagebox
 
 
 class Admin:
+    from gestorAplicacion.gestion.Factura import Factura
+    from gestorAplicacion.gestion.Meta import Meta
     pagina_actual = 0
 
     @staticmethod
@@ -28,6 +27,7 @@ class Admin:
         pass #Este es el método que se encarga de serializar los objetos cuando se cierre el programa. Implementacion pendiente 
     @staticmethod
     def obtenerFacturas():
+        from gestorAplicacion.gestion.Factura import Factura
         """Devuelve todas las facturas en una lista formateada."""
         facturas = []
         n = 1
@@ -58,6 +58,7 @@ class Admin:
 
     @staticmethod
     def obtenerFactura(num, frameInteraccion): 
+        from gestorAplicacion.gestion.Factura import Factura
         try:
             num_factura = int(num)  # Convertir a entero
             factura = Factura.seleccionarFactura(num_factura)  # Obtener la factura 
@@ -102,6 +103,12 @@ class Admin:
     # 🔹 Nuevos métodos para el pago de trabajadores
     @staticmethod
     def obtenerListaTrabajadores(tipo):
+        from gestorAplicacion.gestion.Operario import Operario
+        from gestorAplicacion.gestion.Vendedor import Vendedor
+        from gestorAplicacion.gestion.Conductor import Conductor
+
+
+
         """
         Devuelve la lista de trabajadores según el tipo especificado.
         :param tipo: 1 para Operarios, 2 para Conductores, 3 para Vendedores.
@@ -149,6 +156,8 @@ class Admin:
 
     @staticmethod
     def realizarPago(trabajador, pago_total):
+        from gestorAplicacion.produccion.Fabrica import Fabrica
+
         """
         Realiza el pago al trabajador y actualiza la cuenta bancaria de la fábrica.
         :param trabajador: El trabajador al que se le realizará el pago.

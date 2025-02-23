@@ -1,10 +1,13 @@
 import tkinter as tk
 from tkinter import ttk, messagebox, Tk, Frame, ttk
 from Admin import Admin 
+from  baseDatos.Deserializarcion import cargar_datos
+from  baseDatos.Serialización import guardar_datos
 
 class VentanaSecundaria(Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        cargar_datos()
         # Configuración de la ventana
         self.geometry("800x600")
         self.title("Distribuidora JJAYC")
@@ -308,5 +311,6 @@ class VentanaSecundaria(Tk):
 
 # Ejecutar la aplicación desde una ventana principal
 if __name__ == "__main__":
+    
     ventanaSecundaria = VentanaSecundaria()
     ventanaSecundaria.mainloop()
