@@ -1,18 +1,13 @@
 import sys
 import os
 import pickle
-import traceback
+
 
 # Obtener la ruta absoluta de la carpeta donde está este script
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
 
 # Ruta del archivo de datos.pkl
 ruta_datos = os.path.join(BASE_DIR, "datos.pkl")
-
-if "baseDatos.Deserializarcion" in sys.modules:
-    print("❌ Módulo ya importado, evitando recarga.")
-else:
-    print("✅ Importando módulo Deserializarcion")
 
 
 def cargar_datos():
@@ -26,7 +21,6 @@ def cargar_datos():
     from gestorAplicacion.produccion.Fabrica import Fabrica
     from gestorAplicacion.produccion.Transporte import Transporte
 
-    traceback.print_stack()
     print("🔄 Ejecutando cargar_datos()")
     print(f"🔍 Buscando archivo en: {ruta_datos}")
 
@@ -36,12 +30,7 @@ def cargar_datos():
 
     try:
         with open(ruta_datos, "rb") as archivo:
-            datos = pickle.load(archivo)
-
-        # Verificar lo que se está cargando
-        print("📂 Datos cargados desde el archivo:")
-        for key, value in datos.items():
-            print(f"🔹 {key}: {len(value) if isinstance(value, list) else '1'} elementos")
+            datos = pickle.load(archivo)        
 
         # ✅ Asignación de listas
         Cliente.listaClientes = datos.get("Clientes", [])
