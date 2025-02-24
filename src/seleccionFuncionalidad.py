@@ -6,6 +6,7 @@ from  baseDatos.Serialización import guardar_datos
 from gestorAplicacion.produccion.Producto import Producto
 from gestorAplicacion.gestion.Factura import Factura
 from datetime import datetime
+from gestorAplicacion.produccion.Fabrica import Fabrica
 
 class VentanaSecundaria(Tk):
     def __init__(self, *args, **kwargs):
@@ -44,7 +45,7 @@ class VentanaSecundaria(Tk):
         menu_procesos.add_command(label="Opción 1")
         menu_procesos.add_command(label="Gestor de devoluciones", command=self.devoluciones)
         menu_procesos.add_command(label="Pago a los Trabajadores", command=self.pagoTrabajadores)
-        menu_procesos.add_command(label="Opción 4", command=self.mostrar_abastecimiento)
+        menu_procesos.add_command(label="Abastecer Tiendas", command=self.mostrar_abastecimiento)
         menu_procesos.add_command(label="Estadísticas", command=self.mostrar_estadisticas)
         self.menubar.add_cascade(label="Procesos y Consultas", menu=menu_procesos)
 
@@ -87,23 +88,89 @@ class VentanaSecundaria(Tk):
     # 🔹 Función para mostrar la interfaz de abastecimiento dentro de frame_interaccion
     def mostrar_abastecimiento(self):
         self.limpiar_frame_interaccion()
+        self.titulo.config(text="Abastecimiento de tiendas")
+        tk.Label(self.frame_interaccion, 
+                 text="Desde este menú podrá realizar un correcto abastecimiento a las tiendas asociadas",
+                 font=("Arial", 10)).pack(pady=10)
+        tk.Label(self.frame_interaccion, 
+                 text="Seleccione la tienda que desea abastecer",
+                 font=("Arial", 14)).pack(pady=10)
 
-        tk.Label(self.frame_interaccion, text="Interfaz de Abastecimiento", font=("Arial", 14)).pack(pady=10)
+        # Frame principal para las tiendas
+        frame_tiendas = tk.Frame(self.frame_interaccion)
+        frame_tiendas.pack(pady=10)
 
-        tk.Label(self.frame_interaccion, text="Seleccione la tienda:").pack()
-        ttk.Combobox(self.frame_interaccion, values=["Tienda 1", "Tienda 2", "Tienda 3"]).pack()
+        # Mostrar botones y productos para cada tienda
+        tiendas = Admin.mostrarTiendas()
+        for tienda in tiendas:
+            # Frame individual para cada tienda
+            frame_tienda = tk.Frame(frame_tiendas, relief="solid", bd=1)
+            frame_tienda.pack(pady=5, padx=10, fill="x")
 
-        tk.Label(self.frame_interaccion, text="Seleccione los productos:").pack()
-        ttk.Checkbutton(self.frame_interaccion, text="Producto A").pack()
-        ttk.Checkbutton(self.frame_interaccion, text="Producto B").pack()
-        ttk.Checkbutton(self.frame_interaccion, text="Producto C").pack()
+            # Botón de la tienda
+            tk.Button(frame_tienda, 
+                     text=f"Tienda {tienda.getNombre()}", 
+                     command=lambda t=tienda: self.mostrar_lista_productos(t),
+                     width=20, height=2).pack(pady=5)
 
-        tk.Label(self.frame_interaccion, text="Cantidad:").pack()
-        tk.Entry(self.frame_interaccion).pack()
+            # Label para mostrar los productos actuales
+            tk.Label(frame_tienda, 
+                    text="Productos actuales:",
+                    font=("Arial", 10, "bold")).pack()
+            
+            # Text widget para mostrar los productos con scroll si es necesario
+            productos_text = tk.Text(frame_tienda, height=5, width=40)
+            productos_text.pack(pady=5)
+            productos_text.insert("1.0", tienda.cantidadProductos())
+            productos_text.config(state="disabled")  # Hacer el texto de solo lectura
 
-        tk.Button(self.frame_interaccion, text="Confirmar Envío",
-                  command=lambda: messagebox.showinfo("Éxito", "Abastecimiento confirmado")).pack(pady=10)
-        tk.Button(self.frame_interaccion, text="Volver al Menú", command=self.mostrar_menu).pack()
+        # Botón para volver al menú principal
+        tk.Button(self.frame_interaccion, 
+                 text="Volver al Menú", 
+                 command=self.mostrar_menu).pack(pady=10)
+
+    def mostrar_lista_productos(self, tienda_seleccionada):
+        """
+        Muestra la siguiente pantalla después de seleccionar una tienda,
+        incluyendo los productos por categoría.
+        """
+        self.limpiar_frame_interaccion()
+        
+        # Frame para mostrar productos por categoría
+        frame_categorias = tk.Frame(self.frame_interaccion, relief="solid", bd=1)
+        frame_categorias.pack(fill="x", padx=10, pady=10)
+        
+        # Label para el título
+        tk.Label(frame_categorias, 
+                text="Estado actual de productos por categoría:",
+                font=("Arial", 12, "bold")).pack(pady=5)
+        
+        # Text widget para mostrar productos por categoría
+        categorias_text = tk.Text(frame_categorias, height=4, width=60)
+        categorias_text.pack(pady=5, padx=10)
+        categorias_text.insert("1.0", tienda_seleccionada.productosPorCategoria(tienda_seleccionada.getListaProducto()))
+        categorias_text.config(state="disabled")  # Hacer el texto de solo lectura
+        
+        # Frame para los productos disponibles
+        frame_productos = tk.Frame(self.frame_interaccion)
+        frame_productos.pack(pady=10, fill="both", expand=True)
+        
+        tk.Label(frame_productos, 
+                text="Productos disponibles para abastecer:",
+                font=("Arial", 12, "bold")).pack(pady=5)
+        
+        # Mostrar productos disponibles de la fábrica
+        productos_disponibles = Fabrica.getProductosDisponibles()
+        for producto in productos_disponibles:
+            tk.Button(frame_productos,
+                     text=f"{producto.getNombre()} - {producto.getCategoria()} - ${producto.getPrecio()}",
+                     command=lambda p=producto: self.seleccionar_producto_abastecimiento(tienda_seleccionada, p),
+                     width=40).pack(pady=2)
+        
+        # Botón para volver
+        tk.Button(self.frame_interaccion,
+                 text="Volver",
+                 command=self.mostrar_abastecimiento).pack(pady=10)
 
     # Funcionalidad de devoluciones:
     def devoluciones(self):

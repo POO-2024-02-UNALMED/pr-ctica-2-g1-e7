@@ -185,3 +185,23 @@ class Admin:
         Fabrica._cuentaBancaria.descontarDinero(pago_total)
         trabajador.recibirSueldo(pago_total)
 
+    @staticmethod
+    def mostrarTiendas():
+        """
+        Retorna y muestra las tiendas disponibles con sus productos.
+        Importa Fabrica dentro del método para evitar dependencias circulares.
+        """
+        from gestorAplicacion.produccion.Fabrica import Fabrica
+        
+        tiendas = Fabrica.getListaTienda()
+        if not tiendas:
+            return []
+        
+        # Imprime el estado de las tiendas para depuración
+        print("Listado de Tiendas:")
+        for i, tienda in enumerate(tiendas, start=1):
+            print(f"{i}. {tienda.getNombre()}:")
+            print(tienda.cantidadProductos())
+        
+        return tiendas
+
