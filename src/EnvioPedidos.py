@@ -288,6 +288,7 @@ def enviar_pedidos():
 
         # Eliminar los productos vendidos del inventario
         tiendaSeleccionada.eliminarProductosPorNombre(listaProductosPedidos)
+        print(Fabrica.getCuentaBancaria().getSaldo())
         guardar_datos()
         # Mensaje final
         print("¡Genial! 🎉 Los productos han sido enviados con éxito.")

@@ -1,12 +1,4 @@
 import time
-from gestorAplicacion.produccion.Fabrica import Fabrica  # Importar la clase Fabrica
-from gestorAplicacion.produccion.Tienda import Tienda    # Importar la clase Tienda
-from gestorAplicacion.produccion.Producto import Producto  # Importar la clase Producto
-from gestorAplicacion.produccion.TipoTransporte import TipoTransporte  # Importar la clase TipoTransporte
-from gestorAplicacion.produccion.Transporte import Transporte  # Importar la clase Transporte
-from gestorAplicacion.gestion.Conductor import Conductor  # Importar la clase Conductor
-from gestorAplicacion.gestion.Vendedor import Vendedor #prueba
-from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria#prueba
 import traceback
 from  baseDatos.Deserializarcion import cargar_datos
 from  baseDatos.Serialización import guardar_datos
@@ -22,7 +14,9 @@ def main():
     from gestorAplicacion.gestion.Conductor import Conductor  # Importar la clase Conductor
     from gestorAplicacion.gestion.Vendedor import Vendedor #prueba
     from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria#prueba
-    
+    from  baseDatos.Deserializarcion import cargar_datos
+    from  baseDatos.Serialización import guardar_datos
+    cargar_datos()
     salir = False
     
     while not salir:

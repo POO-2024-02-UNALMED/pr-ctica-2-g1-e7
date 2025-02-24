@@ -48,7 +48,7 @@ def devoluciones():
         print("\nEligió la opción de devoluciones.")
         print("Seleccione la factura que desea consultar. Oprima 0 para salir.")
         print("0. Salir")
-
+       
         # Mostrar las facturas disponibles
         for i, factura in enumerate(Factura.listaFacturas):
             print(f"{i+1}. Factura ID: {factura.getID()}, Cliente: {factura.getCliente().getNombre()}")
@@ -243,6 +243,8 @@ def devoluciones():
                             else:
                                 print("El total no supera el precio del producto original. No se devuelve dinero.")
                             cliente=factura.getCliente() 
+                            print(cliente.getNombre())
+                        
                             cliente.getCuentaBancaria().transferirDinero(excedente, Fabrica.getCuentaBancaria())
                             cliente.removerProducto(producto)
                             producto.setDevuelto(True)

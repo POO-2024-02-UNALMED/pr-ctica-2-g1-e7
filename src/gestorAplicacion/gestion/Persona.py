@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
 class Persona(ABC):
-    SALARIO_BASE = 10000  # Salario base que después se modifica por cantidad de veces trabajadas y por bonos
+    SALARIO_BASE = 6000  # Salario base que después se modifica por cantidad de veces trabajadas y por bonos
     personasTotales = 0
     listaPersonas = []
     

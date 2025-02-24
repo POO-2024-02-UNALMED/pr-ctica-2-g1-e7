@@ -104,8 +104,6 @@ class Tienda:
             raise ValueError("La lista de conteo de categorías debe ser una lista")
     
 
-
-
     def devolverProducto(self, factura, producto):
         from gestorAplicacion.produccion.Producto import Producto
         producto: Producto = producto

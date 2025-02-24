@@ -88,7 +88,7 @@ class Cliente:
         """
         if producto in self.__listaProductos:
             self.__listaProductos.remove(producto)
-'''
+
 from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
 cuentaCliente1 = CuentaBancaria(10001, 5000)
 cuentaCliente2 = CuentaBancaria(10002, 15000)
@@ -102,9 +102,4 @@ cliente3 = Cliente("Carlos García", 40, 567890123, cuentaCliente3)
 cliente4 = Cliente("Ana Rodríguez", 35, 654321987, cuentaCliente4)
 cliente5 = Cliente("Luis Fernández", 28, 192837465, cuentaCliente5)
 
-traceback.print_stack()
-if __name__ == "__main__":
-    from  baseDatos.Deserializarcion import cargar_datos
-    cargar_datos()
-    print(Cliente.listaClientes)
-'''
+

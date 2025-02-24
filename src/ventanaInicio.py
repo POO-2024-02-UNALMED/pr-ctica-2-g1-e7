@@ -34,6 +34,11 @@ class VentanaInicio(Tk):
         self.P3.pack(fill=X)
         self.saludo = Label(self.P3, text="Bienvenido al sistema de manejo de su empresa\nHaz click en la imagen para empezar\n⇣", font=("Segoe UI", 12))
         self.saludo.pack(pady=10)
+
+        # Agregar un Label para mostrar la descripción
+        self.descripcion_label = Label(self.P1, textvariable=self.hola, font=("Segoe UI", 12), bg="Gray95")
+        self.descripcion_label.pack(pady=10)
+
         self.P4 = Frame(self.P1, bg="black")
         self.P4.pack(fill=BOTH, expand=True)
 

@@ -7,6 +7,12 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")
 import pickle
 import os
 
+# Obtener la ruta del directorio donde está este script
+ruta_base = os.path.dirname(os.path.abspath(__file__))
+
+# Construir la ruta relativa al archivo de datos
+ruta_datos = os.path.join(ruta_base, "datos.pkl")
+
 
 def guardar_datos():
     from gestorAplicacion.gestion.Cliente import Cliente
@@ -30,14 +36,18 @@ def guardar_datos():
         "Fabrica": Fabrica.listaFabrica,
         "Transporte": Transporte.listaTransportes,
         "Tiendas": Fabrica.getListaTienda(),
-        "ProductosDisponibles": Fabrica.getProductosDisponibles()
+        "ProductosDisponibles": Fabrica.getProductosDisponibles(),
+        "CuentaBancariaFabrica": Fabrica._cuentaBancaria  # ✅ Guardar la cuenta bancaria
     }
 
     # Verificar que las listas no estén vacías antes de guardar
     for key, value in datos.items():
-        print(f"📌 {key}: {len(value)} elementos guardados")
+        print(f"📌 {key}: {len(value) if isinstance(value, list) else '1'} elementos guardados")
 
     with open("datos.pkl", "wb") as archivo:
         pickle.dump(datos, archivo)
 
     print("✅ Datos guardados correctamente.")
+if __name__ == "__main__":
+    print("🔄 Ejecutando serialización de datos...")
+    guardar_datos()

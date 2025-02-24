@@ -1,15 +1,19 @@
 import tkinter as tk
 from tkinter import ttk, messagebox, Tk, Frame, ttk
 from Admin import Admin 
+from  baseDatos.Deserializarcion import cargar_datos
+from  baseDatos.Serialización import guardar_datos
+from gestorAplicacion.produccion.Producto import Producto
 
 class VentanaSecundaria(Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self._pago_por_metas = 0
+        cargar_datos()
         # Configuración de la ventana
         self.geometry("800x600")
         self.title("Distribuidora JJAYC")
         self.pagina_actual = 0
-
         # 🔹 ZONA 0 - Título de la aplicación
         self.frame_titulo = tk.Frame(self, relief="solid", bd=1)
         self.frame_titulo.pack(fill="x", padx=5, pady=5)
@@ -153,6 +157,8 @@ class VentanaSecundaria(Tk):
             tk.Label(self.frameFacturas, text=factura, font=("Arial", 12)).pack()
 
         tk.Label(self.frameFacturas, text="----------------------------").pack(anchor="s")
+    
+  
 
     def mostrarFacturasSiguiente(self):
         """Maneja el avance de página."""
@@ -162,7 +168,76 @@ class VentanaSecundaria(Tk):
     def mostrarFacturasAtras(self):
         """Maneja el retroceso de página."""
         Admin.retrocederPagina()
-        self.mostrarFacturas()
+        self.mostrarFacturas()  
+
+    @staticmethod
+    def mostrarMotivosDevolucion(frameInteraccion):
+        from gestorAplicacion.produccion.Producto import Producto
+        motivos= Producto.getMotivosDevolucion()
+        tk.Label(frameInteraccion,text="¿Por qué desea devolver el producto?",font=("Arial",10)).pack()
+        comboboxMotivos=ttk.Combobox(frameInteraccion,values=motivos,width=50,state="readonly")
+        comboboxMotivos.pack()
+        tk.Button(frameInteraccion, text="Confirmar Motivo",
+              command=lambda: VentanaSecundaria.verificarMotivo(comboboxMotivos, frameInteraccion)).pack(pady=5)
+    
+    @staticmethod
+    def verificarMotivo(comboboxMotivos, frameInteraccion):
+        """
+        Verifica el motivo seleccionado y si es 'Otro motivo', muestra un FieldFrame para ingresarlo.
+        """
+        motivoSeleccionado = comboboxMotivos.get()  # Obtener el motivo elegido
+
+        if not motivoSeleccionado:
+            messagebox.showerror("Error", "Seleccione un motivo válido.")
+            return
+
+        # 🔹 Si el usuario elige el último motivo ("Otro motivo"), mostrar FieldFrame para escribirlo
+        from fieldFrame import FieldFrame
+        from gestorAplicacion.produccion.Producto import Producto
+
+        if motivoSeleccionado.lower() == "otro motivo":
+
+            # 🔹 Crear un FieldFrame con el campo para escribir el motivo personalizado
+            criterios = ["Ingrese su motivo"]
+            fieldFrame = FieldFrame(frameInteraccion, "Criterio", criterios, "Valor")
+            fieldFrame.pack(pady=10)
+
+            # 🔹 Botón para confirmar el motivo personalizado
+            tk.Button(frameInteraccion, text="Confirmar Motivo Personalizado",
+                    command=lambda: VentanaSecundaria.obtenerMotivoPersonalizado(fieldFrame)).pack(pady=5)
+        else: 
+            Admin.evaluarMotivo(motivoSeleccionado,frameInteraccion)
+            return 
+
+    
+    @staticmethod
+    def obtenerMotivoPersonalizado(fieldFrame):
+        """
+        Obtiene el motivo personalizado del FieldFrame y confirma la selección.
+        """
+        motivoPersonalizado = fieldFrame.getValue("Ingrese su motivo")
+
+        if not motivoPersonalizado.strip():
+            messagebox.showerror("Error", "Debe ingresar un motivo válido.")
+            return
+        Admin.productoSeleccionado.setMotivoDevolucion(motivoPersonalizado)
+
+    @staticmethod
+    def procesarReembolso(producto:Producto,frameInteraccion): 
+        tk.Label(frameInteraccion,text="Por el motivo seleccionado se le hará el reembolso del dinero, el cual es de $"+ str(producto.getPrecio()),
+                 font=("Arial",12)).pack()
+        Admin.procesarReembolso()
+        tk.Label(frameInteraccion, text="Su dinero se ha reembolsado exitosamente",font=("Arial",14).pack())
+
+    
+    @staticmethod
+    def procesarCambio(producto:Producto): 
+        pass
+    
+    @classmethod
+    def mostrarProductosTienda(cls,frameInteraccion):
+        pass
+
 
     # 🔹 Funcionalidad de estadísticas (a implementar)
     def mostrar_estadisticas(self):
@@ -239,20 +314,22 @@ class VentanaSecundaria(Tk):
 
         tk.Label(self.frame_interaccion, text=f"Trabajador seleccionado: {trabajador.getNombre()}", font=("Arial", 14)).pack(pady=20)
         tk.Label(self.frame_interaccion, text=f"Pago potencial: {pago_potencial} por {trabajador.getCantidadTrabajo()} trabajos realizados.",
-                 font=("Arial", 12)).pack(pady=10)
+                font=("Arial", 12)).pack(pady=10)
 
-        # Botón para revisar metas
-        tk.Button(self.frame_interaccion, text="Revisar Metas", 
-                  command=lambda: self.mostrar_metas_trabajador(trabajador),
-                  width=20, height=2).pack(pady=10)
+        # Botón para revisar metas (solo si no hay metas cumplidas)
+        if self._pago_por_metas == 0:
+            tk.Button(self.frame_interaccion, text="Revisar Metas", 
+                    command=lambda: self.mostrar_metas_trabajador(trabajador),
+                    width=20, height=2).pack(pady=10)
 
         # Botón para realizar el pago
         tk.Button(self.frame_interaccion, text="Realizar Pago", 
-                  command=lambda: self.realizar_pago(trabajador, pago_potencial),
-                  width=20, height=2).pack(pady=10)
+                command=lambda: self.realizar_pago(trabajador, pago_potencial),
+                width=20, height=2).pack(pady=10)
 
-        # Botón para volver
-        tk.Button(self.frame_interaccion, text="Volver", command=self.pagoTrabajadores, width=20, height=2).pack(pady=10)
+        # 🔹 Botón para volver (solo si no hay metas cumplidas)
+        if self._pago_por_metas == 0:
+            tk.Button(self.frame_interaccion, text="Volver", command=self.pagoTrabajadores, width=20, height=2).pack(pady=10)
 
 
     def mostrar_metas_trabajador(self, trabajador):
@@ -260,53 +337,130 @@ class VentanaSecundaria(Tk):
         self.limpiar_frame_interaccion()
 
         # Usamos Admin.revisarMetasTrabajador para obtener las metas no pagadas
-        metas_no_pagas = Admin.revisarMetasTrabajador(trabajador)
+        metas_no_pagas = [meta for meta in trabajador.getMeta() if not meta.getVerificador()]
 
         if not metas_no_pagas:
-            tk.Label(self.frame_interaccion, text="El trabajador no tiene metas pendientes.", font=("Arial", 14)).pack(pady=20)
+            tk.Label(self.frame_interaccion, text="El trabajador no tiene metas pendientes.", font=("Arial", 14)).pack(pady=20, fill="x", padx=10)
             tk.Button(self.frame_interaccion, text="Volver", command=lambda: self.seleccionar_trabajador(trabajador),
-                      width=20, height=2).pack(pady=10)
+                    width=20, height=2).pack(pady=10)
             return
 
-        tk.Label(self.frame_interaccion, text="Metas del trabajador:", font=("Arial", 14)).pack(pady=20)
+        # Título de las metas
+        tk.Label(self.frame_interaccion, text="Metas del trabajador:", font=("Arial", 14)).pack(pady=10, fill="x", padx=10)
 
+        # Crear un Canvas y un Scrollbar para hacer el contenido desplazable
+        canvas = tk.Canvas(self.frame_interaccion)
+        scrollbar = tk.Scrollbar(self.frame_interaccion, orient="vertical", command=canvas.yview)
+        scrollable_frame = tk.Frame(canvas)
+
+        # Configurar el Canvas y el Scrollbar
+        scrollable_frame.bind(
+            "<Configure>",
+            lambda e: canvas.configure(scrollregion=canvas.bbox("all"))
+        )
+        canvas.create_window((0, 0), window=scrollable_frame, anchor="nw")
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        # Empaquetar el Canvas y el Scrollbar
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
+        # Configurar el grid en el frame desplazable
+        scrollable_frame.grid_columnconfigure(0, weight=1)  # Centrar el contenido en la columna 0
+
+        # Mostrar cada meta en el frame desplazable
         for i, meta in enumerate(metas_no_pagas):
-            tk.Button(self.frame_interaccion, text=f"Meta {i + 1}: {meta.getDescripcion()} - Pago: {meta.getPago()}",
-                      command=lambda m=meta: self.revisar_meta(trabajador, m), width=40, height=2).pack(pady=5)
+            # Crear un Frame para cada meta
+            frame_meta = tk.Frame(scrollable_frame, borderwidth=2, relief="groove")
+            frame_meta.grid(row=i, column=0, pady=5, padx=10, sticky="ew")
 
+            # Mostrar la información de la meta en un Label
+            tk.Label(frame_meta, text=f"Meta {i + 1}: {str(meta)}", font=("Arial", 12), justify="left").pack(pady=5, padx=10, fill="x")
+
+            # Botón para revisar la meta
+            tk.Button(frame_meta, text="Revisar Meta", command=lambda m=meta: self.revisar_meta(trabajador, m),
+                    width=20, height=1).pack(pady=5)
+
+        # 🔹 Botón para proceder con el pago (si hay metas cumplidas)
+        if self._pago_por_metas > 0:
+            tk.Button(self.frame_interaccion, text="Proceder con el Pago", 
+                    command=lambda: self.seleccionar_trabajador(trabajador),
+                    width=20, height=2).pack(pady=10)
+
+        # Botón para volver
         tk.Button(self.frame_interaccion, text="Volver", command=lambda: self.seleccionar_trabajador(trabajador),
-                  width=20, height=2).pack(pady=10)
-
+                width=20, height=2).pack(pady=10)
+        
     def revisar_meta(self, trabajador, meta):
         """Revisa si la meta seleccionada ha sido cumplida."""
-        # Usamos Admin.cumplirMeta para marcar la meta como cumplida
-        if Admin.cumplirMeta(trabajador, meta):
-            messagebox.showinfo("Meta Cumplida", f"La meta '{meta.getDescripcion()}' ha sido cumplida. Se ha añadido {meta.getPago()} al pago total.")
-        else:
-            messagebox.showinfo("Meta No Cumplida", f"La meta '{meta.getDescripcion()}' no ha sido cumplida.")
-
-        self.mostrar_metas_trabajador(trabajador)
-
-    def realizar_pago(self, trabajador, pago_potencial):
-        """Realiza el pago al trabajador y muestra el comprobante."""
-        # Usamos Admin.realizarPago para realizar el pago
-        pago_por_metas = sum(meta.getPago() for meta in trabajador.getMeta() if meta.getVerificador())
-        pago_total = pago_potencial + pago_por_metas
-
-        Admin.realizarPago(trabajador, pago_total)
-
         self.limpiar_frame_interaccion()
 
+        # Crear un nuevo frame para mostrar la información de la meta
+        frame_meta = tk.Frame(self.frame_interaccion, borderwidth=2, relief="groove")
+        frame_meta.pack(pady=10, padx=10, fill="x")
+
+        # Verificar si la meta ha sido cumplida
+        if meta.cumpleMeta(trabajador.getCantidadTrabajo()):  # Usar el índice de trabajo del trabajador
+            # Mostrar información de la meta cumplida
+            tk.Label(frame_meta, text=f"Meta Cumplida: {str(meta)}", font=("Arial", 12), justify="left").pack(pady=5, padx=10, fill="x")
+            tk.Label(frame_meta, text=f"Se ha añadido {meta.getPago()} al pago total.", font=("Arial", 12), justify="left").pack(pady=5, padx=10, fill="x")
+
+            # Marcar la meta como cumplida
+            meta.setVerificador(True)
+
+            # Sumar el valor de la meta al pago por metas
+            self._pago_por_metas += meta.getPago()  # Aquí se suma el valor de la meta
+
+            # 🔹 No eliminar la meta de la lista, solo marcarla como cumplida
+
+            # 🔹 Opciones después de cumplir una meta
+            frame_opciones = tk.Frame(self.frame_interaccion)
+            frame_opciones.pack(pady=10)
+
+            # Botón para revisar otra meta
+            tk.Button(frame_opciones, text="Revisar Otra Meta", 
+                    command=lambda: self.mostrar_metas_trabajador(trabajador),
+                    width=20, height=2).pack(side="left", padx=10)
+
+            # Botón para proceder con el pago
+            tk.Button(frame_opciones, text="Proceder con el Pago", 
+                    command=lambda: self.seleccionar_trabajador(trabajador),
+                    width=20, height=2).pack(side="left", padx=10)
+        else:
+            # Mostrar información de la meta no cumplida
+            tk.Label(frame_meta, text=f"Meta No Cumplida: {str(meta)}", font=("Arial", 12), justify="left").pack(pady=5, padx=10, fill="x")
+            tk.Label(frame_meta, text=meta.porcentajeCumplidos(trabajador.getCantidadTrabajo()), font=("Arial", 12), justify="left").pack(pady=5, padx=10, fill="x")
+
+            # 🔹 Botón para volver a la lista de metas
+            tk.Button(self.frame_interaccion, text="Volver a Metas", command=lambda: self.mostrar_metas_trabajador(trabajador),
+                    width=20, height=2).pack(pady=10)
+        
+    def realizar_pago(self, trabajador, pago_potencial):
+        """Realiza el pago al trabajador y muestra el comprobante."""
+        # Sumar el pago por metas al pago total
+        pago_total = pago_potencial + self._pago_por_metas
+
+        # Realizar el pago
+        Admin.realizarPago(trabajador, pago_total)
+
+        # Limpiar el frame de interacción
+        self.limpiar_frame_interaccion()
+
+        # Mostrar el comprobante de pago
         tk.Label(self.frame_interaccion, text="COMPROBANTE DE PAGO", font=("Arial", 16)).pack(pady=20)
         tk.Label(self.frame_interaccion, text=f"Trabajador: {trabajador.getNombre()}", font=("Arial", 14)).pack(pady=10)
         tk.Label(self.frame_interaccion, text=f"Total pagado: {pago_total}", font=("Arial", 14)).pack(pady=10)
         tk.Label(self.frame_interaccion, text=f"- {pago_potencial} por las veces trabajadas", font=("Arial", 12)).pack(pady=5)
-        tk.Label(self.frame_interaccion, text=f"- {pago_por_metas} por las metas cumplidas", font=("Arial", 12)).pack(pady=5)
+        tk.Label(self.frame_interaccion, text=f"- {self._pago_por_metas} por las metas cumplidas", font=("Arial", 12)).pack(pady=5)
 
+        # 🔹 Reiniciar el valor de las metas cumplidas
+        self._pago_por_metas = 0
+
+        # Botón para volver al menú principal
         tk.Button(self.frame_interaccion, text="Volver al Menú Principal", command=self.mostrar_menu, width=20, height=2).pack(pady=20)
-
 
 # Ejecutar la aplicación desde una ventana principal
 if __name__ == "__main__":
+    
     ventanaSecundaria = VentanaSecundaria()
     ventanaSecundaria.mainloop()
