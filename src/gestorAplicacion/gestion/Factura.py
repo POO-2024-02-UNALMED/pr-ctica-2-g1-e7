@@ -129,7 +129,15 @@ class Factura(IMostrarProductos):
         ganancias: list[list[datetime, float]] = []
         for f in facturas:
             ganancias.append([f.getFecha(), f.getTotal()])
-        return ganancias
+        msg = ""
+        if ganancias == []:
+            msg = "No hay ganancias."
+        elif len(ganancias) == 1:
+            msg = f"La ganancia total es de ${ganancias[0][1]:.2f} en la fecha {ganancias[0][0].strftime('%d/%m/%Y')}."
+        else:
+            for i in range(len(ganancias)):
+                msg += f"La ganancia total es de ${ganancias[i][1]:.2f} en la fecha {ganancias[i][0].strftime('%d/%m/%Y')}.\n"
+        return msg
     
     @staticmethod
     def gananciaTotal(fecha_min: datetime, fecha_max: datetime):
@@ -137,7 +145,7 @@ class Factura(IMostrarProductos):
         Método que calcula la ganancia total entre dos fechas.
         """
         facturas = Factura.getFacturasEntreFechas(fecha_min, fecha_max)
-        return sum(f.getTotal() for f in facturas)
+        return f'La ganancia total es de: {sum(f.getTotal() for f in facturas)}'
     
     @staticmethod
     def promedioDeGanancias(fecha_min: datetime, fecha_max: datetime):
@@ -145,7 +153,7 @@ class Factura(IMostrarProductos):
         Método que calcula el promedio de ganancias entre dos fechas.
         """
         facturas = Factura.getFacturasEntreFechas(fecha_min, fecha_max)
-        return sum(f.getTotal() for f in facturas) / len(facturas)
+        return f'El promedio de ganancias es de: {sum(f.getTotal() for f in facturas) / len(facturas)}'
     
     @staticmethod
     def aumentosPorcentuales(fecha_min: datetime, fecha_max: datetime):
@@ -157,6 +165,9 @@ class Factura(IMostrarProductos):
         for i in range(1, len(facturas)):
             aumento = (facturas[i].getTotal() - facturas[i - 1].getTotal()) / facturas[i - 1].getTotal() * 100
             aumentos.append([facturas[i].getFecha(), aumento])
+
+        if aumentos == []:
+            return "No hay aumentos porcentuales."
         return aumentos
     
     @staticmethod
@@ -292,6 +303,7 @@ class Factura(IMostrarProductos):
     @staticmethod
     def setTotalCreadas(cls, totalCreadas):
         cls.totalCreadas=totalCreadas
+        
 '''
 #Creacion provisional de facturas para probar la interfaz de devoluciones 
 from gestorAplicacion.gestion.Cliente import Cliente
