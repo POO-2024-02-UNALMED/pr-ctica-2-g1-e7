@@ -30,7 +30,7 @@ class Conductor(Persona):
                 f"Transporte: {self.transporte.getTipoTransporte()}")
     
     def recibirSueldo(self, valor: float):
-        self.getCuentaBancaria().anadirDinero(valor)
+        self.getCuentaBancaria().añadirDinero(valor)
         self.setCantidadTrabajo(0)
     
     def getTransporte(self):

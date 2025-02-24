@@ -1,5 +1,9 @@
 import time
 import traceback
+from  baseDatos.Deserializarcion import cargar_datos
+from  baseDatos.Serialización import guardar_datos
+cargar_datos()
+    
    
 def main():
     from gestorAplicacion.produccion.Fabrica import Fabrica  # Importar la clase Fabrica
@@ -270,6 +274,7 @@ def main():
             else:
                 print("Opción inválida. Volviendo al menú principal...")
                 salir = True
+
         except Exception as e:
             print("Entrada inválida. Volviendo al menú principal...")
             salir = True

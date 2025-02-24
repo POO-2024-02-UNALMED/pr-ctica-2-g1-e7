@@ -64,11 +64,6 @@ class VentanaSecundaria(Tk):
         self.frame_botones = tk.Frame(self, relief="solid", bd=1)
         self.frame_botones.pack(fill="x", padx=10, pady=5)
 
-        self.boton_aceptar = tk.Button(self.frame_botones, text="Ejecutar Proceso")
-        self.boton_aceptar.pack(side="left", padx=10, pady=5)
-
-        self.boton_borrar = tk.Button(self.frame_botones, text="Limpiar")
-        self.boton_borrar.pack(side="right", padx=10, pady=5)
 
         # Mostrar la interfaz principal
         self.mostrar_menu()
@@ -114,133 +109,348 @@ class VentanaSecundaria(Tk):
     def devoluciones(self):
         self.limpiar_frame_interaccion()
         self.titulo.config(text="Bienvenido al gestor de devoluciones")
-        tk.Label(self.frame_interaccion,text="Desde este menú podrá gestionar reembolsos o cambios de los productos de los clientes",font=("Arial",10)).pack(pady=10)
-        tk.Label(self.frame_interaccion,text="Seleccione el número de la factura a la que desea hacer la devolucion",font=("Arial", 14)).pack(pady=10)        
-        self.frameFacturas = Frame(self.frame_interaccion)
+        tk.Label(
+            self.frame_interaccion,
+            text="Desde este menú podrá gestionar reembolsos o cambios de los productos de los clientes",
+            font=("Arial", 10)
+        ).pack(pady=10)
+        tk.Label(
+            self.frame_interaccion,
+            text="Seleccione el número de la factura a la que desea hacer la devolución",
+            font=("Arial", 14)
+        ).pack(pady=10)
+
+        self.frameFacturas = tk.Frame(self.frame_interaccion)
         self.frameFacturas.pack()
+
         self.frameBotones = tk.Frame(self.frame_interaccion)
         self.frameBotones.pack(pady=10)
+
         # Botón "Atrás"
         self.botonAtras = tk.Button(self.frameBotones, text="Atrás", command=self.mostrarFacturasAtras)
-        self.botonAtras.pack(side="left", padx=20)  # Separación entre botones
-
+        self.botonAtras.pack(side="left", padx=20)
         # Botón "Siguiente"
         self.botonSiguiente = tk.Button(self.frameBotones, text="Siguiente", command=self.mostrarFacturasSiguiente)
         self.botonSiguiente.pack(side="right", padx=20)
 
         self.mostrarFacturas()
 
+        # Variable para almacenar el número de factura ingresado
         self.factura_seleccionada = tk.StringVar()
-
-        tk.Label(self.frame_interaccion, text="Ingrese el número de la factura de la que quiere devolver el producto",
-                 font=("Arial", 12)).pack(anchor="s")
-
-        # Campo de entrada asociado a la variable
+        tk.Label(
+            self.frame_interaccion,
+            text="Ingrese el número de la factura de la que quiere devolver el producto",
+            font=("Arial", 12)
+        ).pack(anchor="s")
         entry_factura = tk.Entry(self.frame_interaccion, textvariable=self.factura_seleccionada)
         entry_factura.pack()
 
-        # Botón para procesar la factura seleccionada
-        tk.Button(self.frame_interaccion, text="Seleccionar Factura", 
-          command=lambda: Admin.obtenerFactura(self.factura_seleccionada.get(), self.frame_interaccion)).pack()
-        
+        tk.Button(
+            self.frame_interaccion,
+            text="Seleccionar Factura",
+            command=lambda: self.procesarFactura(self.factura_seleccionada.get())
+        ).pack()
 
-  
+    def procesarFactura(self, num_factura):
+        # Se delega en Admin la obtención de la factura
+        factura = Admin.obtenerFactura(num_factura)
+        if factura:
+            Admin.facturaSeleccionada = factura  # Guardamos la factura en Admin
+            self.mostrarProductosFactura(factura)
+
     def mostrarFacturas(self):
-        """Obtiene las facturas desde Admin y las muestra en pantalla."""
-
-        # Limpiar el frame antes de agregar nuevos elementos
+        # Limpia el frame de facturas y las repinta
         for widget in self.frameFacturas.winfo_children():
             widget.destroy()
-
         facturas = Admin.mostrarFacturas()
-
-        # Agregar líneas antes y después de las facturas
         tk.Label(self.frameFacturas, text="----------------------------").pack(anchor="n")
-
         for factura in facturas:
             tk.Label(self.frameFacturas, text=factura, font=("Arial", 12)).pack()
-
         tk.Label(self.frameFacturas, text="----------------------------").pack(anchor="s")
-    
-  
 
     def mostrarFacturasSiguiente(self):
-        """Maneja el avance de página."""
         Admin.avanzarPagina()
         self.mostrarFacturas()
 
     def mostrarFacturasAtras(self):
-        """Maneja el retroceso de página."""
         Admin.retrocederPagina()
-        self.mostrarFacturas()  
+        self.mostrarFacturas()
 
-    @staticmethod
-    def mostrarMotivosDevolucion(frameInteraccion):
+    def mostrarProductosFactura(self, factura):
+        # Limpia solo el frame de interacción para mostrar los productos
+        for widget in self.frame_interaccion.winfo_children():
+            widget.destroy()
+
+        # Se obtiene la lista de productos (se asume que factura.mostrarProductosFactura() retorna un string con saltos de línea)
+        productos_str = factura.mostrarProductosFactura()
+        productos = productos_str.split("\n")
+
+        tk.Label(
+            self.frame_interaccion,
+            text="Selecciona el producto de la factura que deseas cambiar:",
+            font=("Arial", 12)
+        ).pack(pady=10)
+
+        combobox = ttk.Combobox(self.frame_interaccion, values=productos, state="readonly")
+        combobox.pack()
+        listaProductos = factura.getListaProductos()
+
+        tk.Button(
+            self.frame_interaccion,
+            text="Seleccionar Producto",
+            command=lambda: self.seleccionarProducto(combobox, listaProductos)
+        ).pack(pady=5)
+
+    def seleccionarProducto(self, combobox, lista_objetos_productos):
+        indice_seleccionado = combobox.current()
+        if indice_seleccionado == -1:
+            messagebox.showerror("Error", "Seleccione un producto válido.")
+            return
+
+        producto_seleccionado = lista_objetos_productos[indice_seleccionado]
+        Admin.productoSeleccionado = producto_seleccionado
+        self.mostrarMotivosDevolucion()
+
+    def mostrarMotivosDevolucion(self):
         from gestorAplicacion.produccion.Producto import Producto
-        motivos= Producto.getMotivosDevolucion()
-        tk.Label(frameInteraccion,text="¿Por qué desea devolver el producto?",font=("Arial",10)).pack()
-        comboboxMotivos=ttk.Combobox(frameInteraccion,values=motivos,width=50,state="readonly")
-        comboboxMotivos.pack()
-        tk.Button(frameInteraccion, text="Confirmar Motivo",
-              command=lambda: VentanaSecundaria.verificarMotivo(comboboxMotivos, frameInteraccion)).pack(pady=5)
-    
-    @staticmethod
-    def verificarMotivo(comboboxMotivos, frameInteraccion):
-        """
-        Verifica el motivo seleccionado y si es 'Otro motivo', muestra un FieldFrame para ingresarlo.
-        """
-        motivoSeleccionado = comboboxMotivos.get()  # Obtener el motivo elegido
+        motivos = Producto.getMotivosDevolucion()
+        tk.Label(
+            self.frame_interaccion,
+            text="¿Por qué desea devolver el producto?",
+            font=("Arial", 10)
+        ).pack()
+        self.comboboxMotivos = ttk.Combobox(self.frame_interaccion, values=motivos, width=50, state="readonly")
+        self.comboboxMotivos.pack()
 
+        tk.Button(
+            self.frame_interaccion,
+            text="Confirmar Motivo",
+            command=lambda: self.verificarMotivo(self.comboboxMotivos.get())
+        ).pack(pady=5)
+
+    def verificarMotivo(self, motivoSeleccionado):
         if not motivoSeleccionado:
             messagebox.showerror("Error", "Seleccione un motivo válido.")
             return
 
-        # 🔹 Si el usuario elige el último motivo ("Otro motivo"), mostrar FieldFrame para escribirlo
-        from fieldFrame import FieldFrame
-        from gestorAplicacion.produccion.Producto import Producto
-
+        # Si el motivo es "otro motivo", se solicita que el usuario ingrese su descripción
         if motivoSeleccionado.lower() == "otro motivo":
-
-            # 🔹 Crear un FieldFrame con el campo para escribir el motivo personalizado
+            from fieldFrame import FieldFrame
             criterios = ["Ingrese su motivo"]
-            fieldFrame = FieldFrame(frameInteraccion, "Criterio", criterios, "Valor")
-            fieldFrame.pack(pady=10)
+            self.fieldFrame = FieldFrame(self.frame_interaccion, "Criterio", criterios, "Valor")
+            self.fieldFrame.pack(pady=10)
+            tk.Button(
+                self.frame_interaccion,
+                text="Confirmar Motivo Personalizado",
+                command=lambda: self.obtenerMotivoPersonalizado(self.fieldFrame)
+            ).pack(pady=5)
 
-            # 🔹 Botón para confirmar el motivo personalizado
-            tk.Button(frameInteraccion, text="Confirmar Motivo Personalizado",
-                    command=lambda: VentanaSecundaria.obtenerMotivoPersonalizado(fieldFrame)).pack(pady=5)
-        else: 
-            Admin.evaluarMotivo(motivoSeleccionado,frameInteraccion)
-            return 
+        else:
+            # Se delega la evaluación en Admin (la lógica de negocio) y se procede al reembolso
+            accion=Admin.evaluarMotivo(motivoSeleccionado, self.frame_interaccion)
+            if accion==0: 
+                self.procesarReembolso(Admin.productoSeleccionado)
+            else: 
+                self.procesarCambio(Admin.productoSeleccionado)
 
-    
-    @staticmethod
-    def obtenerMotivoPersonalizado(fieldFrame):
-        """
-        Obtiene el motivo personalizado del FieldFrame y confirma la selección.
-        """
+    def obtenerMotivoPersonalizado(self, fieldFrame):
         motivoPersonalizado = fieldFrame.getValue("Ingrese su motivo")
-
         if not motivoPersonalizado.strip():
             messagebox.showerror("Error", "Debe ingresar un motivo válido.")
             return
         Admin.productoSeleccionado.setMotivoDevolucion(motivoPersonalizado)
+        # Luego de ingresar el motivo personalizado se puede proceder al reembolso
+        self.procesarCambio(Admin.productoSeleccionado)
 
-    @staticmethod
-    def procesarReembolso(producto:Producto,frameInteraccion): 
-        tk.Label(frameInteraccion,text="Por el motivo seleccionado se le hará el reembolso del dinero, el cual es de $"+ str(producto.getPrecio()),
-                 font=("Arial",12)).pack()
+    def procesarReembolso(self, producto):
+        tk.Label(
+            self.frame_interaccion,
+            text="Por el motivo seleccionado se le hará el reembolso del dinero, el cual es de $" + str(producto.getPrecio()),
+            font=("Arial", 12)
+        ).pack()
+        # Simula el proceso de transferencia con un retardo
+        self.frame_interaccion.after(2000, lambda: self.mostrarTransferencia(producto))
+
+    def mostrarTransferencia(self, producto):
+        tk.Label(
+            self.frame_interaccion,
+            text="Transfiriendo el dinero...",
+            font=("Arial", 12)
+        ).pack()
+        self.frame_interaccion.after(2000, lambda: self.finalizarReembolso(producto))
+
+    def finalizarReembolso(self, producto):
         Admin.procesarReembolso()
-        tk.Label(frameInteraccion, text="Su dinero se ha reembolsado exitosamente",font=("Arial",14).pack())
+        tk.Label(
+            self.frame_interaccion,
+            text="Transferencia exitosa. Su dinero ha sido reembolsado exitosamente.",
+            font=("Arial", 14)
+        ).pack()
+        tk.Button(
+            self.frame_interaccion,
+            text="Oprima el botón si desea gestionar otra devolución",
+            bg="Green",
+            command=self.devoluciones
+        ).pack(pady=10)
+    
+    def procesarCambio(self, producto):
+        tk.Label(
+            self.frame_interaccion,
+            text=("Por el motivo seleccionado, se le hará el cambio del producto.\n"
+                  "Si el producto que seleccione tiene un precio menor, puede agregar otro para completar el valor restante.\n"
+                  "NO se le devolverá el dinero restante."),
+            font=("Arial", 12)
+        ).pack(pady=10)
+        tk.Button(
+            self.frame_interaccion,
+            text="Continuar con el cambio",
+            bg="red",
+            command=self.mostrarProductosTienda
+        ).pack(pady=10)
+    def mostrarProductosTienda(self):
+        self.limpiar_frame_interaccion()
+        # Almacenar la tienda y el precio original para usar en otros métodos
+        self.original_price = Admin.productoSeleccionado.getPrecio()
+        tk.Label(
+            self.frame_interaccion,
+            text=f"El precio de su producto es: ${self.original_price}",
+            font=("Arial", 12)
+        ).pack(pady=10)
+        self.tienda = Admin.facturaSeleccionada.getTienda()
+        productosDisponibles = self.tienda.mostrarProductos(Admin.productoSeleccionado)
+        
+        # Agrupar productos disponibles (productos únicos y sus cantidades)
+        self.productosUnicos = []
+        self.frecuencias = []
+        for p in productosDisponibles:
+            encontrado = False
+            for i, prod in enumerate(self.productosUnicos):
+                if prod.getNombre() == p.getNombre():
+                    self.frecuencias[i] += 1
+                    encontrado = True
+                    break
+            if not encontrado:
+                self.productosUnicos.append(p)
+                self.frecuencias.append(1)
 
-    
-    @staticmethod
-    def procesarCambio(producto:Producto): 
-        pass
-    
-    @classmethod
-    def mostrarProductosTienda(cls,frameInteraccion):
-        pass
+        # Crear un frame para la sección de cambio
+        self.frameCambio = tk.Frame(self.frame_interaccion)
+        self.frameCambio.pack(pady=10)
+        tk.Label(
+            self.frameCambio,
+            text="Productos disponibles para cambio:",
+            font=("Arial", 12)
+        ).pack(pady=5)
+
+        # Combobox de mayor ancho para visualizar las opciones
+        self.comboboxCambio = ttk.Combobox(self.frameCambio, state="readonly", width=80)
+        opciones = []
+        for i, prod in enumerate(self.productosUnicos):
+            opciones.append(f"{i+1}. {prod.getNombre()} - Precio: ${prod.getPrecio()} - Cantidad: {self.frecuencias[i]}")
+        self.comboboxCambio['values'] = opciones
+        self.comboboxCambio.pack(pady=5)
+
+        # Label para mostrar mensajes informativos o de error
+        self.labelInfo = tk.Label(self.frameCambio, text="", font=("Arial", 12))
+        self.labelInfo.pack(pady=5)
+
+        # Botón para agregar el producto seleccionado al carrito
+        self.btnAgregar = tk.Button(
+            self.frameCambio,
+            text="Agregar al carrito",
+            command=self.agregarProductoCambio
+        )
+        self.btnAgregar.pack(pady=5)
+
+        # Inicializar el carrito y el subtotal
+        self.carrito = []
+        self.subtotal = 0.0
+        self.labelSubtotal = tk.Label(
+            self.frameCambio,
+            text=f"Subtotal actual: ${self.subtotal}",
+            font=("Arial", 12)
+        )
+        self.labelSubtotal.pack(pady=5)
+
+        # Botón para finalizar la selección manualmente (si el usuario decide no seguir agregando)
+        self.btnFinalizar = tk.Button(
+            self.frameCambio,
+            text="Finalizar selección",
+            command=self.finalizarCambio
+        )
+        self.btnFinalizar.pack(pady=10)
+
+    def agregarProductoCambio(self):
+        index = self.comboboxCambio.current()
+        if index == -1:
+            self.labelInfo.config(text="Seleccione un producto válido.", fg="red")
+            return
+        if self.frecuencias[index] == 0:
+            self.labelInfo.config(text="Este producto ya no está disponible.", fg="red")
+            return
+
+        producto_seleccionado = self.productosUnicos[index]
+        nuevo_subtotal = self.subtotal + producto_seleccionado.getPrecio()
+
+        # Permitir agregar el producto, incluso si hace que el subtotal supere el precio original
+        self.frecuencias[index] -= 1
+        self.carrito.append(producto_seleccionado)
+        self.subtotal = nuevo_subtotal
+        self.labelSubtotal.config(text=f"Subtotal actual: ${self.subtotal}")
+        self.labelInfo.config(text=f"Se agregó {producto_seleccionado.getNombre()} al carrito.", fg="green")
+
+        # Actualizar las opciones del combobox con las nuevas cantidades
+        nuevas_opciones = []
+        for i, prod in enumerate(self.productosUnicos):
+            nuevas_opciones.append(f"{i+1}. {prod.getNombre()} - Precio: ${prod.getPrecio()} - Cantidad: {self.frecuencias[i]}")
+        self.comboboxCambio['values'] = nuevas_opciones
+
+        # Si el subtotal alcanza o supera el precio original, se deshabilita la opción de agregar más y se muestra el resumen automáticamente
+        if self.subtotal >= self.original_price:
+            self.btnAgregar.config(state="disabled")
+            self.labelInfo.config(text="El valor del carrito ha superado (o igualado) el precio original.", fg="green")
+            # Se procede a confirmar el cambio automáticamente
+            self.confirmarCambio()
+
+    def finalizarCambio(self):
+        # Este método se invoca si el usuario finaliza manualmente la selección
+        if self.subtotal < self.original_price:
+            self.labelInfo.config(
+                text="El subtotal no supera el precio original. No se le devolverá la diferencia. ¿Desea confirmar el cambio?",
+                fg="red"
+            )
+            # Mostrar un botón de confirmación para proceder a pesar de que no se alcance el precio
+            self.btnConfirmarCambio = tk.Button(
+                self.frameCambio,
+                text="Confirmar cambio",
+                command=self.confirmarCambio
+            )
+            self.btnConfirmarCambio.pack(pady=5)
+        else:
+            self.confirmarCambio()
+
+    def confirmarCambio(self):
+        from gestorAplicacion.produccion.Fabrica import Fabrica 
+        # Calcular el excedente (si el carrito supera el precio original, se le cobrará la diferencia)
+        excedente = Fabrica.calcularExcedente(self.carrito, self.original_price)
+        # Delegar en Admin el procesamiento del cambio
+        Admin.procesarCambioProducto(self.carrito, excedente)
+        
+        # Mostrar el resumen final del cambio en un label
+        resumen = "----- Resumen final del cambio -----\n"
+        resumen += f"Usted ha cambiado un {Admin.productoSeleccionado.getNombre()} por:\n"
+        for p in self.carrito:
+            resumen += f" - {p.getNombre()}: ${p.getPrecio()}\n"
+        resumen += f"Total del carrito: ${self.subtotal}\nExcedente pagado: ${excedente}\n"
+        resumen += "---------------------------------------"
+        tk.Label(self.frame_interaccion, text=resumen, font=("Arial", 12), justify="left").pack(pady=10)
+        
+        # Botón para volver a seleccionar otra factura (como en el proceso de reembolso)
+        tk.Button(
+            self.frame_interaccion,
+            text="Volver a seleccionar otra factura",
+            command=self.devoluciones
+        ).pack(pady=10)
 
 
     # 🔹 Funcionalidad de estadísticas (a implementar)

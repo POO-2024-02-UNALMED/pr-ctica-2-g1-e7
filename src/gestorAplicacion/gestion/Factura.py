@@ -303,6 +303,7 @@ class Factura(IMostrarProductos):
     @staticmethod
     def setTotalCreadas(cls, totalCreadas):
         cls.totalCreadas=totalCreadas
+        
 '''
 #Creacion provisional de facturas para probar la interfaz de devoluciones 
 from gestorAplicacion.gestion.Cliente import Cliente
