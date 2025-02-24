@@ -37,7 +37,7 @@ class VentanaSecundaria(Tk):
 
         # Menú Procesos y Consultas
         menu_procesos = tk.Menu(self.menubar, tearoff=0)
-        menu_procesos.add_command(label="Opción 1")
+        menu_procesos.add_command(label="Envio de Pedidos", command=self.EnvioPedidos)
         menu_procesos.add_command(label="Gestor de devoluciones", command=self.devoluciones)
         menu_procesos.add_command(label="Pago a los Trabajadores", command=self.pagoTrabajadores)
         menu_procesos.add_command(label="Opción 4", command=self.mostrar_abastecimiento)
@@ -668,7 +668,269 @@ class VentanaSecundaria(Tk):
 
         # Botón para volver al menú principal
         tk.Button(self.frame_interaccion, text="Volver al Menú Principal", command=self.mostrar_menu, width=20, height=2).pack(pady=20)
+    
+        
+        tk.Button(self.frame_interaccion, text="Volver al Menú Principal", command=self.mostrar_menu, font=("Helvetica", 10)).pack(pady=10)
+    def EnvioPedidos(self):
+        self.limpiar_frame_interaccion()
+        self.titulo.config(text="Bienvenido Al Gestor De Envio De Pedidos")
+        tk.Label(
+            self.frame_interaccion,
+            text="Desde este menú podrá gestionar los Envios de Pedidos de los clientes",
+            font=("Helvetica", 14, "bold")).pack(pady=10)
+        
+        self.seleccionar_cliente()
 
+    def seleccionar_cliente(self):
+        from gestorAplicacion.gestion.Cliente import Cliente
+        self.verificar_espacio()
+        tk.Label(self.frame_interaccion, text="Seleccione al cliente que realizó el pedido:", font=("Helvetica", 12)).pack(pady=10)
+        
+        clientes = Cliente.listaClientes  # Tomamos la lista directamente
+        if not clientes:
+            tk.Label(self.frame_interaccion, text="No hay clientes registrados.", font=("Helvetica", 12)).pack(pady=10)
+            return  # Salimos de la función si no hay clientes
+
+        opciones = [f"{i+1}. {cliente.getNombre()}" for i, cliente in enumerate(clientes)]
+        
+        combobox = ttk.Combobox(self.frame_interaccion, values=opciones, state="readonly", font=("Helvetica", 10))
+        combobox.pack(pady=5)
+        
+        self.boton_confirmar_cliente = tk.Button(self.frame_interaccion, text="Confirmar Cliente", command=lambda: self.confirmar_cliente(combobox, clientes), font=("Helvetica", 10))
+        self.boton_confirmar_cliente.pack(pady=10)
+
+    def confirmar_cliente(self, combobox, clientes):
+        seleccion = combobox.current()
+        if seleccion == -1:
+            messagebox.showerror("Error", "Seleccione un cliente válido.")
+            return
+        
+        self.clienteSeleccionado = clientes[seleccion]
+        self.boton_confirmar_cliente.pack_forget()
+        combobox.config(state="disabled")
+        self.seleccionar_tienda()
+
+    def seleccionar_tienda(self):
+        from gestorAplicacion.produccion.Fabrica import Fabrica
+        self.verificar_espacio()
+        tk.Label(self.frame_interaccion, text="Seleccione la tienda desde la cual se enviará el pedido:", font=("Helvetica", 12)).pack(pady=10)
+        
+        tiendas = Fabrica.getListaTienda()
+        opciones = [f"{i+1}. {tienda.getNombre()}" for i, tienda in enumerate(tiendas)]
+        combobox = ttk.Combobox(self.frame_interaccion, values=opciones, state="readonly", font=("Helvetica", 10))
+        combobox.pack(pady=5)
+        
+        self.boton_confirmar_tienda = tk.Button(self.frame_interaccion, text="Confirmar Tienda", command=lambda: self.confirmar_tienda(combobox, tiendas), font=("Helvetica", 10))
+        self.boton_confirmar_tienda.pack(pady=10)
+
+    def confirmar_tienda(self, combobox, tiendas):
+        seleccion = combobox.current()
+        if seleccion == -1:
+            messagebox.showerror("Error", "Seleccione una tienda válida.")
+            return
+        
+        self.tiendaSeleccionada = tiendas[seleccion]
+        self.boton_confirmar_tienda.pack_forget()
+        combobox.config(state="disabled")
+        self.seleccionar_cantidad_productos()
+
+    def seleccionar_cantidad_productos(self):
+        self.verificar_espacio()
+        tk.Label(self.frame_interaccion, text="Indique la cantidad de productos que desea enviar (máximo 5):", font=("Helvetica", 12)).pack(pady=10)
+        
+        self.cantidadProductosSeleccionados = tk.IntVar()
+        spinbox = tk.Spinbox(self.frame_interaccion, from_=1, to=5, textvariable=self.cantidadProductosSeleccionados, font=("Helvetica", 10))
+        spinbox.pack(pady=5)
+        
+        self.boton_confirmar_cantidad = tk.Button(self.frame_interaccion, text="Confirmar Cantidad", command=self.confirmar_cantidad_productos, font=("Helvetica", 10))
+        self.boton_confirmar_cantidad.pack(pady=10)
+
+    def confirmar_cantidad_productos(self):
+        cantidad = self.cantidadProductosSeleccionados.get()
+        if cantidad < 1 or cantidad > 5:
+            messagebox.showerror("Error", "Seleccione una cantidad válida.")
+            return
+        
+        self.listaProductosPedidos = []
+        self.listaProductosTienda = self.tiendaSeleccionada.listaProductosTienda()
+        self.boton_confirmar_cantidad.pack_forget()
+        self.seleccionar_productos(0)
+
+    def seleccionar_productos(self, indice):
+        if indice >= self.cantidadProductosSeleccionados.get():
+            self.seleccionar_transporte()
+            return
+        
+        self.verificar_espacio()
+        tk.Label(self.frame_interaccion, text=f"Seleccione el producto {indice + 1}:", font=("Helvetica", 12)).pack(pady=10)
+        
+        productos = [f"{i+1}. {producto[0].getNombre()} - Cantidad: {producto[1]}" for i, producto in enumerate(self.listaProductosTienda)]
+        combobox = ttk.Combobox(self.frame_interaccion, values=productos, state="readonly", font=("Helvetica", 10))
+        combobox.pack(pady=5)
+        
+        self.boton_confirmar_producto = tk.Button(self.frame_interaccion, text="Confirmar Producto", command=lambda: self.confirmar_producto(combobox, indice), font=("Helvetica", 10))
+        self.boton_confirmar_producto.pack(pady=10)
+
+    def confirmar_producto(self, combobox, indice):
+        seleccion = combobox.current()
+        if seleccion == -1:
+            messagebox.showerror("Error", "Seleccione un producto válido.")
+            return
+        
+        productoSeleccionado = self.listaProductosTienda[seleccion][0]
+        cantidadProducto = self.listaProductosTienda[seleccion][1]
+        
+        if cantidadProducto <= 0:
+            messagebox.showerror("Error", "El producto seleccionado ya no tiene stock disponible.")
+            self.seleccionar_productos(indice)
+            return
+        
+        self.listaProductosPedidos.append(productoSeleccionado)
+        self.listaProductosTienda[seleccion][1] -= 1
+        self.boton_confirmar_producto.pack_forget()
+        combobox.config(state="disabled")
+        self.seleccionar_productos(indice + 1)
+
+    def seleccionar_transporte(self):
+        from gestorAplicacion.produccion.Transporte import Transporte
+        from gestorAplicacion.produccion.TipoTransporte import TipoTransporte
+        from gestorAplicacion.gestion.Conductor import Conductor
+
+        self.verificar_espacio()
+        tk.Label(self.frame_interaccion, text="Seleccione el transporte para el envío:", font=("Helvetica", 12)).pack(pady=10)
+        
+        totalPeso = sum([producto.getPeso() for producto in self.listaProductosPedidos])
+        listaPosibleTransporte = TipoTransporte.crearTipoTransporteSegunCarga(totalPeso)
+        listaTransporteFiltrada = [conductor.getTransporte() for conductor in Conductor.getListaConductores() if conductor.getTransporte().getTipoTransporte() in listaPosibleTransporte]
+        
+        envioGratis = Transporte.enviarGratis(self.listaProductosPedidos)
+        
+        transportes = [f"{i+1}. {transporte.getTipoTransporte().getNombre()} - Precio: {'0.0' if envioGratis else transporte.getPrecioEnvio()}" for i, transporte in enumerate(listaTransporteFiltrada)]
+        combobox = ttk.Combobox(self.frame_interaccion, values=transportes, state="readonly", font=("Helvetica", 10))
+        combobox.pack(pady=5)
+        
+        self.boton_confirmar_transporte = tk.Button(self.frame_interaccion, text="Confirmar Transporte", command=lambda: self.confirmar_transporte(combobox, listaTransporteFiltrada, envioGratis), font=("Helvetica", 10))
+        self.boton_confirmar_transporte.pack(pady=10)
+
+    def confirmar_transporte(self, combobox, listaTransporteFiltrada, envioGratis):
+        seleccion = combobox.current()
+        if seleccion == -1:
+            messagebox.showerror("Error", "Seleccione un transporte válido.")
+            return
+        
+        self.transporteSeleccionado = listaTransporteFiltrada[seleccion]
+        self.precioEnvio = 0.0 if envioGratis else self.transporteSeleccionado.getPrecioEnvio()
+        self.boton_confirmar_transporte.pack_forget()
+        combobox.config(state="disabled")
+        self.ingresar_fecha()
+
+    def ingresar_fecha(self):
+        self.verificar_espacio()
+        tk.Label(self.frame_interaccion, text="Ingrese la fecha de la venta (formato: DD/MM/AAAA):", font=("Helvetica", 12)).pack(pady=10)
+        
+        self.fechaVenta = tk.StringVar()
+        entry_fecha = tk.Entry(self.frame_interaccion, textvariable=self.fechaVenta, font=("Helvetica", 10))
+        entry_fecha.pack(pady=5)
+        
+        self.boton_confirmar_fecha = tk.Button(self.frame_interaccion, text="Confirmar Fecha", command=self.confirmar_fecha, font=("Helvetica", 10))
+        self.boton_confirmar_fecha.pack(pady=10)
+
+    def confirmar_fecha(self):
+        import datetime
+        formatoFecha = "%d/%m/%Y"
+        try:
+            self.fechaVenta = datetime.datetime.strptime(self.fechaVenta.get(), formatoFecha)
+            self.boton_confirmar_fecha.pack_forget()
+            self.generar_factura()
+        except ValueError:
+            messagebox.showerror("Error", "La fecha ingresada no es válida o no cumple con el formato DD/MM/AAAA.")
+            self.ingresar_fecha()
+
+    def formatear_factura(self, factura, tree):
+        totalPrecio = 0
+        totalPeso = 0
+        precioEnvio = factura.getPrecioEnvio()
+
+        # Añadir los productos al Treeview
+        for producto in factura.getListaProductos():
+            if producto is not None:
+                tree.insert("", "end", values=(producto.getNombre(), f"${producto.getPrecio():.2f}", f"{producto.getPeso():.2f}"))
+                totalPrecio += producto.getPrecio()
+                totalPeso += producto.getPeso()
+
+        # Añadir el envío y los totales al Treeview
+        tree.insert("", "end", values=("Envío", f"${precioEnvio:.2f}", "N/A"))
+        totalPrecio += precioEnvio
+        tree.insert("", "end", values=("Total", f"${totalPrecio:.2f}", f"{totalPeso:.2f}"))
+
+    def generar_factura(self):
+        self.verificar_espacio()
+        tk.Label(self.frame_interaccion, text="Generando Factura...", font=("Helvetica", 12)).pack(pady=10)
+        
+        factura = self.tiendaSeleccionada.enviarPedido(self.listaProductosPedidos, self.transporteSeleccionado, self.clienteSeleccionado, self.precioEnvio, self.fechaVenta)
+        
+        tk.Label(self.frame_interaccion, text="¡Factura creada con éxito! A continuación, se mostrará la factura:", font=("Helvetica", 12)).pack(pady=10)
+        
+        # Añadir el nombre de la tienda centrado en la parte superior
+        tk.Label(self.frame_interaccion, text=factura.getTienda().getNombre(), font=("Helvetica", 14, "bold")).pack(pady=10)
+        
+        # Crear un Treeview widget para mostrar los detalles de la factura
+        columns_detalles = ("Campo", "Valor")
+        tree_detalles = ttk.Treeview(self.frame_interaccion, columns=columns_detalles, show="headings", height=5)
+        tree_detalles.heading("Campo", text="Campo")
+        tree_detalles.heading("Valor", text="Valor")
+        tree_detalles.pack(pady=10)
+        
+        # Añadir detalles de la factura
+        detalles = [
+            ("Cliente", factura.getCliente().getNombre()),
+            ("Cédula", factura.getCliente().getCedula()),
+            ("Fecha", factura.getFecha().strftime('%Y-%m-%d')),
+            ("Transporte", factura.getTransporte().getTipoTransporte().getNombre())
+        ]
+        for detalle in detalles:
+            tree_detalles.insert("", "end", values=detalle)
+        
+        # Crear un Treeview widget para mostrar los productos de la factura
+        columns_productos = ("Producto", "Precio", "Peso (kg)")
+        tree_productos = ttk.Treeview(self.frame_interaccion, columns=columns_productos, show="headings", height=15)
+        tree_productos.heading("Producto", text="Producto")
+        tree_productos.heading("Precio", text="Precio")
+        tree_productos.heading("Peso (kg)", text="Peso (kg)")
+        tree_productos.pack(pady=10)
+        
+        # Formatear la factura
+        self.formatear_factura(factura, tree_productos)
+        
+        self.tiendaSeleccionada.getVendedor().aumentarCargaTrabajo()
+        self.transporteSeleccionado.getConductor().aumentarCargaTrabajo()
+        self.tiendaSeleccionada.getVendedor().aumentarIndiceMeta()
+        self.transporteSeleccionado.getConductor().aumentarIndiceMeta(sum([producto.getPeso() for producto in self.listaProductosPedidos]))
+        self.tiendaSeleccionada.eliminarProductosPorNombre(self.listaProductosPedidos)
+        guardar_datos()
+        
+        tk.Button(self.frame_interaccion, text="Volver al Menú Principal", command=self.mostrar_menu, font=("Helvetica", 10)).pack(pady=10)
+
+    def formatear_factura(self, factura, tree):
+        totalPrecio = 0
+        totalPeso = 0
+        precioEnvio = factura.getPrecioEnvio()
+
+        # Añadir los productos al Treeview
+        for producto in factura.getListaProductos():
+            if producto is not None:
+                tree.insert("", "end", values=(producto.getNombre(), f"${producto.getPrecio():.2f}", f"{producto.getPeso():.2f}"))
+                totalPrecio += producto.getPrecio()
+                totalPeso += producto.getPeso()
+
+        # Añadir el envío y los totales al Treeview
+        tree.insert("", "end", values=("Envío", f"${precioEnvio:.2f}", "N/A"))
+        totalPrecio += precioEnvio
+        tree.insert("", "end", values=("Total", f"${totalPrecio:.2f}", f"{totalPeso:.2f}"))
+    def verificar_espacio(self):
+        # Verificar si hay suficiente espacio en el frame_interaccion
+        if len(self.frame_interaccion.winfo_children()) > 10:  # Ajustar el número según sea necesario
+            self.limpiar_frame_interaccion()
 # Ejecutar la aplicación desde una ventana principal
 if __name__ == "__main__":
     

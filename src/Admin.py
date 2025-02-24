@@ -184,4 +184,5 @@ class Admin:
         """
         Fabrica._cuentaBancaria.descontarDinero(pago_total)
         trabajador.recibirSueldo(pago_total)
+    
 

@@ -196,7 +196,7 @@ class Factura(IMostrarProductos):
         # Borde superior
         factura.append("=====================================\n")
         factura.append("|                                   |\n")
-        factura.append(f"| {self._tienda.getNombre():<33} |\n")
+        factura.append(f"| {self._tienda.getNombre():^33} |\n")
         factura.append("|                                   |\n")
         factura.append("=====================================\n")
 
@@ -206,7 +206,7 @@ class Factura(IMostrarProductos):
         factura.append(f"| Cédula: {self._cliente.getCedula():<26} |\n")
         factura.append(f"| Fecha: {self._fecha.strftime('%Y-%m-%d'):<28} |\n")
         factura.append(f"| Transporte: {self._transporte.getTipoTransporte().getNombre():<22} |\n")
-        factura.append("========================================================\n")
+        factura.append("=====================================\n")
 
         # Encabezado de los productos
         factura.append("| Producto                     | Precio    | Peso (kg) |\n")
@@ -222,9 +222,9 @@ class Factura(IMostrarProductos):
         # Totales
         totalPrecio += precioEnvio
         factura.append("|------------------------------|-----------|-----------|\n")
-        factura.append(f"| Envío                       | ${precioEnvio:<8.2f} | {'N/A':<8} |\n")
-        factura.append(f"| Total                       | ${totalPrecio:<8.2f} | {totalPeso:<8.2f} |\n")
-        factura.append("=======================================================\n")
+        factura.append(f"| Envío                        | ${precioEnvio:<8.2f} | {'N/A':<8} |\n")
+        factura.append(f"| Total                        | ${totalPrecio:<8.2f} | {totalPeso:<8.2f} |\n")
+        factura.append("=====================================\n")
 
         return ''.join(factura)
 

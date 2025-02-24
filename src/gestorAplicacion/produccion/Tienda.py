@@ -169,7 +169,11 @@ class Tienda:
     # Método de la funcionalidad enviarPedidos:
     # Elimina de la tienda los productos cuyos nombres coincidan con los de la lista recibida.
     def eliminarProductosPorNombre(self, listaEliminar):
-        self._listaProducto = [producto for producto in self._listaProducto if producto.getNombre() not in {p.getNombre() for p in listaEliminar}]
+        for producto_eliminar in listaEliminar:
+            for i, producto in enumerate(self._listaProducto):
+                if producto.getNombre() == producto_eliminar.getNombre():
+                    del self._listaProducto[i]  # Elimina solo la primera coincidencia
+                    break 
         
     # Método de la funcionalidad enviarPedidos:
     # Genera una factura con los productos seleccionados para el pedido, junto con el cliente, el transporte y el precio de envío.
@@ -177,7 +181,7 @@ class Tienda:
     def enviarPedido(self, listaProductosPedidos, transporteSeleccionado, clienteSeleccionado, precioEnvio, dia):
         from gestorAplicacion.gestion.Factura import Factura
         factura = Factura(self, clienteSeleccionado, transporteSeleccionado, listaProductosPedidos, precioEnvio, dia)
-        return str(factura)
+        return factura
 
     def agregarProductosParaCambio(self, precio_cambio: float, seleccion_productos: List[int], productos_disponibles):
             from gestorAplicacion.produccion.Producto import Producto
