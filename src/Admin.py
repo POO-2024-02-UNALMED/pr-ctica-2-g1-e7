@@ -33,7 +33,8 @@ class Admin:
 
     @staticmethod
     def salirDelSistema(): 
-        pass #Este es el método que se encarga de serializar los objetos cuando se cierre el programa. Implementacion pendiente 
+        pass #Este es el método que se encarga de serializar los objetos cuando se cierre el programa. Implementacion pendiente
+     
     @staticmethod
     def obtenerFacturas():
         from gestorAplicacion.gestion.Factura import Factura
@@ -41,7 +42,7 @@ class Admin:
         facturas = []
         n = 1
         for factura in Factura.listaFacturas:
-            facturas.append(f"{n}. {factura.getCliente().getNombre()} - Tienda: {factura.getTienda()} - ID: {factura.getID()}")
+            facturas.append(f"{n}. {factura.getCliente().getNombre()} - Tienda: {factura.getTienda().getNombre()} - ID: {factura.getID()}")
             n += 1
         return facturas
 

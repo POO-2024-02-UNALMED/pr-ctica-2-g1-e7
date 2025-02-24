@@ -223,12 +223,37 @@ class VentanaSecundaria(Tk):
         Admin.productoSeleccionado.setMotivoDevolucion(motivoPersonalizado)
 
     @staticmethod
-    def procesarReembolso(producto:Producto,frameInteraccion): 
-        tk.Label(frameInteraccion,text="Por el motivo seleccionado se le hará el reembolso del dinero, el cual es de $"+ str(producto.getPrecio()),
-                 font=("Arial",12)).pack()
-        Admin.procesarReembolso()
-        tk.Label(frameInteraccion, text="Su dinero se ha reembolsado exitosamente",font=("Arial",14).pack())
+    def procesarReembolso(producto, frameInteraccion):
+        """
+        Muestra el mensaje de reembolso y simula la transferencia del dinero con un delay.
+        """
+        # Mostrar mensaje de reembolso
+        tk.Label(frameInteraccion, text="Por el motivo seleccionado se le hará el reembolso del dinero, el cual es de $"
+                + str(producto.getPrecio()), font=("Arial", 12)).pack()
 
+        # Simular el proceso de transferencia con after()
+        frameInteraccion.after(2000, lambda: VentanaSecundaria.mostrarTransferencia(frameInteraccion, producto))
+    
+    @staticmethod
+    def mostrarTransferencia(frameInteraccion, producto):
+        """
+        Simula la transferencia del dinero en la interfaz con un delay.
+        """
+        tk.Label(frameInteraccion, text="Transfiriendo el dinero...", font=("Arial", 12)).pack()
+
+        # Pausa de 2 segundos antes de mostrar "Transferencia exitosa"
+        frameInteraccion.after(2000, lambda: VentanaSecundaria.finalizarReembolso(frameInteraccion, producto))
+    @staticmethod
+    def finalizarReembolso(frameInteraccion, producto):
+        """
+        Finaliza el proceso de reembolso con un mensaje de confirmación.
+        """
+        # Ejecutar la lógica de negocio del reembolso
+        Admin.procesarReembolso()
+
+        # Mostrar mensaje final
+        tk.Label(frameInteraccion, text="Transferencia exitosa. Su dinero ha sido reembolsado exitosamente.", font=("Arial", 14)).pack()
+        tk.Button(frameInteraccion,text="Oprima el botón si desea gestionar otra devolución",bg="Green",command=VentanaSecundaria.devoluciones()).pack(pady=10)
     
     @staticmethod
     def procesarCambio(producto:Producto): 
