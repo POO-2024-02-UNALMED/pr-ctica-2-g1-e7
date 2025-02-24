@@ -6,7 +6,6 @@ from gestorAplicacion.gestion.IMostrarProductos import IMostrarProductos
 
 class Factura(IMostrarProductos):
     # Variables de clase (atributos estáticos)
-    totalCreadas = 0
     listaFacturas = []
 
     def __init__(self, tienda, cliente, transporte, lista_productos: list, precio_envio: float, fecha: datetime):
@@ -24,12 +23,9 @@ class Factura(IMostrarProductos):
         self._fecha = fecha
         self._total = self.calcularTotal()
 
-        # Se incrementa el contador y se asigna el id
-        Factura.totalCreadas += 1
-        self._id = Factura.totalCreadas
-
         # Se agrega la factura a la lista de facturas
         Factura.listaFacturas.append(self)
+        self.totalCreadas = len(Factura.listaFacturas)
 
     
     @classmethod
@@ -270,9 +266,8 @@ class Factura(IMostrarProductos):
     def getListaFacturas():
         return Factura.listaFacturas
     
-    @staticmethod
-    def getTotalCreadas():
-        return Factura.totalCreadas
+    def getTotalCreadas(self):
+        return self.totalCreadas
     
 
     #setters:

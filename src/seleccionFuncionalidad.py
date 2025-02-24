@@ -7,6 +7,7 @@ from gestorAplicacion.produccion.Producto import Producto
 from gestorAplicacion.gestion.Factura import Factura
 from datetime import datetime
 from gestorAplicacion.produccion.Fabrica import Fabrica
+from src.Excepciones.ErrorFecha import *
 
 class VentanaSecundaria(Tk):
     def __init__(self, *args, **kwargs):
@@ -74,7 +75,7 @@ class VentanaSecundaria(Tk):
         messagebox.showinfo("Aplicación", "Esta aplicación gestiona procesos y consultas del sistema.")
 
     def mostrar_autores(self):
-        messagebox.showinfo("Acerca de", "Autores: Equipo de Desarrollo JJAYC")
+        messagebox.showinfo("Acerca de", "Autores: Equipo de Desarrollo JJAYC\nJose Luis Sánchez Álvarez\nJuan Esteban Herrera Navarro\nAndrés Felipe Guerra Amaris\nYhan Carlos Jaramillo Díaz\nCarlos Galvis")
 
     def cerrarVentana(self):
         from Admin import Admin
@@ -788,10 +789,31 @@ class VentanaSecundaria(Tk):
         try:
             self.fecha_inicio = datetime.strptime(self.fecha_inicio_entry.get(), "%d-%m-%Y")
             self.fecha_final = datetime.strptime(self.fecha_final_entry.get(), "%d-%m-%Y")
-            messagebox.showinfo("Fechas Actualizadas", f"Fechas seleccionadas: {self.fecha_inicio} - {self.fecha_final}")
-            self.mostrar_menu_estadisticas()
+            if self.fecha_inicio < datetime.strptime(Factura.getFechaMinima(), "%d-%m-%Y"):
+                raise FechaFueraDeRango("inicial es menor", "de inicio por defecto")
+            elif self.fecha_inicio > datetime.strptime(Factura.getFechaMaxima(), "%d-%m-%Y"):
+                raise FechaFueraDeRango("inicial es mayor", "final por defecto")
+            if self.fecha_final < self.fecha_inicio:
+                raise FechaFueraDeRango("final es menor", "de inicio")
+            elif self.fecha_final > datetime.strptime(Factura.getFechaMaxima(), "%d-%m-%Y"):
+                raise FechaFueraDeRango("final es mayor", "final por defecto")
+            else:
+                messagebox.showinfo("Fechas Actualizadas", f"Fechas seleccionadas: {self.fecha_inicio} - {self.fecha_final}")
+                self.mostrar_menu_estadisticas()
+        except FechaFueraDeRango as FFDR:
+            messagebox.showerror("Error", FFDR.mensaje_error_inicial)
+
         except ValueError:
-            messagebox.showerror("Error", "Formato de fecha inválido. Use dd-mm-yyyy.")
+            try:
+                if self.fecha_inicio_entry.get() == "" and self.fecha_final_entry.get() == "":
+                    raise PatronFechaIncorrecto(f"vacio")
+                if self.fecha_inicio_entry.get() == "" and self.fecha_final_entry.get() != "":
+                    raise PatronFechaIncorrecto(f"vacio o {self.fecha_final_entry.get()}")
+                elif self.fecha_inicio_entry.get() != "" and self.fecha_final_entry.get() == "":
+                    raise PatronFechaIncorrecto(f"{self.fecha_inicio_entry.get()} o vacio")
+                raise PatronFechaIncorrecto(f"{self.fecha_inicio_entry.get()} o {self.fecha_final_entry.get()}")
+            except PatronFechaIncorrecto as PFI:
+                messagebox.showerror("Error", PFI.mensaje_error_inicial)
 
     def mostrar_menu_estadisticas(self):
         self.limpiar_frame_interaccion()
