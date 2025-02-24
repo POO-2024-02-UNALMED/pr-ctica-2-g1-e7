@@ -4,6 +4,7 @@ from tkinter import Tk, Label,messagebox, ttk, Button, Frame
 
 from  baseDatos.Deserializarcion import cargar_datos
 from  baseDatos.Serialización import guardar_datos
+from src.Excepciones.EnteroFueraDeRango import OpcionNoValida
 cargar_datos()
 from tkinter import messagebox
 from ventanaInicio import centrar_ventana
@@ -67,12 +68,15 @@ class Admin:
         from gestorAplicacion.gestion.Factura import Factura
         try:
             num_factura = int(num)
-            factura = Factura.seleccionarFactura(num_factura)
+            if num_factura > len(Factura.getListaFacturas()):
+                raise OpcionNoValida(num_factura)
+            else:
+                factura = Factura.seleccionarFactura(num_factura)
             return factura
         except ValueError:
             messagebox.showerror("Error", "Por favor, ingrese un número válido.")
-        except IndexError:
-            messagebox.showerror("Error", "Número de factura inválido.")
+        except OpcionNoValida as ONV:
+            messagebox.showerror("Error", ONV.mensaje_error_inicial)
         return None
 
     @staticmethod

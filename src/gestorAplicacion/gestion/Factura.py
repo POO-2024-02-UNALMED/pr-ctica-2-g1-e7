@@ -24,12 +24,9 @@ class Factura(IMostrarProductos):
         self._fecha = fecha
         self._total = self.calcularTotal()
 
-        # Se incrementa el contador y se asigna el id
-        Factura.totalCreadas += 1
-        self._id = Factura.totalCreadas
-
         # Se agrega la factura a la lista de facturas
         Factura.listaFacturas.append(self)
+        totalCreadas = len(Factura.listaFacturas)
 
     
     @classmethod
