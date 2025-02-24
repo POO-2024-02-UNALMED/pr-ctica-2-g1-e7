@@ -22,15 +22,14 @@ class Admin:
         from seleccionFuncionalidad import VentanaSecundaria
         ventanaPrincipal.destroy()
         nuevaVentana=VentanaSecundaria()
-        centrar_ventana(nuevaVentana)
-
+        #centrar_ventana(nuevaVentana)
 
     @staticmethod
     def volverVentanaInicio(ventanaSecundaria:Tk):
         from ventanaInicio import VentanaInicio
         ventanaSecundaria.destroy()
         ventana_inicio=VentanaInicio()
-        centrar_ventana(ventana_inicio)
+        #centrar_ventana(ventana_inicio)
 
     @staticmethod
     def salirDelSistema(): 
@@ -42,7 +41,7 @@ class Admin:
         facturas = []
         n = 1
         for factura in Factura.listaFacturas:
-            facturas.append(f"{n}. {factura.getCliente().getNombre()} - Tienda: {factura.getTienda().getNombre()} - ID: {factura.getID()}")
+            facturas.append(f"{n}. {factura.getCliente().getNombre()} - Tienda: {factura.getTienda().getNombre()}")
             n += 1
         return facturas
 

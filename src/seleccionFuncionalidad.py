@@ -9,80 +9,100 @@ from datetime import datetime
 from gestorAplicacion.produccion.Fabrica import Fabrica
 from src.Excepciones.ErrorFecha import *
 
-class VentanaSecundaria(Tk):
+import tkinter as tk
+from tkinter import ttk, messagebox
+
+class VentanaSecundaria(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self._pago_por_metas = 0
-        self.fecha_inicio = Factura.getFechaMinima()
-        self.fecha_final = Factura.getFechaMaxima()
-        cargar_datos()
-        # Configuración de la ventana
-        self.geometry("800x600")
-        self.title("Distribuidora JJAYC")
-        self.pagina_actual = 0
-        # 🔹 ZONA 0 - Título de la aplicación
-        self.frame_titulo = tk.Frame(self, relief="solid", bd=1)
-        self.frame_titulo.pack(fill="x", padx=5, pady=5)
 
-        self.titulo = tk.Label(self.frame_titulo, text="Distribuidora JJAYC", font=("Arial", 14, "bold"))
-        self.titulo.pack(pady=5)
+        # Configuración de la ventana
+        self.geometry("900x650")
+        self.title("Distribuidora JJAYC")
+        self.configure(bg="#ECF0F1")  # Fondo gris claro moderno
+
+        # 🔹 ZONA 0 - Título de la aplicación
+        self.frame_titulo = tk.Frame(self, bg="#1F618D", height=60)
+        self.frame_titulo.pack(fill="x")
+
+        self.titulo = tk.Label(self.frame_titulo, text="Distribuidora JJAYC", font=("Arial", 18, "bold"),
+                               fg="white", bg="#1F618D")
+        self.titulo.pack(pady=15)
 
         # 🔹 ZONA 1 - Menú superior
-        self.frame_menu = tk.Frame(self, relief="solid", bd=1)
-        self.frame_menu.pack(fill="x", padx=5, pady=5)
+        self.frame_menu = tk.Frame(self, bg="#2C3E50")
+        self.frame_menu.pack(fill="x")
 
         # Menú de opciones
         self.menubar = tk.Menu(self)
 
         # Menú Archivo
-        menu_archivo = tk.Menu(self.menubar, tearoff=0)
-        menu_archivo.add_command(label="Aplicación", command=self.mostrar_info_aplicacion)
+        menu_archivo = tk.Menu(self.menubar, tearoff=0, bg="#ECF0F1")
+        menu_archivo.add_command(label="📘 Aplicación", command=self.mostrar_info_aplicacion)
         menu_archivo.add_separator()
-        menu_archivo.add_command(label="Salir", command=self.cerrarVentana)
-        self.menubar.add_cascade(label="Archivo", menu=menu_archivo)
+        menu_archivo.add_command(label="🚪 Salir", command=self.cerrarVentana)
+        self.menubar.add_cascade(label="📂 Archivo", menu=menu_archivo)
 
         # Menú Procesos y Consultas
-        menu_procesos = tk.Menu(self.menubar, tearoff=0)
-        menu_procesos.add_command(label="Envio de Pedidos", command=self.EnvioPedidos)
-        menu_procesos.add_command(label="Gestor de devoluciones", command=self.devoluciones)
-        menu_procesos.add_command(label="Pago a los Trabajadores", command=self.pagoTrabajadores)
-        menu_procesos.add_command(label="Abastecer Tiendas", command=self.mostrar_abastecimiento)
-        menu_procesos.add_command(label="Estadísticas", command=self.mostrar_estadisticas)
-        self.menubar.add_cascade(label="Procesos y Consultas", menu=menu_procesos)
+        menu_procesos = tk.Menu(self.menubar, tearoff=0, bg="#ECF0F1")
+        menu_procesos.add_command(label="🚛 Envio de Pedidos", command=self.EnvioPedidos)
+        menu_procesos.add_command(label="🔄 Gestor de Devoluciones", command=self.devoluciones)
+        menu_procesos.add_command(label="💵 Pago a los Trabajadores", command=self.pagoTrabajadores)
+        menu_procesos.add_command(label="🏬 Abastecer Tiendas", command=self.mostrar_abastecimiento)
+        menu_procesos.add_command(label="📊 Estadísticas", command=self.mostrar_estadisticas)
+        self.menubar.add_cascade(label="⚙️ Procesos y Consultas", menu=menu_procesos)
 
         # Menú Ayuda
-        menu_ayuda = tk.Menu(self.menubar, tearoff=0)
-        menu_ayuda.add_command(label="Acerca de", command=self.mostrar_autores)
-        self.menubar.add_cascade(label="Ayuda", menu=menu_ayuda)
+        menu_ayuda = tk.Menu(self.menubar, tearoff=0, bg="#ECF0F1")
+        menu_ayuda.add_command(label="❓ Acerca de", command=self.mostrar_autores)
+        self.menubar.add_cascade(label="ℹ️ Ayuda", menu=menu_ayuda)
 
         # Asignar menú a la ventana
         self.config(menu=self.menubar)
 
-        # 🔹 ZONA 2 - Zona de interacción con el usuario
-        self.frame_interaccion = tk.Frame(self, relief="solid", bd=1)
-        self.frame_interaccion.pack(fill="both", expand=True, padx=10, pady=10)
+        # 🔹 ZONA 2 - Zona de interacción con el usuario (bloqueada para edición)
+        self.frame_interaccion = tk.LabelFrame(self, text="Zona de Interacción", relief="solid", bd=2, 
+                                               bg="white", font=("Arial", 12, "bold"), fg="#2C3E50")
+        self.frame_interaccion.pack(fill="both", expand=True, padx=20, pady=10)
 
-        # 🔹 Botones de acción
-        self.frame_botones = tk.Frame(self, relief="solid", bd=1)
-        self.frame_botones.pack(fill="x", padx=10, pady=5)
+        self.label_interaccion = tk.Label(self.frame_interaccion, text="Seleccione una opción en el menú",
+                                          font=("Arial", 14), fg="#2C3E50", bg="white")
+        self.label_interaccion.pack(pady=30)
 
+        # 🔹 ZONA 3 - Pie de Página (Sin botones innecesarios)
+        self.frame_pie = tk.Frame(self, bg="#34495E", height=30)
+        self.frame_pie.pack(fill="x", side="bottom")
+
+        self.label_pie = tk.Label(self.frame_pie, text="Sistema de Distribución JJAYC | © 2024",
+                                  font=("Arial", 10), fg="white", bg="#34495E")
+        self.label_pie.pack(pady=5)
 
         # Mostrar la interfaz principal
         self.mostrar_menu()
 
     # 🔹 Funciones de menú
     def mostrar_info_aplicacion(self):
-        messagebox.showinfo("Aplicación", "Esta aplicación gestiona procesos y consultas del sistema.")
+        messagebox.showinfo("📘 Aplicación", "Esta aplicación gestiona procesos y consultas del sistema.")
 
     def mostrar_autores(self):
-        messagebox.showinfo("Acerca de", "Autores: Equipo de Desarrollo JJAYC\nJose Luis Sánchez Álvarez\nJuan Esteban Herrera Navarro\nAndrés Felipe Guerra Amaris\nYhan Carlos Jaramillo Díaz\nCarlos Galvis")
+        messagebox.showinfo("❓ Acerca de", "Autores: Equipo de Desarrollo JJAYC\n"
+                                         "Jose Luis Sánchez Álvarez\n"
+                                         "Juan Esteban Herrera Navarro\n"
+                                         "Andrés Felipe Guerra Amaris\n"
+                                         "Yhan Carlos Jaramillo Díaz\n"
+                                         "Carlos Galvis")
 
     def cerrarVentana(self):
         from Admin import Admin
         Admin.volverVentanaInicio(self)
 
-    # 🔹 Función para limpiar el frame de interacción antes de cargar otra interfaz
+    def mostrar_menu(self):
+        """Muestra el mensaje de bienvenida en la zona de interacción."""
+        self.limpiar_frame_interaccion()
+        self.label_interaccion.config(text="Seleccione una opción en el menú")
+
     def limpiar_frame_interaccion(self):
+        """Elimina todos los widgets dentro de frame_interaccion."""
         for widget in self.frame_interaccion.winfo_children():
             widget.destroy()
 
