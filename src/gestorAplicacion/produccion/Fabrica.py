@@ -133,7 +133,7 @@ class Fabrica:
             )
             nuevosProductos.append(nuevoProducto)
         return nuevosProductos
-
+'''
 import datetime
 from gestorAplicacion.gestion.Vendedor import Vendedor
 from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
@@ -401,4 +401,4 @@ conductor9.setIndiceMeta(50)
 
 conductor10.setCantidadTrabajo(6)
 conductor10.setIndiceMeta(18)
-
+'''

@@ -40,10 +40,6 @@ def guardar_datos():
         "CuentaBancariaFabrica": Fabrica._cuentaBancaria  # ✅ Guardar la cuenta bancaria
     }
 
-    # Verificar que las listas no estén vacías antes de guardar
-    for key, value in datos.items():
-        print(f"📌 {key}: {len(value) if isinstance(value, list) else '1'} elementos guardados")
-
     with open("datos.pkl", "wb") as archivo:
         pickle.dump(datos, archivo)
 
