@@ -147,7 +147,7 @@ class VentanaInicio(Tk):
             self.varHDV.set("Andrés Felipe Guerra Amaris \n18 años \nIngeniería de sistemas e informática  \nNacido en Bucaramanga")
             self.evento(4)  # Índice inicial para Andrés
         elif self.numClicksHDV == 3:
-            self.varHDV.set("Juan Esteban Herrera Navarro \n22 años \nEstudiante ingeniería de sistemas \nTrabajador nato.")
+            self.varHDV.set("Juan Esteban Herrera Navarro \n22 años \nEstudiante ingeniería de sistemas \nInteresado por las nuevas tecnologías.")
             self.evento(8)  # Índice inicial para Juan
         elif self.numClicksHDV == 4:
             self.varHDV.set("Yhan Carlos Jaramillo Diaz \n17 años \nEstudiante de Ingeniería de Sistemas \nTrabajador")

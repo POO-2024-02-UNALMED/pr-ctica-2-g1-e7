@@ -6,7 +6,6 @@ from gestorAplicacion.gestion.IMostrarProductos import IMostrarProductos
 
 class Factura(IMostrarProductos):
     # Variables de clase (atributos estáticos)
-    totalCreadas = 0
     listaFacturas = []
 
     def __init__(self, tienda, cliente, transporte, lista_productos: list, precio_envio: float, fecha: datetime):
@@ -24,12 +23,9 @@ class Factura(IMostrarProductos):
         self._fecha = fecha
         self._total = self.calcularTotal()
 
-        # Se incrementa el contador y se asigna el id
-        Factura.totalCreadas += 1
-        self._id = Factura.totalCreadas
-
         # Se agrega la factura a la lista de facturas
         Factura.listaFacturas.append(self)
+        self.totalCreadas = len(Factura.listaFacturas)
 
     
     @classmethod
@@ -129,7 +125,15 @@ class Factura(IMostrarProductos):
         ganancias: list[list[datetime, float]] = []
         for f in facturas:
             ganancias.append([f.getFecha(), f.getTotal()])
-        return ganancias
+        msg = ""
+        if ganancias == []:
+            msg = "No hay ganancias."
+        elif len(ganancias) == 1:
+            msg = f"La ganancia total es de ${ganancias[0][1]:.2f} en la fecha {ganancias[0][0].strftime('%d/%m/%Y')}."
+        else:
+            for i in range(len(ganancias)):
+                msg += f"La ganancia total es de ${ganancias[i][1]:.2f} en la fecha {ganancias[i][0].strftime('%d/%m/%Y')}.\n"
+        return msg
     
     @staticmethod
     def gananciaTotal(fecha_min: datetime, fecha_max: datetime):
@@ -137,7 +141,7 @@ class Factura(IMostrarProductos):
         Método que calcula la ganancia total entre dos fechas.
         """
         facturas = Factura.getFacturasEntreFechas(fecha_min, fecha_max)
-        return sum(f.getTotal() for f in facturas)
+        return f'La ganancia total es de: {sum(f.getTotal() for f in facturas)}'
     
     @staticmethod
     def promedioDeGanancias(fecha_min: datetime, fecha_max: datetime):
@@ -145,7 +149,7 @@ class Factura(IMostrarProductos):
         Método que calcula el promedio de ganancias entre dos fechas.
         """
         facturas = Factura.getFacturasEntreFechas(fecha_min, fecha_max)
-        return sum(f.getTotal() for f in facturas) / len(facturas)
+        return f'El promedio de ganancias es de: {sum(f.getTotal() for f in facturas) / len(facturas)}'
     
     @staticmethod
     def aumentosPorcentuales(fecha_min: datetime, fecha_max: datetime):
@@ -157,6 +161,9 @@ class Factura(IMostrarProductos):
         for i in range(1, len(facturas)):
             aumento = (facturas[i].getTotal() - facturas[i - 1].getTotal()) / facturas[i - 1].getTotal() * 100
             aumentos.append([facturas[i].getFecha(), aumento])
+
+        if aumentos == []:
+            return "No hay aumentos porcentuales."
         return aumentos
     
     @staticmethod
@@ -259,9 +266,8 @@ class Factura(IMostrarProductos):
     def getListaFacturas():
         return Factura.listaFacturas
     
-    @staticmethod
-    def getTotalCreadas():
-        return Factura.totalCreadas
+    def getTotalCreadas(self):
+        return self.totalCreadas
     
 
     #setters:

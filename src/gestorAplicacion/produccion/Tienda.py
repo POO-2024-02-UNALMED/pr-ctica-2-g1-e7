@@ -216,74 +216,84 @@ class Tienda:
 
         
     def productosPorCategoria(self, productos, conteoTemporal=None):
-            """
-            Muestra los productos por categoría en formato: (cantidad actual/capacidad máxima).
-            Si conteoTemporal se proporciona, se usa en lugar del conteo normal.
-            """
-            # Limpiar listas antes de procesar
-            self._categorias = []
+        """
+        Muestra los productos por categoría usando las listas paralelas.
+        Si conteoTemporal se proporciona, se usa en lugar del conteo normal.
+        """
+        # Inicializar las categorías si están vacías
+        if not self._categorias:
+            self._categorias = ["Herramientas", "Muebles", "Aseo"]
+            self._conteoCategorias = [0] * len(self._categorias)
 
-            # Lista de todas las categorías posibles
-            todasLasCategorias = ["Herramientas", "Muebles", "Aseo"]
+        # Si no hay conteo temporal, contar productos actuales
+        if conteoTemporal is None:
+            # Reiniciar conteos
+            self._conteoCategorias = [0] * len(self._categorias)
             
-            # Inicializar las categorías
-            for categoria in todasLasCategorias:
-                self._categorias.append(categoria)
+            # Contar productos por categoría
+            for producto in productos:
+                categoria = producto.getCategoria()
+                if categoria in self._categorias:
+                    index = self._categorias.index(categoria)
+                    self._conteoCategorias[index] += 1
+        
+        # Construir el resultado
+        resultado = ""
+        for i, categoria in enumerate(self._categorias):
+            # Usar conteo temporal si existe, sino usar el conteo normal
+            conteo = conteoTemporal[i] if conteoTemporal is not None else self._conteoCategorias[i]
             
-            # Si conteoTemporal no se proporciona, inicializar conteoCategorias
-            if conteoTemporal is None:
-                self._conteoCategorias = []
-                self._conteoCategorias = [0] * len(self._categorias)
-
-                # Contar productos por categoría
-                for producto in productos:
-                    categoria = producto.getCategoria()  # Obtener la categoría
-                    if categoria in self._categorias:
-                        index = self._categorias.index(categoria)
-                        self._conteoCategorias[index] += 1
+            # Determinar la capacidad máxima según la categoría
+            if categoria == "Herramientas":
+                capacidadMaxima = self._capacidadMaximaMaterial
+            elif categoria == "Muebles":
+                capacidadMaxima = self._capacidadMaximaConsumible
+            elif categoria == "Aseo":
+                capacidadMaxima = self._capacidadMaximaLimpieza
             else:
-                # Si conteoTemporal existe, solo asegurarse de que las categorías están en la lista
-                for producto in productos:
-                    categoria = producto.getCategoria()
-                    if categoria not in self._categorias:
-                        self._categorias.append(categoria)
+                capacidadMaxima = 0
+                
+            resultado += f"{categoria}: {conteo}/{capacidadMaxima} productos\n"
+        
+        return resultado
 
-            # Construir el resultado
-            resultado = ""
-            for i, categoria in enumerate(self._categorias):
-                conteo = self._conteoCategorias[i] if conteoTemporal is None else conteoTemporal[i-1]
-                resultado += f"{categoria}: {conteo}/"
-
-                # Agregar la capacidad máxima correspondiente
-                if categoria == "Herramientas":
-                    resultado += str(self._capacidadMaximaMaterial)
-                elif categoria == "Muebles":
-                    resultado += str(self._capacidadMaximaConsumible)
-                elif categoria == "Aseo":
-                    resultado += str(self._capacidadMaximaLimpieza)
-                else:
-                    resultado += "N/A"
-
-                resultado += " productos\n"
-            return resultado
-    #falla aqui la actualizacion de productos por categoria
     def getCantidadActualPorCategoria(self, categoria):
-            cantidad = sum(1 for producto in self._listaProducto if producto.getCategoria() == categoria)
-            return cantidad
+        """
+        Obtiene la cantidad actual de productos de una categoría específica
+        usando las listas paralelas.
+        """
+        if categoria in self._categorias:
+            index = self._categorias.index(categoria)
+            return self._conteoCategorias[index]
+        return 0
+
     def cantidadProductos(self):
-            """
-            Muestra los productos de la tienda de forma ordenada (producto: cantidad).
-            """
-            nombresContados = []
-            resultado = ""
+        """
+        Muestra los productos de la tienda de forma ordenada (producto: cantidad).
+        Usa listas paralelas para mantener el conteo.
+        """
+        nombresProductos = []
+        cantidadesProductos = []
+        
+        # Primera pasada: recolectar nombres únicos y sus cantidades
+        for producto in self._listaProducto:
+            try:
+                nombre = producto.getNombre()
+                if nombre in nombresProductos:
+                    indice = nombresProductos.index(nombre)
+                    cantidadesProductos[indice] += 1
+                else:
+                    nombresProductos.append(nombre)
+                    cantidadesProductos.append(1)
+            except:
+                continue  # Saltar si hay algún problema al obtener el nombre
 
-            for producto in self._listaProducto:
-                if producto.getNombre() not in nombresContados:
-                    cantidad = sum(1 for p in self._listaProducto if p.getNombre() == producto.getNombre())
-                    nombresContados.append(producto.getNombre())
-                    resultado += f"{producto.getNombre()}: {cantidad} unidades\n"
-
-            return resultado
+        # Construir el resultado
+        resultado = ""
+        for i in range(len(nombresProductos)):
+            resultado += f"{nombresProductos[i]}: {cantidadesProductos[i]} unidades\n"
+        
+        return resultado if resultado else "No hay productos en la tienda.\n"
 
     def descargarProducto(self, transporteSeleccionado):
             """

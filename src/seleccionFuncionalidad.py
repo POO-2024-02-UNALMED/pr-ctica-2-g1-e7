@@ -4,11 +4,17 @@ from Admin import Admin
 from  baseDatos.Deserializarcion import cargar_datos
 from  baseDatos.Serialización import guardar_datos
 from gestorAplicacion.produccion.Producto import Producto
+from gestorAplicacion.gestion.Factura import Factura
+from datetime import datetime
+from gestorAplicacion.produccion.Fabrica import Fabrica
+from src.Excepciones.ErrorFecha import *
 
 class VentanaSecundaria(Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._pago_por_metas = 0
+        self.fecha_inicio = Factura.getFechaMinima()
+        self.fecha_final = Factura.getFechaMaxima()
         cargar_datos()
         # Configuración de la ventana
         self.geometry("800x600")
@@ -40,7 +46,7 @@ class VentanaSecundaria(Tk):
         menu_procesos.add_command(label="Envio de Pedidos", command=self.EnvioPedidos)
         menu_procesos.add_command(label="Gestor de devoluciones", command=self.devoluciones)
         menu_procesos.add_command(label="Pago a los Trabajadores", command=self.pagoTrabajadores)
-        menu_procesos.add_command(label="Opción 4", command=self.mostrar_abastecimiento)
+        menu_procesos.add_command(label="Abastecer Tiendas", command=self.mostrar_abastecimiento)
         menu_procesos.add_command(label="Estadísticas", command=self.mostrar_estadisticas)
         self.menubar.add_cascade(label="Procesos y Consultas", menu=menu_procesos)
 
@@ -69,7 +75,7 @@ class VentanaSecundaria(Tk):
         messagebox.showinfo("Aplicación", "Esta aplicación gestiona procesos y consultas del sistema.")
 
     def mostrar_autores(self):
-        messagebox.showinfo("Acerca de", "Autores: Equipo de Desarrollo JJAYC")
+        messagebox.showinfo("Acerca de", "Autores: Equipo de Desarrollo JJAYC\nJose Luis Sánchez Álvarez\nJuan Esteban Herrera Navarro\nAndrés Felipe Guerra Amaris\nYhan Carlos Jaramillo Díaz\nCarlos Galvis")
 
     def cerrarVentana(self):
         from Admin import Admin
@@ -83,23 +89,314 @@ class VentanaSecundaria(Tk):
     # 🔹 Función para mostrar la interfaz de abastecimiento dentro de frame_interaccion
     def mostrar_abastecimiento(self):
         self.limpiar_frame_interaccion()
+        self.titulo.config(text="Abastecimiento de tiendas")
+        tk.Label(self.frame_interaccion, 
+                 text="Desde este menú podrá realizar un correcto abastecimiento a las tiendas asociadas",
+                 font=("Arial", 10)).pack(pady=10)
+        tk.Label(self.frame_interaccion, 
+                 text="Seleccione la tienda que desea abastecer",
+                 font=("Arial", 14)).pack(pady=10)
 
-        tk.Label(self.frame_interaccion, text="Interfaz de Abastecimiento", font=("Arial", 14)).pack(pady=10)
+        # Frame principal para las tiendas
+        frame_tiendas = tk.Frame(self.frame_interaccion)
+        frame_tiendas.pack(pady=10)
 
-        tk.Label(self.frame_interaccion, text="Seleccione la tienda:").pack()
-        ttk.Combobox(self.frame_interaccion, values=["Tienda 1", "Tienda 2", "Tienda 3"]).pack()
+        # Mostrar botones y productos para cada tienda
+        tiendas = Admin.mostrarTiendas()
+        for tienda in tiendas:
+            # Frame individual para cada tienda
+            frame_tienda = tk.Frame(frame_tiendas, relief="solid", bd=1)
+            frame_tienda.pack(pady=5, padx=10, fill="x")
 
-        tk.Label(self.frame_interaccion, text="Seleccione los productos:").pack()
-        ttk.Checkbutton(self.frame_interaccion, text="Producto A").pack()
-        ttk.Checkbutton(self.frame_interaccion, text="Producto B").pack()
-        ttk.Checkbutton(self.frame_interaccion, text="Producto C").pack()
+            # Botón de la tienda
+            tk.Button(frame_tienda, 
+                     text=f"Tienda {tienda.getNombre()}", 
+                     command=lambda t=tienda: self.mostrar_lista_productos(t),
+                     width=20, height=2).pack(pady=5)
 
-        tk.Label(self.frame_interaccion, text="Cantidad:").pack()
-        tk.Entry(self.frame_interaccion).pack()
+            # Label para mostrar los productos actuales
+            tk.Label(frame_tienda, 
+                    text="Productos actuales:",
+                    font=("Arial", 10, "bold")).pack()
+            
+            # Text widget para mostrar los productos con scroll si es necesario
+            productos_text = tk.Text(frame_tienda, height=5, width=40)
+            productos_text.pack(pady=5)
+            productos_text.insert("1.0", tienda.cantidadProductos())
+            productos_text.config(state="disabled")  # Hacer el texto de solo lectura
 
-        tk.Button(self.frame_interaccion, text="Confirmar Envío",
-                  command=lambda: messagebox.showinfo("Éxito", "Abastecimiento confirmado")).pack(pady=10)
-        tk.Button(self.frame_interaccion, text="Volver al Menú", command=self.mostrar_menu).pack()
+        # Botón para volver al menú principal
+        tk.Button(self.frame_interaccion, 
+                 text="Volver al Menú", 
+                 command=self.mostrar_menu).pack(pady=10)
+
+    def reiniciar_seleccion(self, tienda_seleccionada):
+        """Reinicia las variables temporales y vuelve a la selección de productos"""
+        self.productosGenerados = []
+        self.pesoTotalProductos = 0.0
+        self.conteoCategoriasTemporal = [
+        tienda_seleccionada.getCantidadActualPorCategoria("Herramientas"),
+        tienda_seleccionada.getCantidadActualPorCategoria("Muebles"),
+        tienda_seleccionada.getCantidadActualPorCategoria("Aseo")
+    ]
+        self.mostrar_lista_productos(tienda_seleccionada)
+
+
+    def mostrar_lista_productos(self, tienda_seleccionada):
+        """
+        Muestra la siguiente pantalla después de seleccionar una tienda,
+        incluyendo los productos por categoría.
+        """
+        self.limpiar_frame_interaccion()
+        
+        # Frame para mostrar productos por categoría
+        frame_categorias = tk.Frame(self.frame_interaccion, relief="solid", bd=1)
+        frame_categorias.pack(fill="x", padx=10, pady=10)
+        
+        # Label para el título
+        tk.Label(frame_categorias, 
+                text="Estado actual de productos por categoría:",
+                font=("Arial", 12, "bold")).pack(pady=5)
+        
+        # Text widget para mostrar productos por categoría
+        categorias_text = tk.Text(frame_categorias, height=4, width=60)
+        categorias_text.pack(pady=5, padx=10)
+        categorias_text.insert("1.0", tienda_seleccionada.productosPorCategoria(tienda_seleccionada.getListaProducto()))
+        categorias_text.config(state="disabled")  # Hacer el texto de solo lectura
+        
+        # Frame para los productos disponibles
+        frame_productos = tk.Frame(self.frame_interaccion)
+        frame_productos.pack(pady=10, fill="both", expand=True)
+        
+        tk.Label(frame_productos, 
+                text="Productos disponibles para abastecer:",
+                font=("Arial", 12, "bold")).pack(pady=5)
+        
+        # Mostrar productos disponibles de la fábrica
+        productos_disponibles = Fabrica.getProductosDisponibles()
+        for producto in productos_disponibles:
+            tk.Button(frame_productos,
+                     text=f"{producto.getNombre()} - {producto.getCategoria()} - ${producto.getPrecio()}",
+                     command=lambda p=producto: self.seleccionar_producto_abastecimiento(tienda_seleccionada, p),
+                     width=40).pack(pady=2)
+        
+        # Botón para volver
+        tk.Button(self.frame_interaccion,
+                 text="Volver",
+                 command=self.mostrar_abastecimiento).pack(pady=10)
+
+    def seleccionar_producto_abastecimiento(self, tienda_seleccionada, producto):
+        """Maneja la selección de un producto y solicita la cantidad a enviar"""
+        self.limpiar_frame_interaccion()
+        
+        # Variables temporales para el proceso de abastecimiento
+        if not hasattr(self, 'productosGenerados'):
+            self.productosGenerados = []
+            self.pesoTotalProductos = 0.0
+            self.conteoCategoriasTemporal = [
+                tienda_seleccionada.getCantidadActualPorCategoria("Herramientas"),
+                tienda_seleccionada.getCantidadActualPorCategoria("Muebles"),
+                tienda_seleccionada.getCantidadActualPorCategoria("Aseo")
+            ]
+
+        # Frame principal
+        frame_cantidad = tk.Frame(self.frame_interaccion)
+        frame_cantidad.pack(fill="both", expand=True, padx=10, pady=10)
+
+        # Mostrar estado actual
+        tk.Label(frame_cantidad, 
+                text="Estado actual de productos por categoría:",
+                font=("Arial", 12, "bold")).pack(pady=5)
+        
+        categorias_text = tk.Text(frame_cantidad, height=4, width=60)
+        categorias_text.pack(pady=5)
+        categorias_text.insert("1.0", tienda_seleccionada.productosPorCategoria(
+            tienda_seleccionada.getListaProducto(), 
+            self.conteoCategoriasTemporal))
+        categorias_text.config(state="disabled")
+
+        # Información del producto seleccionado
+        tk.Label(frame_cantidad, 
+                text=f"Producto seleccionado: {producto.getNombre()}",
+                font=("Arial", 12)).pack(pady=5)
+
+        # Calcular cantidad disponible
+        categoria_producto = producto.getCategoria()
+        indice = tienda_seleccionada.getCategorias().index(categoria_producto)
+        cantidad_actual = self.conteoCategoriasTemporal[indice]
+        cantidad_maxima = 100  # Ajustar según la categoría
+        cantidad_disponible = cantidad_maxima - cantidad_actual
+
+        tk.Label(frame_cantidad,
+                text=f"Cantidad máxima disponible: {cantidad_disponible}",
+                font=("Arial", 10)).pack()
+
+        # Entry para la cantidad
+        self.entry_cantidad = tk.Entry(frame_cantidad)
+        self.entry_cantidad.pack(pady=10)
+
+        # Frame para botones de acción
+        frame_botones = tk.Frame(frame_cantidad)
+        frame_botones.pack(pady=20)
+
+        tk.Button(frame_botones,
+                 text="Confirmar cantidad",
+                 command=lambda: self.validar_y_mostrar_opciones(
+                     tienda_seleccionada, producto, cantidad_disponible)).pack(side="left", padx=5)
+
+        tk.Button(frame_botones,
+                 text="Volver a productos",
+                 command=lambda: self.mostrar_lista_productos(tienda_seleccionada)).pack(side="left", padx=5)
+
+        tk.Button(frame_botones,
+                 text="Volver al menú",
+                 command=self.mostrar_abastecimiento).pack(side="left", padx=5)
+        
+
+    def validar_y_mostrar_opciones(self, tienda_seleccionada, producto, cantidad_maxima):
+        """Valida la cantidad y muestra las opciones de continuación"""
+        from Excepciones.EnteroFueraDeRango import EnteroFueraDeRango
+        try:
+            cantidad = int(self.entry_cantidad.get())
+            if cantidad < 0 or cantidad > cantidad_maxima:
+                raise EnteroFueraDeRango(f"La cantidad debe estar entre 0 y {cantidad_maxima}")
+
+            # Guardar temporalmente los productos y actualizar conteos
+            categoria_producto = producto.getCategoria()
+            indice = tienda_seleccionada.getCategorias().index(categoria_producto)
+            
+            # Actualizar conteos temporales
+            self.conteoCategoriasTemporal[indice] += cantidad
+            self.productosGenerados.extend(Fabrica.cantidadProductos(producto, cantidad))
+            self.pesoTotalProductos += producto.getPeso() * cantidad
+
+            # Frame para opciones post-selección
+            frame_opciones = tk.Frame(self.frame_interaccion)
+            frame_opciones.pack(pady=20)
+
+            tk.Label(frame_opciones,
+                    text="¿Qué desea hacer?",
+                    font=("Arial", 12, "bold")).pack(pady=10)
+
+            tk.Button(frame_opciones,
+                     text="Agregar más productos",
+                     command=lambda: self.mostrar_lista_productos(tienda_seleccionada)).pack(pady=5)
+
+            tk.Button(frame_opciones,
+                     text="Continuar con el abastecimiento",
+                     command=lambda: self.continuar_abastecimiento(tienda_seleccionada)).pack(pady=5)
+
+            tk.Button(frame_opciones,
+                     text="Volver a elegir productos",
+                     command=lambda: self.reiniciar_seleccion(tienda_seleccionada)).pack(pady=5)
+
+        except ValueError:
+            messagebox.showerror("Error", "Por favor ingrese un número válido")
+        except EnteroFueraDeRango as e:
+            messagebox.showerror("Error", str(e))
+
+    def continuar_abastecimiento(self, tienda_seleccionada):
+        """Muestra los transportes disponibles según el peso total"""
+        from gestorAplicacion.produccion.TipoTransporte import TipoTransporte
+        self.limpiar_frame_interaccion()
+        
+        # Frame principal
+        frame_transportes = tk.Frame(self.frame_interaccion)
+        frame_transportes.pack(fill="both", expand=True, padx=10, pady=10)
+        
+        # Título y peso total
+        tk.Label(frame_transportes,
+                text="Seleccione el tipo de transporte para enviar los productos:",
+                font=("Arial", 12, "bold")).pack(pady=10)
+        
+        tk.Label(frame_transportes,
+                text=f"Peso total de productos: {self.pesoTotalProductos} kg",
+                font=("Arial", 10)).pack(pady=5)
+        
+        # Obtener lista de transportes según el peso
+        listaTransportes = TipoTransporte.crearTipoTransporteSegunCarga(self.pesoTotalProductos)
+        
+        # Frame para los botones de los transportes
+        frame_botones_transporte = tk.Frame(frame_transportes)
+        frame_botones_transporte.pack(pady=20)
+        
+        # Mostrar cada transporte como botón
+        for i, transporte in enumerate(listaTransportes, 1):
+            tk.Button(frame_botones_transporte,
+                     text=f"{i}. {transporte.getNombre()} - Capacidad: {transporte.getCapacidadMax()} kg",
+                     command=lambda t=transporte: self.seleccionar_transporte(tienda_seleccionada, t),
+                     width=40).pack(pady=5)
+        
+        # Botones de navegación
+        frame_navegacion = tk.Frame(frame_transportes)
+        frame_navegacion.pack(side="bottom", pady=20)
+        
+        tk.Button(frame_navegacion,
+                 text="Volver a productos",
+                 command=lambda: self.mostrar_lista_productos(tienda_seleccionada)).pack(side="left", padx=5)
+        
+        tk.Button(frame_navegacion,
+                 text="Volver al menú",
+                 command=self.mostrar_abastecimiento).pack(side="left", padx=5)
+
+    def seleccionar_transporte(self, tienda_seleccionada, transporte_seleccionado):
+        """Maneja la selección del transporte y busca un conductor disponible"""
+        from gestorAplicacion.gestion.Conductor import Conductor
+        
+        # Buscar conductor con el transporte seleccionado
+        conductorSeleccionado = None
+        for conductor in Conductor.getListaConductores():
+            if conductor.getTransporte().getTipoTransporte() == transporte_seleccionado:
+                conductorSeleccionado = conductor
+                break
+        
+        if conductorSeleccionado is None:
+            messagebox.showerror("Error", "No se encontró un conductor con el transporte seleccionado.")
+            return
+        
+        # Proceder a la confirmación final
+        self.mostrar_confirmacion_final(tienda_seleccionada, transporte_seleccionado, conductorSeleccionado)
+
+    def mostrar_confirmacion_final(self, tienda_seleccionada, transporte_seleccionado, conductor):
+        """Muestra la pantalla de confirmación final del abastecimiento"""
+        self.limpiar_frame_interaccion()
+        
+        frame_confirmacion = tk.Frame(self.frame_interaccion)
+        frame_confirmacion.pack(fill="both", expand=True, padx=10, pady=10)
+        
+        # Resumen del abastecimiento
+        tk.Label(frame_confirmacion,
+                text="Resumen del abastecimiento",
+                font=("Arial", 12, "bold")).pack(pady=10)
+        
+        tk.Label(frame_confirmacion,
+                text=f"Tienda: {tienda_seleccionada.getNombre()}",
+                font=("Arial", 10)).pack(pady=5)
+                
+        tk.Label(frame_confirmacion,
+                text=f"Transporte: {transporte_seleccionado.getNombre()}",
+                font=("Arial", 10)).pack(pady=5)
+                
+        tk.Label(frame_confirmacion,
+                text=f"Conductor: {conductor.getNombre()}",
+                font=("Arial", 10)).pack(pady=5)
+        
+        # Botones finales
+        frame_botones = tk.Frame(frame_confirmacion)
+        frame_botones.pack(pady=20)
+        
+        tk.Button(frame_botones,
+                 text="Confirmar abastecimiento",
+                 command=lambda: self.ejecutar_abastecimiento(
+                     tienda_seleccionada, transporte_seleccionado, conductor)).pack(side="left", padx=5)
+                 
+        tk.Button(frame_botones,
+                 text="Volver a transportes",
+                 command=lambda: self.continuar_abastecimiento(tienda_seleccionada)).pack(side="left", padx=5)
+                 
+        tk.Button(frame_botones,
+                 text="Cancelar",
+                 command=self.mostrar_abastecimiento).pack(side="left", padx=5)
 
     # Funcionalidad de devoluciones:
     def devoluciones(self):
@@ -931,6 +1228,137 @@ class VentanaSecundaria(Tk):
         # Verificar si hay suficiente espacio en el frame_interaccion
         if len(self.frame_interaccion.winfo_children()) > 10:  # Ajustar el número según sea necesario
             self.limpiar_frame_interaccion()
+
+    # 🔹 Funcionalidad de estadísticas
+    def mostrar_estadisticas(self):
+        self.limpiar_frame_interaccion()
+        self.titulo.config(text="Estadísticas del Sistema")
+        
+        # Mostrar fechas por defecto
+        fecha_inicio_defecto = Factura.getFechaMinima()
+        fecha_final_defecto = Factura.getFechaMaxima()
+        
+        tk.Label(self.frame_interaccion, text=f"Las fechas por defecto son {fecha_inicio_defecto.strftime('%d/%m/%y')} y {fecha_final_defecto.strftime('%d/%m/%y')}", font=("Arial", 14)).pack(pady=10)
+        tk.Label(self.frame_interaccion, text="¿Desea usar las fechas por defecto? (s/n):", font=("Arial", 12)).pack(pady=5)
+        
+        self.entrada_uso_fechas = tk.Entry(self.frame_interaccion)
+        self.entrada_uso_fechas.pack(pady=5)
+        
+        tk.Button(self.frame_interaccion, text="Confirmar", command=self.confirmar_uso_fechas).pack(pady=10)
+        tk.Button(self.frame_interaccion, text="Volver al Menú", command=self.mostrar_menu).pack(pady=10)
+
+    def confirmar_uso_fechas(self):
+        respuesta = self.entrada_uso_fechas.get().strip().lower()
+        if (respuesta == 's'):
+            self.fecha_inicio = Factura.getFechaMinima()
+            self.fecha_final = Factura.getFechaMaxima()
+            self.mostrar_menu_estadisticas()
+        elif (respuesta == 'n'):
+            self.cambiar_fechas()
+        else:
+            messagebox.showerror("Error", "Entrada inválida. Por favor, ingrese 's' o 'n'.")
+
+    def cambiar_fechas(self):
+        self.limpiar_frame_interaccion()
+        tk.Label(self.frame_interaccion, text="Cambiar Fechas", font=("Arial", 14)).pack(pady=10)
+        
+        tk.Label(self.frame_interaccion, text="Fecha de Inicio (dd-mm-yyyy):").pack(pady=5)
+        self.fecha_inicio_entry = tk.Entry(self.frame_interaccion)
+        self.fecha_inicio_entry.pack(pady=5)
+        
+        tk.Label(self.frame_interaccion, text="Fecha Final (dd-mm-yyyy):").pack(pady=5)
+        self.fecha_final_entry = tk.Entry(self.frame_interaccion)
+        self.fecha_final_entry.pack(pady=5)
+        
+        tk.Button(self.frame_interaccion, text="Confirmar", command=self.confirmar_fechas).pack(pady=10)
+        tk.Button(self.frame_interaccion, text="Volver a Estadísticas", command=self.mostrar_estadisticas).pack(pady=10)
+
+    def confirmar_fechas(self):
+        try:
+            self.fecha_inicio = datetime.strptime(self.fecha_inicio_entry.get(), "%d-%m-%Y")
+            self.fecha_final = datetime.strptime(self.fecha_final_entry.get(), "%d-%m-%Y")
+            if self.fecha_inicio < datetime.strptime(Factura.getFechaMinima(), "%d-%m-%Y"):
+                raise FechaFueraDeRango("inicial es menor", "de inicio por defecto")
+            elif self.fecha_inicio > datetime.strptime(Factura.getFechaMaxima(), "%d-%m-%Y"):
+                raise FechaFueraDeRango("inicial es mayor", "final por defecto")
+            if self.fecha_final < self.fecha_inicio:
+                raise FechaFueraDeRango("final es menor", "de inicio")
+            elif self.fecha_final > datetime.strptime(Factura.getFechaMaxima(), "%d-%m-%Y"):
+                raise FechaFueraDeRango("final es mayor", "final por defecto")
+            else:
+                messagebox.showinfo("Fechas Actualizadas", f"Fechas seleccionadas: {self.fecha_inicio} - {self.fecha_final}")
+                self.mostrar_menu_estadisticas()
+        except FechaFueraDeRango as FFDR:
+            messagebox.showerror("Error", FFDR.mensaje_error_inicial)
+
+        except ValueError:
+            try:
+                if self.fecha_inicio_entry.get() == "" and self.fecha_final_entry.get() == "":
+                    raise PatronFechaIncorrecto(f"vacio")
+                if self.fecha_inicio_entry.get() == "" and self.fecha_final_entry.get() != "":
+                    raise PatronFechaIncorrecto(f"vacio o {self.fecha_final_entry.get()}")
+                elif self.fecha_inicio_entry.get() != "" and self.fecha_final_entry.get() == "":
+                    raise PatronFechaIncorrecto(f"{self.fecha_inicio_entry.get()} o vacio")
+                raise PatronFechaIncorrecto(f"{self.fecha_inicio_entry.get()} o {self.fecha_final_entry.get()}")
+            except PatronFechaIncorrecto as PFI:
+                messagebox.showerror("Error", PFI.mensaje_error_inicial)
+
+    def mostrar_menu_estadisticas(self):
+        self.limpiar_frame_interaccion()
+        self.titulo.config(text="Estadísticas del Sistema")
+        
+        tk.Label(self.frame_interaccion, text="Seleccione la estadística que desea consultar:", font=("Arial", 14)).pack(pady=10)
+        
+        # Botones para cada tipo de estadística
+        tk.Button(self.frame_interaccion, text="Ganancias Discretas", command=self.mostrar_ganancias_discretas).pack(pady=5)
+        tk.Button(self.frame_interaccion, text="Ganancias Totales", command=self.mostrar_ganancias_totales).pack(pady=5)
+        tk.Button(self.frame_interaccion, text="Promedio de Ganancias", command=self.mostrar_promedio_ganancias).pack(pady=5)
+        tk.Button(self.frame_interaccion, text="Ganancias Porcentuales", command=self.mostrar_ganancias_porcentuales).pack(pady=5)
+        tk.Button(self.frame_interaccion, text="Modas", command=self.mostrar_modas).pack(pady=5)
+        tk.Button(self.frame_interaccion, text="Cambiar Fechas", command=self.cambiar_fechas).pack(pady=5)
+        
+        tk.Button(self.frame_interaccion, text="Volver al Menú", command=self.mostrar_menu).pack(pady=10)
+
+    def mostrar_ganancias_discretas(self):
+        ganancias = Factura.gananciasDiscretas(self.fecha_inicio, self.fecha_final)
+        self.mostrar_resultado_estadistica("Ganancias Discretas", ganancias)
+
+    def mostrar_ganancias_totales(self):
+        ganancias = Factura.gananciaTotal(self.fecha_inicio, self.fecha_final)
+        self.mostrar_resultado_estadistica("Ganancias Totales", ganancias)
+
+    def mostrar_promedio_ganancias(self):
+        promedio = Factura.promedioDeGanancias(self.fecha_inicio, self.fecha_final)
+        self.mostrar_resultado_estadistica("Promedio de Ganancias", promedio)
+
+    def mostrar_ganancias_porcentuales(self):
+        porcentuales = Factura.aumentosPorcentuales(self.fecha_inicio, self.fecha_final)
+        self.mostrar_resultado_estadistica("Ganancias Porcentuales", porcentuales)
+
+    def mostrar_modas(self):
+        modas = {
+            "Producto más vendido": Factura.modaProductos(self.fecha_inicio, self.fecha_final),
+            "Cliente con más facturaciones": Factura.modaClientes(self.fecha_inicio, self.fecha_final),
+            "Tienda con más facturaciones": Factura.modaTiendas(self.fecha_inicio, self.fecha_final)
+        }
+        self.mostrar_resultado_estadistica("Modas", modas)
+
+    def mostrar_resultado_estadistica(self, titulo, resultado):
+        self.limpiar_frame_interaccion()
+        self.titulo.config(text=titulo)
+        
+        tk.Label(self.frame_interaccion, text=titulo, font=("Arial", 14)).pack(pady=10)
+        
+        if isinstance(resultado, dict):
+            for key, value in resultado.items():
+                tk.Label(self.frame_interaccion, text=f"{key}: {value}", font=("Arial", 12)).pack(pady=5)
+        else:
+            tk.Label(self.frame_interaccion, text=str(resultado), font=("Arial", 12)).pack(pady=5)
+        
+        tk.Button(self.frame_interaccion, text="Volver a Estadísticas", command=self.mostrar_menu_estadisticas).pack(pady=10)
+        tk.Button(self.frame_interaccion, text="Volver al Menú", command=self.mostrar_menu).pack(pady=10)
+
+
 # Ejecutar la aplicación desde una ventana principal
 if __name__ == "__main__":
     
