@@ -1,8 +1,8 @@
 import time
 import traceback
-from  baseDatos.Deserializarcion import cargar_datos
+"""from  baseDatos.Deserializarcion import cargar_datos
 from  baseDatos.Serialización import guardar_datos
-cargar_datos()
+cargar_datos()"""
     
    
 def main():
@@ -124,8 +124,11 @@ def main():
                         productoSeleccionado = Fabrica.getProductosDisponibles()[productoSeleccionadoIndex - 1]
                         print(f"PRODUCTO SELECCIONADO: {productoSeleccionado.getNombre()}")
 
+                        # Modificar la sección donde se calcula cantidadDisponible
                         categoriaProducto = productoSeleccionado.getCategoria()
-                        cantidadActual = tiendaSeleccionada.getCantidadActualPorCategoria(categoriaProducto)
+                        # Usar conteoCategoriasTemporal para obtener la cantidad actual
+                        indice = tiendaSeleccionada.getCategorias().index(categoriaProducto)
+                        cantidadActual = conteoCategoriasTemporal[indice]  # Usar el conteo temporal
                         cantidadMaxima = 100  # Ejemplo de capacidad máxima
 
                         cantidadDisponible = cantidadMaxima - cantidadActual
@@ -144,12 +147,10 @@ def main():
                                     productosGenerados.extend(Fabrica.cantidadProductos(productoSeleccionado, cantidadAEnviar))
                                     pesoTotalProductos += productoSeleccionado.getPeso() * cantidadAEnviar
 
-                                    if categoriaProducto == "Herramientas":
-                                        conteoCategoriasTemporal[0] += cantidadAEnviar
-                                    elif categoriaProducto == "Muebles":
-                                        conteoCategoriasTemporal[1] += cantidadAEnviar
-                                    elif categoriaProducto == "Aseo":
-                                        conteoCategoriasTemporal[2] += cantidadAEnviar
+                                    if categoriaProducto in tiendaSeleccionada.getCategorias():
+                                        indice = tiendaSeleccionada.getCategorias().index(categoriaProducto)
+                                        conteoCategoriasTemporal[indice] += cantidadAEnviar
+                                        print(f"Actualizado inventario de {categoriaProducto}: {conteoCategoriasTemporal[indice]}")
                             except Exception as e:
                                 print("Entrada inválida. Por favor, ingrese un número.")
                                 traceback.print_exc()
@@ -167,13 +168,16 @@ def main():
             try:
                 respuesta = input("» ")
                 if respuesta.lower() == "v":
+                    # Reiniciar todo cuando se elige volver a empezar
                     productosGenerados.clear()
-                    conteoCategoriasTemporal = [
-                        tiendaSeleccionada.getCantidadActualPorCategoria("Herramientas"),
-                        tiendaSeleccionada.getCantidadActualPorCategoria("Muebles"),
-                        tiendaSeleccionada.getCantidadActualPorCategoria("Aseo")
-                    ]
+                    conteoCategoriasTemporal = [0] * len(tiendaSeleccionada.getCategorias())
+                    for i, categoria in enumerate(tiendaSeleccionada.getCategorias()):
+                        conteoCategoriasTemporal[i] = tiendaSeleccionada.getCantidadActualPorCategoria(categoria)
                     pesoTotalProductos = 0.0
+                    continue
+                if respuesta.lower() == "s":
+                    # Mantener los conteos temporales y continuar con el siguiente producto
+                    # No reiniciar nada, solo continuar el ciclo
                     continue
                 if respuesta.lower() != "s":
                     break
@@ -223,8 +227,16 @@ def main():
                         transporteSeleccionado = None
                         continue
                     if confirmar.lower() == "s":
+                        # Primero actualizar la lista de productos
+                        tiendaSeleccionada.setListaProducto(tiendaSeleccionada.getListaProducto() + productosGenerados)
+                        # Luego actualizar el conteo de categorías
                         tiendaSeleccionada.setConteoCategorias(conteoCategoriasTemporal)
-                        tiendaSeleccionada.setListaProducto(tiendaSeleccionada.getListaProducto())
+                        
+                        # ... resto del código de confirmación ...
+                        
+                        print("\n¡¡¡EL PRODUCTO FUE ENVIADO CON EXITO!!!. Ahora la tienda tiene:\n")
+                        print("    PRODUCTOS:")
+                        print(tiendaSeleccionada.cantidadProductos())
 
                         time.sleep(1)
                         print("========================================")
@@ -282,5 +294,5 @@ def main():
 
 if __name__ == "__main__":
     main()
- 
+
 

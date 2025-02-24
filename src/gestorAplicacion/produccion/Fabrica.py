@@ -118,20 +118,21 @@ class Fabrica:
         return IMostrarProductos.mostrarProductosLista(Fabrica.getProductosDisponibles())
 
     @staticmethod
-    def cantidadProductos(producto, cantidad_a_enviar: int):
-        from gestorAplicacion.produccion.Producto import Producto
+    def cantidadProductos(producto, cantidad):
         """
-        Genera una cantidad específica de productos para abastecimiento.
+        Genera nuevas instancias de productos según la cantidad especificada
         """
-
-        if not isinstance(producto, Producto):
-            raise ValueError("Error: El objeto proporcionado no es un producto válido.")
-        if cantidad_a_enviar <= 0:
-            raise ValueError("Error: La cantidad a enviar debe ser mayor a 0.")
-
-        return [Producto(producto.getNombre, producto.getPrecio, producto.getEstado,
-                         producto.getTipo, producto.getCategoria, producto.getPeso)
-                for _ in range(cantidad_a_enviar)]
+        nuevosProductos = []
+        for _ in range(cantidad):
+            # Crear una nueva instancia del producto con los mismos atributos
+            nuevoProducto = Producto(
+                producto.getNombre(),
+                producto.getPrecio(),
+                producto.getPeso(),
+                producto.getCategoria()
+            )
+            nuevosProductos.append(nuevoProducto)
+        return nuevosProductos
 
 import datetime
 from gestorAplicacion.gestion.Vendedor import Vendedor
