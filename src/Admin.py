@@ -83,7 +83,31 @@ class Admin:
         if motivoDevolucion in (motivos[0], motivos[1], motivos[2]):
             # En este ejemplo no se muestra la comunicación completa, ya que la interfaz se encarga
             # de llamar a los métodos para mostrar el proceso de reembolso.
-            pass
+            return 0
+        else: 
+            return 1
+    @classmethod
+    def procesarCambioProducto(cls, carrito, excedente):
+        from gestorAplicacion.produccion.Tienda import Tienda
+        from gestorAplicacion.gestion.Cliente import Cliente
+        from gestorAplicacion.produccion.Fabrica import Fabrica
+        tienda = cls.facturaSeleccionada.getTienda()
+        cliente = cls.facturaSeleccionada.getCliente()
+
+        # Si hay excedente, se transfiere el dinero correspondiente
+        if excedente > 0:
+            cliente.getCuentaBancaria().transferirDinero(excedente, Fabrica.getCuentaBancaria())
+        # Se remueve el producto original y se marca como devuelto
+        cliente.removerProducto(cls.productoSeleccionado)
+        cls.productoSeleccionado.setDevuelto(True)
+        # Se agregan los productos seleccionados al cliente y se actualiza el inventario de la tienda
+        for p in carrito:
+            cliente.getListaProductos().append(p)
+            for producto in tienda.getListaProducto():
+                if producto.getId() == p.getId():
+                    tienda.getListaProducto().remove(producto)
+                    break
+        
 
     @classmethod
     def procesarReembolso(cls):
