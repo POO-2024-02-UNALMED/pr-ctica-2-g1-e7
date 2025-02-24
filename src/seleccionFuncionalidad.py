@@ -60,11 +60,6 @@ class VentanaSecundaria(Tk):
         self.frame_botones = tk.Frame(self, relief="solid", bd=1)
         self.frame_botones.pack(fill="x", padx=10, pady=5)
 
-        self.boton_aceptar = tk.Button(self.frame_botones, text="Ejecutar Proceso")
-        self.boton_aceptar.pack(side="left", padx=10, pady=5)
-
-        self.boton_borrar = tk.Button(self.frame_botones, text="Limpiar")
-        self.boton_borrar.pack(side="right", padx=10, pady=5)
 
         # Mostrar la interfaz principal
         self.mostrar_menu()
