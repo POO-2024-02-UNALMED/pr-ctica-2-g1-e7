@@ -6,7 +6,7 @@ from  baseDatos.Deserializarcion import cargar_datos
 from  baseDatos.Serialización import guardar_datos
 cargar_datos()
 from tkinter import messagebox
-#from ventanaInicio import centrar_ventana
+from ventanaInicio import centrar_ventana
 
 class Admin:
     from gestorAplicacion.gestion.Factura import Factura
@@ -21,7 +21,7 @@ class Admin:
         from seleccionFuncionalidad import VentanaSecundaria
         ventanaPrincipal.destroy()
         nuevaVentana=VentanaSecundaria()
-        #centrar_ventana(nuevaVentana)
+        centrar_ventana(nuevaVentana)
 
 
     @staticmethod
@@ -29,7 +29,7 @@ class Admin:
         from ventanaInicio import VentanaInicio
         ventanaSecundaria.destroy()
         ventana_inicio=VentanaInicio()
-        #centrar_ventana(ventana_inicio)
+        centrar_ventana(ventana_inicio)
 
     @staticmethod
     def salirDelSistema(): 

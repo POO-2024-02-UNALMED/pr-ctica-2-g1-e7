@@ -4,11 +4,15 @@ from Admin import Admin
 from  baseDatos.Deserializarcion import cargar_datos
 from  baseDatos.Serialización import guardar_datos
 from gestorAplicacion.produccion.Producto import Producto
+from gestorAplicacion.gestion.Factura import Factura
+from datetime import datetime
 
 class VentanaSecundaria(Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self._pago_por_metas = 0
+        self.fecha_inicio = Factura.getFechaMinima()
+        self.fecha_final = Factura.getFechaMaxima()
         cargar_datos()
         # Configuración de la ventana
         self.geometry("800x600")
@@ -458,6 +462,115 @@ class VentanaSecundaria(Tk):
 
         # Botón para volver al menú principal
         tk.Button(self.frame_interaccion, text="Volver al Menú Principal", command=self.mostrar_menu, width=20, height=2).pack(pady=20)
+
+    # 🔹 Funcionalidad de estadísticas
+    def mostrar_estadisticas(self):
+        self.limpiar_frame_interaccion()
+        self.titulo.config(text="Estadísticas del Sistema")
+        
+        # Mostrar fechas por defecto
+        fecha_inicio_defecto = Factura.getFechaMinima()
+        fecha_final_defecto = Factura.getFechaMaxima()
+        
+        tk.Label(self.frame_interaccion, text=f"Las fechas por defecto son {fecha_inicio_defecto.strftime('%d/%m/%y')} y {fecha_final_defecto.strftime('%d/%m/%y')}", font=("Arial", 14)).pack(pady=10)
+        tk.Label(self.frame_interaccion, text="¿Desea usar las fechas por defecto? (s/n):", font=("Arial", 12)).pack(pady=5)
+        
+        self.entrada_uso_fechas = tk.Entry(self.frame_interaccion)
+        self.entrada_uso_fechas.pack(pady=5)
+        
+        tk.Button(self.frame_interaccion, text="Confirmar", command=self.confirmar_uso_fechas).pack(pady=10)
+        tk.Button(self.frame_interaccion, text="Volver al Menú", command=self.mostrar_menu).pack(pady=10)
+
+    def confirmar_uso_fechas(self):
+        respuesta = self.entrada_uso_fechas.get().strip().lower()
+        if respuesta == 's':
+            self.fecha_inicio = Factura.getFechaMinima()
+            self.fecha_final = Factura.getFechaMaxima()
+            self.mostrar_menu_estadisticas()
+        elif respuesta == 'n':
+            self.cambiar_fechas()
+        else:
+            messagebox.showerror("Error", "Entrada inválida. Por favor, ingrese 's' o 'n'.")
+
+    def cambiar_fechas(self):
+        self.limpiar_frame_interaccion()
+        tk.Label(self.frame_interaccion, text="Cambiar Fechas", font=("Arial", 14)).pack(pady=10)
+        
+        tk.Label(self.frame_interaccion, text="Fecha de Inicio (dd-mm-yyyy):").pack(pady=5)
+        self.fecha_inicio_entry = tk.Entry(self.frame_interaccion)
+        self.fecha_inicio_entry.pack(pady=5)
+        
+        tk.Label(self.frame_interaccion, text="Fecha Final (dd-mm-yyyy):").pack(pady=5)
+        self.fecha_final_entry = tk.Entry(self.frame_interaccion)
+        self.fecha_final_entry.pack(pady=5)
+        
+        tk.Button(self.frame_interaccion, text="Confirmar", command=self.confirmar_fechas).pack(pady=10)
+        tk.Button(self.frame_interaccion, text="Volver a Estadísticas", command=self.mostrar_estadisticas).pack(pady=10)
+
+    def confirmar_fechas(self):
+        try:
+            self.fecha_inicio = datetime.strptime(self.fecha_inicio_entry.get(), "%d-%m-%Y")
+            self.fecha_final = datetime.strptime(self.fecha_final_entry.get(), "%d-%m-%Y")
+            messagebox.showinfo("Fechas Actualizadas", f"Fechas seleccionadas: {self.fecha_inicio} - {self.fecha_final}")
+            self.mostrar_menu_estadisticas()
+        except ValueError:
+            messagebox.showerror("Error", "Formato de fecha inválido. Use dd-mm-yyyy.")
+
+    def mostrar_menu_estadisticas(self):
+        self.limpiar_frame_interaccion()
+        self.titulo.config(text="Estadísticas del Sistema")
+        
+        tk.Label(self.frame_interaccion, text="Seleccione la estadística que desea consultar:", font=("Arial", 14)).pack(pady=10)
+        
+        # Botones para cada tipo de estadística
+        tk.Button(self.frame_interaccion, text="Ganancias Discretas", command=self.mostrar_ganancias_discretas).pack(pady=5)
+        tk.Button(self.frame_interaccion, text="Ganancias Totales", command=self.mostrar_ganancias_totales).pack(pady=5)
+        tk.Button(self.frame_interaccion, text="Promedio de Ganancias", command=self.mostrar_promedio_ganancias).pack(pady=5)
+        tk.Button(self.frame_interaccion, text="Ganancias Porcentuales", command=self.mostrar_ganancias_porcentuales).pack(pady=5)
+        tk.Button(self.frame_interaccion, text="Modas", command=self.mostrar_modas).pack(pady=5)
+        tk.Button(self.frame_interaccion, text="Cambiar Fechas", command=self.cambiar_fechas).pack(pady=5)
+        
+        tk.Button(self.frame_interaccion, text="Volver al Menú", command=self.mostrar_menu).pack(pady=10)
+
+    def mostrar_ganancias_discretas(self):
+        ganancias = Factura.gananciasDiscretas(self.fecha_inicio, self.fecha_final)
+        self.mostrar_resultado_estadistica("Ganancias Discretas", ganancias)
+
+    def mostrar_ganancias_totales(self):
+        ganancias = Factura.gananciaTotal(self.fecha_inicio, self.fecha_final)
+        self.mostrar_resultado_estadistica("Ganancias Totales", ganancias)
+
+    def mostrar_promedio_ganancias(self):
+        promedio = Factura.promedioDeGanancias(self.fecha_inicio, self.fecha_final)
+        self.mostrar_resultado_estadistica("Promedio de Ganancias", promedio)
+
+    def mostrar_ganancias_porcentuales(self):
+        porcentuales = Factura.aumentosPorcentuales(self.fecha_inicio, self.fecha_final)
+        self.mostrar_resultado_estadistica("Ganancias Porcentuales", porcentuales)
+
+    def mostrar_modas(self):
+        modas = {
+            "Producto más vendido": Factura.modaProductos(self.fecha_inicio, self.fecha_final),
+            "Cliente con más facturaciones": Factura.modaClientes(self.fecha_inicio, self.fecha_final),
+            "Tienda con más facturaciones": Factura.modaTiendas(self.fecha_inicio, self.fecha_final)
+        }
+        self.mostrar_resultado_estadistica("Modas", modas)
+
+    def mostrar_resultado_estadistica(self, titulo, resultado):
+        self.limpiar_frame_interaccion()
+        self.titulo.config(text=titulo)
+        
+        tk.Label(self.frame_interaccion, text=titulo, font=("Arial", 14)).pack(pady=10)
+        
+        if isinstance(resultado, dict):
+            for key, value in resultado.items():
+                tk.Label(self.frame_interaccion, text=f"{key}: {value}", font=("Arial", 12)).pack(pady=5)
+        else:
+            tk.Label(self.frame_interaccion, text=str(resultado), font=("Arial", 12)).pack(pady=5)
+        
+        tk.Button(self.frame_interaccion, text="Volver a Estadísticas", command=self.mostrar_menu_estadisticas).pack(pady=10)
+        tk.Button(self.frame_interaccion, text="Volver al Menú", command=self.mostrar_menu).pack(pady=10)
+
 
 # Ejecutar la aplicación desde una ventana principal
 if __name__ == "__main__":
