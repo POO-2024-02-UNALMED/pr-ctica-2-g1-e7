@@ -14,7 +14,8 @@ from tkinter import ttk, messagebox
 class VentanaSecundaria(tk.Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
+        self._pago_por_metas = 0
+        
         # Configuración de la ventana
         self.geometry("900x650")
         self.title("Distribuidora JJAYC")
