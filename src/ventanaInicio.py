@@ -29,33 +29,34 @@ class VentanaInicio(Tk):
 
         # Configuración de los frames
         self.P1 = Frame(self, bg="Gray95")
-        self.P1.pack(side=LEFT, fill=BOTH, expand=True)
+        self.P1.place(relx=0, rely=0, relwidth=0.5, relheight=1)
         self.P3 = Frame(self.P1, bg="Gray95")
-        self.P3.pack(fill=X)
+        self.P3.place(relx=0, rely=0, relwidth=1, relheight=0.1)
         self.saludo = Label(self.P3, text="Bienvenido al sistema de manejo de su empresa\nHaz click en la imagen para empezar\n⇣", font=("Segoe UI", 12))
-        self.saludo.pack(pady=10)
+        self.saludo.place(relx=0.5, rely=0.5, anchor="center")
 
         # Agregar un Label para mostrar la descripción
         self.descripcion_label = Label(self.P1, textvariable=self.hola, font=("Segoe UI", 12), bg="Gray95")
-        self.descripcion_label.pack(pady=10)
+        self.descripcion_label.place(relx=0.5, rely=0.15, anchor="center")
 
         self.P4 = Frame(self.P1, bg="black")
-        self.P4.pack(fill=BOTH, expand=True)
+        self.P4.place(relx=0, rely=0.2, relwidth=1, relheight=0.8)
 
         # Configurar el botón de apertura de la ventana secundaria
         self.nueva_ventana = Button(self.P4, command=self.abrirVentanaSecundaria)
-        self.nueva_ventana.pack(fill=BOTH, expand=True)
+        self.nueva_ventana.place(relx=0, rely=0, relwidth=1, relheight=1)
         self.nueva_ventana.bind('<Enter>', self.cambio)
 
         self.P2 = Frame(self, bg="yellow")
-        self.P2.pack(side=RIGHT, fill=BOTH, expand=True)
+        self.P2.place(relx=0.5, rely=0, relwidth=0.5, relheight=1)
         self.P5 = Frame(self.P2, bg="Gray")
-        self.P5.pack(fill=X)
+        self.P5.place(relx=0, rely=0, relwidth=1, relheight=0.1)
         self.textoHDV = Label(self.P5, textvariable=self.varHDV, font=("Segoe UI", 8))
         self.textoHDV.bind('<ButtonPress-1>', self.cambioHDV)
-        self.textoHDV.pack(pady=10)
+        self.textoHDV.place(relx=0.5, rely=0.5, anchor="center")
+
         self.P6 = Frame(self.P2, bg="Gray")
-        self.P6.pack(fill=BOTH, expand=True)
+        self.P6.place(relx=0, rely=0.1, relwidth=1, relheight=0.9)
 
         # Crear los 4 cuadros de colores para las fotos de los desarrolladores
         self.W1 = Frame(self.P6, bg="Blue")
@@ -69,13 +70,13 @@ class VentanaInicio(Tk):
 
         # Labels para mostrar las fotos de los desarrolladores
         self.im_desa_pos1 = Label(self.W1)
-        self.im_desa_pos1.pack(fill=BOTH, expand=True)
+        self.im_desa_pos1.place(relx=0, rely=0, relwidth=1, relheight=1)
         self.im_desa_pos2 = Label(self.W2)
-        self.im_desa_pos2.pack(fill=BOTH, expand=True)
+        self.im_desa_pos2.place(relx=0, rely=0, relwidth=1, relheight=1)
         self.im_desa_pos3 = Label(self.W3)
-        self.im_desa_pos3.pack(fill=BOTH, expand=True)
+        self.im_desa_pos3.place(relx=0, rely=0, relwidth=1, relheight=1)
         self.im_desa_pos4 = Label(self.W4)
-        self.im_desa_pos4.pack(fill=BOTH, expand=True)
+        self.im_desa_pos4.place(relx=0, rely=0, relwidth=1, relheight=1)
 
         # Contadores
         self.acumulador = 0
