@@ -3,41 +3,23 @@ import os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 from datetime import datetime
 from gestorAplicacion.gestion.IMostrarProductos import IMostrarProductos
-from multimethod import multimethod
+
 class Factura(IMostrarProductos):
     # Variables de clase (atributos estáticos)
     listaFacturas = []
-    @multimethod
-    def __init__(self, tienda, cliente, transporte, lista_productos: list, precio_envio: float, fecha: datetime):
+
+    def __init__(self, tienda, cliente, transporte, lista_productos: list, precio_envio: float, fecha: datetime = None):
         self._tienda = tienda
         self._cliente = cliente
         self._transporte = transporte
         self._listaProductos = lista_productos
         self._precioEnvio = precio_envio
+        self._fecha = fecha if fecha else datetime.now()
+        self._total = self.calcularTotal()
 
         # Si ya existen más de dos facturas, se ordenan por fecha.
         if len(Factura.getListaFacturas()) > 2:
             Factura.ordenar_facturas_por_fecha()
-        if type(fecha) is not datetime:
-            self._fecha: datetime = fecha
-        self._fecha = fecha
-        self._total = self.calcularTotal()
-
-        # Se agrega la factura a la lista de facturas
-        Factura.listaFacturas.append(self)
-        self.totalCreadas = len(Factura.listaFacturas)
-    @multimethod
-    def __init__(self, tienda, cliente, transporte, lista_productos: list, precio_envio):
-        self._tienda = tienda
-        self._cliente = cliente
-        self._transporte = transporte
-        self._listaProductos = lista_productos
-        self._precioEnvio = precio_envio
-
-        # Si ya existen más de dos facturas, se ordenan por fecha.
-        if len(Factura.getListaFacturas()) > 2:
-            Factura.ordenar_facturas_por_fecha()
-        self._total = self.calcularTotal()
 
         # Se agrega la factura a la lista de facturas
         Factura.listaFacturas.append(self)

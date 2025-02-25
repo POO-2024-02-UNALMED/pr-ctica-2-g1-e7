@@ -7,7 +7,7 @@ from gestorAplicacion.produccion.Producto import Producto
 from gestorAplicacion.gestion.Factura import Factura
 from datetime import datetime
 from gestorAplicacion.produccion.Fabrica import Fabrica
-from src.Excepciones.ErrorFecha import *
+from Excepciones.ErrorFecha import *
 
 import tkinter as tk
 from tkinter import ttk, messagebox
@@ -514,6 +514,7 @@ class VentanaSecundaria(tk.Tk):
              font=("Arial", 11),
              width=25,  # Aumentar ancho
              height=2).pack(side="left", padx=10)  # Aumentar altura
+        guardar_datos()
     # Funcionalidad de devoluciones:
     def devoluciones(self):
         self.limpiar_frame_interaccion()
@@ -1226,7 +1227,7 @@ class VentanaSecundaria(tk.Tk):
         
         envioGratis = Transporte.enviarGratis(self.listaProductosPedidos)
         
-        transportes = [f"{i+1}. {transporte.getTipoTransporte().getNombre()} - Precio: {'0.0' if envioGratis else transporte.getPrecioEnvio()}" for i, transporte in enumerate(listaTransporteFiltrada)]
+        transportes = [f"{i+1}. {transporte.getTipoTransporte().getNombre()} - Precio: {'0.0' if envioGratis else transporte.getTipoTransporte().getPrecioEnvio()}" for i, transporte in enumerate(listaTransporteFiltrada)]
         combobox = ttk.Combobox(self.frame_interaccion, values=transportes, state="readonly", font=("Helvetica", 10))
         combobox.pack(pady=5)
         
@@ -1240,7 +1241,7 @@ class VentanaSecundaria(tk.Tk):
             return
         
         self.transporteSeleccionado = listaTransporteFiltrada[seleccion]
-        self.precioEnvio = 0.0 if envioGratis else self.transporteSeleccionado.getPrecioEnvio()
+        self.precioEnvio = 0.0 if envioGratis else self.transporteSeleccionado.getTipoTransporte().getPrecioEnvio()
         self.boton_confirmar_transporte.pack_forget()
         combobox.config(state="disabled")
         self.ingresar_fecha()
@@ -1485,6 +1486,6 @@ class VentanaSecundaria(tk.Tk):
 
 # Ejecutar la aplicación desde una ventana principal
 if __name__ == "__main__":
-    
+    cargar_datos()
     ventanaSecundaria = VentanaSecundaria()
     ventanaSecundaria.mainloop()
