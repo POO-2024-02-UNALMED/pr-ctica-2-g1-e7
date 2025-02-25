@@ -1,9 +1,13 @@
 from tkinter import *
 from tkinter import messagebox, Tk
+from baseDatos.Deserializarcion import cargar_datos
+
+
 
 class VentanaInicio(Tk):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        cargar_datos()
         # Ventana secundaria
         self.ventanaSecundaria = None
         # Configuración de parámetros principales de la ventana
@@ -135,7 +139,6 @@ class VentanaInicio(Tk):
         self.hola.set("Permite el manejo de la distribuidora.\nEn la cual se van a poder realizar las siguientes operaciones:\nEnviar Pedidos, manejar devoluciones, abastecer Tiendas,\npagar a los trabajadores, revisar estadisticas.")
 
     def salir(self):
-        """Cierra la ventana."""
         self.destroy()
 
     def cambioHDV(self, event):

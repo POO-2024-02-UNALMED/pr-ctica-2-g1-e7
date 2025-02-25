@@ -1,16 +1,13 @@
 import tkinter as tk
 from tkinter import ttk, messagebox, Tk, Frame, ttk
 from Admin import Admin 
-from  baseDatos.Deserializarcion import cargar_datos
-from  baseDatos.Serialización import guardar_datos
 from gestorAplicacion.produccion.Producto import Producto
 from gestorAplicacion.gestion.Factura import Factura
 from datetime import datetime
 from gestorAplicacion.produccion.Fabrica import Fabrica
 from Excepciones.ErrorFecha import *
+from baseDatos.Serialización import guardar_datos
 
-import tkinter as tk
-from tkinter import ttk, messagebox
 
 class VentanaSecundaria(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -95,6 +92,7 @@ class VentanaSecundaria(tk.Tk):
 
     def cerrarVentana(self):
         from Admin import Admin
+        guardar_datos()
         Admin.volverVentanaInicio(self)
 
     def mostrar_menu(self):
@@ -109,7 +107,7 @@ class VentanaSecundaria(tk.Tk):
 
     # 🔹 Función para mostrar la interfaz de abastecimiento dentro de frame_interaccion
     def mostrar_abastecimiento(self):
-        cargar_datos()
+        
         self.limpiar_frame_interaccion()
         self.titulo.config(text="Abastecimiento de tiendas")
     
@@ -515,10 +513,10 @@ class VentanaSecundaria(tk.Tk):
              font=("Arial", 11),
              width=25,  # Aumentar ancho
              height=2).pack(side="left", padx=10)  # Aumentar altura
-        guardar_datos()
+        
     # Funcionalidad de devoluciones:
     def devoluciones(self):
-        cargar_datos()
+        
         self.limpiar_frame_interaccion()
         self.titulo.config(text="Bienvenido al gestor de devoluciones")
         tk.Label(
@@ -719,7 +717,7 @@ class VentanaSecundaria(tk.Tk):
             bg="Green",
             command=self.devoluciones
         ).pack(pady=10)
-        guardar_datos()
+       
     
     def procesarCambio(self, producto):
         tk.Label(
@@ -879,7 +877,7 @@ class VentanaSecundaria(tk.Tk):
             text="Volver a seleccionar otra factura",
             command=self.devoluciones
         ).pack(pady=10)
-        guardar_datos()
+        
 
 
     # Función para volver a la interfaz principal
@@ -895,7 +893,7 @@ class VentanaSecundaria(tk.Tk):
 
     # Funcionalidad de Pago de Trabajadores
     def pagoTrabajadores(self):
-        cargar_datos()
+        
         self.limpiar_frame_interaccion()
         self.titulo.config(text="Bienvenido al gestor del pago de sus trabajadores")
         tk.Label(self.frame_interaccion, text="Desde este menú podrá gestionar el pago a todos sus trabajadores",
@@ -1098,9 +1096,9 @@ class VentanaSecundaria(tk.Tk):
     
         
         tk.Button(self.frame_interaccion, text="Volver al Menú Principal", command=self.mostrar_menu, font=("Helvetica", 10)).pack(pady=10)
-        guardar_datos()
+
     def EnvioPedidos(self):
-        cargar_datos()
+        
         self.limpiar_frame_interaccion()
         self.titulo.config(text="Bienvenido Al Gestor De Envio De Pedidos")
         tk.Label(
@@ -1386,8 +1384,7 @@ class VentanaSecundaria(tk.Tk):
         self.tiendaSeleccionada.getVendedor().aumentarIndiceMeta()
         self.transporteSeleccionado.getConductor().aumentarIndiceMeta(sum([producto.getPeso() for producto in self.listaProductosPedidos]))
         self.tiendaSeleccionada.eliminarProductosPorNombre(self.listaProductosPedidos)
-        # Guardar los cambios
-        guardar_datos()
+       
 
 
         ttk.Button(scrollable_frame, text="Volver al Menú Principal", command=self.mostrar_menu).pack(pady=10)

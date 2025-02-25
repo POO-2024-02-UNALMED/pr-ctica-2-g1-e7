@@ -2,12 +2,14 @@ import sys
 import os
 import pickle
 
+# Agregar la carpeta 'src' al sys.path para que Python encuentre 'gestorAplicacion'
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-# Obtener la ruta absoluta de la carpeta donde está este script
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../.."))
+# Obtener la ruta del directorio donde está este script
+ruta_base = os.path.dirname(os.path.abspath(__file__))
 
-# Ruta del archivo de datos.pkl
-ruta_datos = os.path.join(BASE_DIR, "datos.pkl")
+# Construir la ruta relativa al archivo de datos
+ruta_datos = os.path.join(ruta_base, "datos.pkl")
 
 
 def cargar_datos():
@@ -47,6 +49,18 @@ def cargar_datos():
         Fabrica._cuentaBancaria = datos.get("CuentaBancariaFabrica", None)  # ✅ Cargar la cuenta bancaria
 
         print("✅ Datos cargados correctamente.")
+        print(f"Clientes: {Cliente.listaClientes}")
+        print(f"Conductores: {Conductor.listaConductores}")
+        print(f"Facturas: {Factura.listaFacturas}")
+        print(f"Metas: {Meta.listaMetas}")
+        print(f"Operarios: {Operario.listaOperarios}")
+        print(f"Personas: {Persona.listaPersonas}")
+        print(f"Vendedores: {Vendedor.listaVendedores}")
+        print(f"Fabrica: {Fabrica.listaFabrica}")
+        print(f"Transportes: {Transporte.listaTransportes}")
+        print(f"Tiendas: {Fabrica._listaTienda}")
+        print(f"Productos Disponibles: {Fabrica._productosDisponibles}")
+        print(f"Cuenta Bancaria Fabrica: {Fabrica._cuentaBancaria}")
 
     except (EOFError, pickle.UnpicklingError) as e:
         print("⚠️ Error al cargar los datos. El archivo puede estar corrupto.", e)

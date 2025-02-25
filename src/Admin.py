@@ -1,5 +1,6 @@
 import sys, os
 
+
 # Agrega la carpeta 'src' a sys.path
 src_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src"))
 sys.path.insert(0, src_path)
@@ -33,7 +34,6 @@ class Admin:
         ventanaSecundaria.destroy()
         ventana_inicio=VentanaInicio()
         #centrar_ventana(ventana_inicio)
-
     @staticmethod
     def salirDelSistema(): 
         pass #Este es el método que se encarga de serializar los objetos cuando se cierre el programa. Implementacion pendiente
