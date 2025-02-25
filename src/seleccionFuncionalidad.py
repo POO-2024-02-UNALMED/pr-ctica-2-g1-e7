@@ -419,6 +419,7 @@ class VentanaSecundaria(tk.Tk):
                  text="Cancelar",
                  command=self.mostrar_abastecimiento).pack(side="left", padx=5)
 
+
     # Funcionalidad de devoluciones:
     def devoluciones(self):
         self.limpiar_frame_interaccion()
