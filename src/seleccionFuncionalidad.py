@@ -7,7 +7,7 @@ from gestorAplicacion.produccion.Producto import Producto
 from gestorAplicacion.gestion.Factura import Factura
 from datetime import datetime
 from gestorAplicacion.produccion.Fabrica import Fabrica
-from src.Excepciones.ErrorFecha import *
+from Excepciones.ErrorFecha import *
 
 import tkinter as tk
 from tkinter import ttk, messagebox

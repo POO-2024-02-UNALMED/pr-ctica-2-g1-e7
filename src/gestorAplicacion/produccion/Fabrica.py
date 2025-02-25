@@ -1,16 +1,17 @@
 import sys
 import os
+from multimethod import multimethod
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
-
-
 
 class Fabrica:
     listaFabrica = []
     _cuentaBancaria = None
     _productosDisponibles = []
-    _listaTienda=[]
+    _listaTienda = []
 
-    def __init__(self, idFabrica, nombre, direccion, cuentaBancariaFabrica, productosDisponibles, operario):
+    @multimethod
+    def __init__(self, idFabrica: str, nombre: str, direccion: str, cuentaBancariaFabrica, productosDisponibles: list, operario):
         self.idFabrica = idFabrica
         self.nombre = nombre
         self.direccion = direccion
@@ -21,6 +22,15 @@ class Fabrica:
         Fabrica._productosDisponibles.extend(productosDisponibles)
 
         operario.setFabrica(self)
+
+    @multimethod
+    def __init__(self, idFabrica: str, nombre: str, direccion: str, operario):
+        # Constructor decorativo para evitar errores
+        self.idFabrica = idFabrica
+        self.nombre = nombre
+        self.direccion = direccion
+        self.operario = operario
+
 
     # Getters y Setters para atributos privados (estáticos)
     @staticmethod
@@ -134,7 +144,7 @@ class Fabrica:
             )
             nuevosProductos.append(nuevoProducto)
         return nuevosProductos
-'''
+
 import datetime
 from gestorAplicacion.gestion.Vendedor import Vendedor
 from gestorAplicacion.gestion.CuentaBancaria import CuentaBancaria
@@ -402,4 +412,4 @@ conductor9.setIndiceMeta(50)
 
 conductor10.setCantidadTrabajo(6)
 conductor10.setIndiceMeta(18)
-'''
+

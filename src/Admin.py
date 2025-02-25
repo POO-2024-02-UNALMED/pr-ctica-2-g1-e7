@@ -1,10 +1,16 @@
+import sys, os
+
+# Agrega la carpeta 'src' a sys.path
+src_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "src"))
+sys.path.insert(0, src_path)
+
+
+from Excepciones.EnteroFueraDeRango import OpcionNoValida
 from tkinter import Tk, Label,messagebox, ttk, Button, Frame
-
-
 
 from  baseDatos.Deserializarcion import cargar_datos
 from  baseDatos.Serialización import guardar_datos
-from src.Excepciones.EnteroFueraDeRango import OpcionNoValida
+
 cargar_datos()
 from tkinter import messagebox
 from ventanaInicio import centrar_ventana

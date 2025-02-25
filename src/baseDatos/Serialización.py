@@ -2,7 +2,7 @@ import sys
 import os
 
 # Agregar la carpeta 'src' al sys.path para que Python encuentre 'gestorAplicacion'
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 import pickle
 import os
