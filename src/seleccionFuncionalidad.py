@@ -8,6 +8,7 @@ from gestorAplicacion.gestion.Factura import Factura
 from datetime import datetime
 from gestorAplicacion.produccion.Fabrica import Fabrica
 from src.Excepciones.ErrorFecha import *
+
 import tkinter as tk
 from tkinter import ttk, messagebox
 
@@ -314,7 +315,6 @@ class VentanaSecundaria(tk.Tk):
             messagebox.showerror("Error", "Por favor ingrese un número válido")
         except EnteroFueraDeRango as e:
             messagebox.showerror("Error", str(e))
-
 
     def continuar_abastecimiento(self, tienda_seleccionada):
         """Muestra los transportes disponibles según el peso total"""

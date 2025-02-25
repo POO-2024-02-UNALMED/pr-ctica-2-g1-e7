@@ -119,7 +119,6 @@ class Fabrica:
 
     @staticmethod
     def cantidadProductos(producto, cantidad):
-        from gestorAplicacion.produccion.Producto import Producto
         """
         Genera nuevas instancias de productos según la cantidad especificada
         """
