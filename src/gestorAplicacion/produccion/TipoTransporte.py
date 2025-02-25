@@ -64,9 +64,9 @@ class TipoTransporte(Enum):
             if 0 < opcion <= len(lista_filtrada):
                 return lista_filtrada[opcion - 1]
             else:
-                _, transporte_recomendado = TipoTransporte.mostrar_tipo_transporte_segun_carga(lista_filtrada)
+                _, transporte_recomendado = TipoTransporte.mostrarTipoTransporteSegunCarga(lista_filtrada)
                 if transporte_recomendado:
-                    print(f"Opción inválida. Se seleccionará automáticamente el transporte recomendado: {transporte_recomendado.nombre}")
+                    print(f"Opción inválida. Se seleccionará automáticamente el transporte recomendado: {transporte_recomendado.getNombre()}")
                     return transporte_recomendado
                 else:
                     raise ValueError("No hay transportes disponibles.")
