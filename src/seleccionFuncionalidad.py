@@ -888,6 +888,7 @@ class VentanaSecundaria(tk.Tk):
     # Función para volver a la interfaz principal
     def mostrar_menu(self):
         self.limpiar_frame_interaccion()
+        self.titulo.config(text="Distribuidora JJAYC")
         tk.Label(self.frame_interaccion, text="Desde aquí podrá gestionar todo sobre la fábrica. Seleccione el menú procesos y consultas", font=("Arial", 12)).pack(pady=5)
        
             # 🔹 Frame para la imagen
