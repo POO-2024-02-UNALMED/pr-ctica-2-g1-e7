@@ -109,6 +109,7 @@ class VentanaSecundaria(tk.Tk):
 
     # 🔹 Función para mostrar la interfaz de abastecimiento dentro de frame_interaccion
     def mostrar_abastecimiento(self):
+        cargar_datos()
         self.limpiar_frame_interaccion()
         self.titulo.config(text="Abastecimiento de tiendas")
     
@@ -1385,6 +1386,7 @@ class VentanaSecundaria(tk.Tk):
         self.tiendaSeleccionada.getVendedor().aumentarIndiceMeta()
         self.transporteSeleccionado.getConductor().aumentarIndiceMeta(sum([producto.getPeso() for producto in self.listaProductosPedidos]))
         self.tiendaSeleccionada.eliminarProductosPorNombre(self.listaProductosPedidos)
+        # Guardar los cambios
         guardar_datos()
 
 

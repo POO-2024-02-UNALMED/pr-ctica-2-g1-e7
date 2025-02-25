@@ -43,7 +43,3 @@ def guardar_datos():
     with open("datos.pkl", "wb") as archivo:
         pickle.dump(datos, archivo)
 
-    print("✅ Datos guardados correctamente.")
-if __name__ == "__main__":
-    print("🔄 Ejecutando serialización de datos...")
-    guardar_datos()
