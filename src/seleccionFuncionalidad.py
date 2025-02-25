@@ -18,7 +18,7 @@ class VentanaSecundaria(tk.Tk):
         self._pago_por_metas = 0
         
         # Configuración de la ventana
-        self.geometry("900x650")
+        self.geometry("1500x800")
         self.title("Distribuidora JJAYC")
         self.configure(bg="#ECF0F1")  # Fondo gris claro moderno
 
@@ -111,45 +111,47 @@ class VentanaSecundaria(tk.Tk):
     def mostrar_abastecimiento(self):
         self.limpiar_frame_interaccion()
         self.titulo.config(text="Abastecimiento de tiendas")
+    
         tk.Label(self.frame_interaccion, 
-                 text="Desde este menú podrá realizar un correcto abastecimiento a las tiendas asociadas",
-                 font=("Arial", 10)).pack(pady=10)
+             text="Desde este menú podrá realizar un correcto abastecimiento a las tiendas asociadas",
+             font=("Arial", 10)).pack(pady=10)
+    
         tk.Label(self.frame_interaccion, 
-                 text="Seleccione la tienda que desea abastecer",
-                 font=("Arial", 14)).pack(pady=10)
+             text="Seleccione la tienda que desea abastecer",
+             font=("Arial", 14)).pack(pady=10)
 
-        # Frame principal para las tiendas
+    # Frame principal para las tiendas (horizontal)
         frame_tiendas = tk.Frame(self.frame_interaccion)
         frame_tiendas.pack(pady=10)
 
-        # Mostrar botones y productos para cada tienda
+    # Mostrar botones y productos para cada tienda horizontalmente
         tiendas = Admin.mostrarTiendas()
         for tienda in tiendas:
-            # Frame individual para cada tienda
+        # Frame individual para cada tienda
             frame_tienda = tk.Frame(frame_tiendas, relief="solid", bd=1)
-            frame_tienda.pack(pady=5, padx=10, fill="x")
+            frame_tienda.pack(side="left", padx=10, pady=5)  # Changed to side="left"
 
-            # Botón de la tienda
+        # Botón de la tienda
             tk.Button(frame_tienda, 
-                     text=f"Tienda {tienda.getNombre()}", 
-                     command=lambda t=tienda: self.mostrar_lista_productos(t),
-                     width=20, height=2).pack(pady=5)
+                 text=f"Tienda {tienda.getNombre()}", 
+                 command=lambda t=tienda: self.mostrar_lista_productos(t),
+                 width=23, height=2).pack(pady=5)
 
-            # Label para mostrar los productos actuales
+        # Label para mostrar los productos actuales
             tk.Label(frame_tienda, 
-                    text="Productos actuales:",
-                    font=("Arial", 10, "bold")).pack()
-            
-            # Text widget para mostrar los productos con scroll si es necesario
+                text="Productos actuales:",
+                font=("Arial", 10, "bold")).pack()
+        
+        # Text widget para mostrar los productos
             productos_text = tk.Text(frame_tienda, height=5, width=40)
             productos_text.pack(pady=5)
             productos_text.insert("1.0", tienda.cantidadProductos())
-            productos_text.config(state="disabled")  # Hacer el texto de solo lectura
+            productos_text.config(state="disabled")
 
-        # Botón para volver al menú principal
+    # Botón para volver al menú principal
         tk.Button(self.frame_interaccion, 
-                 text="Volver al Menú", 
-                 command=self.mostrar_menu).pack(pady=10)
+             text="Volver al Menú", 
+             command=self.mostrar_menu).pack(pady=10)
 
     def reiniciar_seleccion(self, tienda_seleccionada):
         """Reinicia las variables temporales y vuelve a la selección de productos"""
@@ -253,8 +255,16 @@ class VentanaSecundaria(tk.Tk):
                 font=("Arial", 10)).pack()
 
         # Entry para la cantidad
-        self.entry_cantidad = tk.Entry(frame_cantidad)
-        self.entry_cantidad.pack(pady=10)
+        # Usar Spinbox para la cantidad
+        self.spinbox_cantidad = ttk.Spinbox(
+            frame_cantidad,
+            from_=0,
+            to=cantidad_disponible,
+            width=10,
+            justify="center"
+        )
+        self.spinbox_cantidad.set(0)  # Valor inicial
+        self.spinbox_cantidad.pack(pady=10)
 
         # Frame para botones de acción
         frame_botones = tk.Frame(frame_cantidad)
@@ -278,7 +288,7 @@ class VentanaSecundaria(tk.Tk):
         """Valida la cantidad y muestra las opciones de continuación"""
         from Excepciones.EnteroFueraDeRango import EnteroFueraDeRango
         try:
-            cantidad = int(self.entry_cantidad.get())
+            cantidad = int(self.spinbox_cantidad.get())
             if cantidad < 0 or cantidad > cantidad_maxima:
                 raise EnteroFueraDeRango(f"La cantidad debe estar entre 0 y {cantidad_maxima}")
 
@@ -292,24 +302,29 @@ class VentanaSecundaria(tk.Tk):
             self.pesoTotalProductos += producto.getPeso() * cantidad
 
             # Frame para opciones post-selección
-            frame_opciones = tk.Frame(self.frame_interaccion)
+            frame_opciones = tk.Frame(self.frame_interaccion, bg="white")
             frame_opciones.pack(pady=20)
 
             tk.Label(frame_opciones,
                     text="¿Qué desea hacer?",
-                    font=("Arial", 12, "bold")).pack(pady=10)
+                    font=("Arial", 12, "bold"),
+                    bg="white").pack(pady=10)
 
-            tk.Button(frame_opciones,
-                     text="Agregar más productos",
-                     command=lambda: self.mostrar_lista_productos(tienda_seleccionada)).pack(pady=5)
-
-            tk.Button(frame_opciones,
-                     text="Continuar con el abastecimiento",
-                     command=lambda: self.continuar_abastecimiento(tienda_seleccionada)).pack(pady=5)
-
-            tk.Button(frame_opciones,
-                     text="Volver a elegir productos",
-                     command=lambda: self.reiniciar_seleccion(tienda_seleccionada)).pack(pady=5)
+            # Frame para los botones horizontales
+            frame_botones = tk.Frame(frame_opciones, bg="white")
+            frame_botones.pack()
+        
+            tk.Button(frame_botones,
+                 text="Agregar más productos",
+                 command=lambda: self.mostrar_lista_productos(tienda_seleccionada)).pack(side="left", padx=5)
+        
+            tk.Button(frame_botones,
+                 text="Continuar abastecimiento",
+                 command=lambda: self.continuar_abastecimiento(tienda_seleccionada)).pack(side="left", padx=5)
+        
+            tk.Button(frame_botones,
+                 text="Volver a elegir productos",
+                 command=lambda: self.reiniciar_seleccion(tienda_seleccionada)).pack(side="left", padx=5)
 
         except ValueError:
             messagebox.showerror("Error", "Por favor ingrese un número válido")
@@ -375,54 +390,142 @@ class VentanaSecundaria(tk.Tk):
             messagebox.showerror("Error", "No se encontró un conductor con el transporte seleccionado.")
             return
         
-        # Proceder a la confirmación final
-        self.mostrar_confirmacion_final(tienda_seleccionada, transporte_seleccionado, conductorSeleccionado)
-
-    def mostrar_confirmacion_final(self, tienda_seleccionada, transporte_seleccionado, conductor):
-        """Muestra la pantalla de confirmación final del abastecimiento"""
+        # Mostrar encuesta antes de la confirmación final
+        self.mostrar_encuesta(tienda_seleccionada, transporte_seleccionado, conductorSeleccionado)
+    
+    def mostrar_encuesta(self, tienda_seleccionada, transporte_seleccionado, conductor):
+        """Muestra la encuesta de sugerencias para el conductor"""
         self.limpiar_frame_interaccion()
         
-        frame_confirmacion = tk.Frame(self.frame_interaccion)
-        frame_confirmacion.pack(fill="both", expand=True, padx=10, pady=10)
+        from fieldFrame import FieldFrame
         
-        # Resumen del abastecimiento
-        tk.Label(frame_confirmacion,
-                text="Resumen del abastecimiento",
-                font=("Arial", 12, "bold")).pack(pady=10)
+        # Crear el FieldFrame para la encuesta con múltiples campos
+        criterios = [
+            "Sugerencias para el conductor",
+            "Manipulación de productos",
+            "Instrucciones especiales de entrega"
+        ]
+        valores_defecto = [
+            "",
+            "Por favor manipular con cuidado",
+            ""
+        ]
+        self.fieldFrame = FieldFrame(
+            self.frame_interaccion, 
+            "Criterio", 
+            criterios, 
+            "Valor",
+            valores_defecto
+        )
+        self.fieldFrame.pack(pady=20)
         
-        tk.Label(frame_confirmacion,
-                text=f"Tienda: {tienda_seleccionada.getNombre()}",
-                font=("Arial", 10)).pack(pady=5)
-                
-        tk.Label(frame_confirmacion,
-                text=f"Transporte: {transporte_seleccionado.getNombre()}",
-                font=("Arial", 10)).pack(pady=5)
-                
-        tk.Label(frame_confirmacion,
-                text=f"Conductor: {conductor.getNombre()}",
-                font=("Arial", 10)).pack(pady=5)
+        def procesar_sugerencia():
+            # Obtener valores de todos los campos
+            sugerencia = self.fieldFrame.getValue("Sugerencias para el conductor")
+            manipulacion = self.fieldFrame.getValue("Manipulación de productos")
+            instrucciones = self.fieldFrame.getValue("Instrucciones especiales de entrega")
+            
+            if sugerencia and manipulacion:
+                # Guardar todas las sugerencias
+                self.sugerencia_conductor = {
+                    "sugerencia": sugerencia,
+                    "manipulacion": manipulacion,
+                    "instrucciones": instrucciones
+                }
+                messagebox.showinfo("Éxito", "ABASTECIMIENTO FINALIZADO CON EXITO")
+                # Proceder con el abastecimiento
+                self.ejecutar_abastecimiento(tienda_seleccionada, transporte_seleccionado, conductor)
+            else:
+                messagebox.showerror("Error", "Por favor complete al menos la sugerencia y la manipulación de productos")
         
-        # Botones finales
-        frame_botones = tk.Frame(frame_confirmacion)
+        # Botón para confirmar la sugerencia
+        tk.Button(self.frame_interaccion,
+                 text="CONFIRME EL ABASTECIMIENTO",
+                 command=procesar_sugerencia).pack(pady=10)
+    
+    def ejecutar_abastecimiento(self, tienda_seleccionada, transporte_seleccionado, conductor):
+        """Ejecuta el abastecimiento final y muestra el resumen unificado"""
+        # Actualizar la lista de productos de la tienda
+        tienda_seleccionada.setConteoCategorias(self.conteoCategoriasTemporal)
+        
+        # Realizar el abastecimiento usando el transporte
+        transporte = conductor.getTransporte()
+        transporte.abastecerProducto(tienda_seleccionada, self.productosGenerados)
+        tienda_seleccionada.descargarProducto(transporte)
+        
+        # Mostrar resumen final unificado
+        self.limpiar_frame_interaccion()
+        frame_resumen = tk.Frame(self.frame_interaccion)
+        frame_resumen.pack(fill="both", expand=True, padx=20, pady=20)
+        
+        # Text widget para todo el resumen
+        resumen_text = tk.Text(frame_resumen, height=30, width=60, font=("Arial", 11))
+        resumen_text.pack(pady=10)
+        resumen_text.tag_configure("center", justify="center")
+        
+        # Construir el texto del resumen completo
+        ancho_barra = "=" * 50
+        resumen = f"\n{ancho_barra}\n"
+        resumen += "¡ABASTECIMIENTO REALIZADO CON ÉXITO!\n"
+        resumen += f"{ancho_barra}\n\n"
+        resumen += "INFORMACIÓN GENERAL:\n"
+        resumen += "-" * 40 + "\n"
+        resumen += f"Tienda: {tienda_seleccionada.getNombre()}\n"
+        resumen += f"Transporte: {transporte_seleccionado.getNombre()}\n"
+        resumen += f"Conductor: {conductor.getNombre()}\n"
+        resumen += f"\n{ancho_barra}\n"
+        resumen += f"Sugerencia al conductor: {self.sugerencia_conductor['sugerencia']}\n"
+        resumen += f"Manipulación de productos: {self.sugerencia_conductor['manipulacion']}\n"
+        if self.sugerencia_conductor['instrucciones']:
+            resumen += f"Instrucciones especiales: {self.sugerencia_conductor['instrucciones']}\n"
+        resumen += f"{ancho_barra}\n\n"
+        resumen += "PRODUCTOS ACTUALIZADOS EN LA TIENDA:\n"
+        resumen += "-" * 40 + "\n"
+        resumen += tienda_seleccionada.cantidadProductos() + "\n\n"
+        resumen += "ESTADO ACTUAL POR CATEGORÍA:\n"
+        resumen += "-" * 40 + "\n"
+        resumen += tienda_seleccionada.productosPorCategoria(tienda_seleccionada.getListaProducto())
+        resumen += f"\n{ancho_barra}"
+        
+        # Insertar el texto y aplicar el centrado
+        resumen_text.insert("1.0", resumen)
+        resumen_text.tag_add("center", "1.0", "end")
+        resumen_text.config(state="disabled")
+        # Botón para realizar otro abastecimiento
+        # Frame para los botones con mejor presentación
+        frame_botones = tk.Frame(frame_resumen)
         frame_botones.pack(pady=20)
-        
+    
+        # Botones más grandes y con mejor espaciado
         tk.Button(frame_botones,
-                 text="Confirmar abastecimiento",
-                 command=lambda: self.ejecutar_abastecimiento(
-                     tienda_seleccionada, transporte_seleccionado, conductor)).pack(side="left", padx=5)
-                 
+             text="Realizar otro abastecimiento",
+             command=self.mostrar_abastecimiento,
+             font=("Arial", 11),
+             width=25,  # Aumentar ancho
+             height=2).pack(side="left", padx=10)  # Aumentar altura
+    
         tk.Button(frame_botones,
-                 text="Volver a transportes",
-                 command=lambda: self.continuar_abastecimiento(tienda_seleccionada)).pack(side="left", padx=5)
-                 
-        tk.Button(frame_botones,
-                 text="Cancelar",
-                 command=self.mostrar_abastecimiento).pack(side="left", padx=5)
-
+             text="Volver al menú principal",
+             command=self.mostrar_menu,
+             font=("Arial", 11),
+             width=25,  # Aumentar ancho
+             height=2).pack(side="left", padx=10)  # Aumentar altura
     # Funcionalidad de devoluciones:
     def devoluciones(self):
         self.limpiar_frame_interaccion()
         self.titulo.config(text="Bienvenido al gestor de devoluciones")
+        tk.Label(
+            self.frame_interaccion,
+            text="Desde este menú podrá gestionar reembolsos o cambios de los productos de los clientes",
+            font=("Arial", 10)
+        ).pack(pady=10)
+        tk.Label(
+            self.frame_interaccion,
+            text="Seleccione el número de la factura a la que desea hacer la devolución",
+            font=("Arial", 14)
+        ).pack(pady=10)
+
+        self.frameFacturas = tk.Frame(self.frame_interaccion)
         tk.Label(
             self.frame_interaccion,
             text="Desde este menú podrá gestionar reembolsos o cambios de los productos de los clientes",
@@ -495,7 +598,7 @@ class VentanaSecundaria(tk.Tk):
         for widget in self.frame_interaccion.winfo_children():
             widget.destroy()
 
-        # Se obtiene la lista de productos (se asume que factura.mostrarProductosFactura() retorna un string con saltos de línea)
+        # Se obtiene la lista de productos 
         productos_str = factura.mostrarProductosFactura()
         productos = productos_str.split("\n")
 
@@ -520,8 +623,11 @@ class VentanaSecundaria(tk.Tk):
         if indice_seleccionado == -1:
             messagebox.showerror("Error", "Seleccione un producto válido.")
             return
-
         producto_seleccionado = lista_objetos_productos[indice_seleccionado]
+        if producto_seleccionado.getDevuelto()==True: 
+            messagebox.showerror("Error", "el producto ya ha sido devuelto")
+            return 
+        
         Admin.productoSeleccionado = producto_seleccionado
         self.mostrarMotivosDevolucion()
 
@@ -767,14 +873,7 @@ class VentanaSecundaria(tk.Tk):
         ).pack(pady=10)
 
 
-    # 🔹 Funcionalidad de estadísticas (a implementar)
-    def mostrar_estadisticas(self):
-        self.limpiar_frame_interaccion()
-        tk.Label(self.frame_interaccion, text="Interfaz de Estadísticas", font=("Arial", 14)).pack()
-        tk.Label(self.frame_interaccion, text="Aquí se mostrarán las estadísticas del sistema").pack()
-
-
-    # 🔹 Función para volver a la interfaz principal
+    # Función para volver a la interfaz principal
     def mostrar_menu(self):
         self.limpiar_frame_interaccion()
         tk.Label(self.frame_interaccion, text="Descripción del proceso o consulta:", font=("Arial", 12)).pack(pady=5)
@@ -785,7 +884,7 @@ class VentanaSecundaria(tk.Tk):
         texto_resultados = tk.Text(frame_resultados, wrap="word", height=10)
         texto_resultados.pack(fill="both", expand=True, padx=5, pady=5)
 
-    # 🔹 Funcionalidad de Pago de Trabajadores
+    # Funcionalidad de Pago de Trabajadores
     def pagoTrabajadores(self):
         self.limpiar_frame_interaccion()
         self.titulo.config(text="Bienvenido al gestor del pago de sus trabajadores")
@@ -1250,7 +1349,7 @@ class VentanaSecundaria(tk.Tk):
         if len(self.frame_interaccion.winfo_children()) > 10:  # Ajustar el número según sea necesario
             self.limpiar_frame_interaccion()
 
-    # 🔹 Funcionalidad de estadísticas
+    # Funcionalidad de estadísticas
     def mostrar_estadisticas(self):
         self.limpiar_frame_interaccion()
         self.titulo.config(text="Estadísticas del Sistema")

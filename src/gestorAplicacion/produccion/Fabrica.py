@@ -136,12 +136,7 @@ class Fabrica:
         nuevosProductos = []
         for _ in range(cantidad):
             # Crear una nueva instancia del producto con los mismos atributos
-            nuevoProducto = Producto(
-                producto.getNombre(),
-                producto.getPrecio(),
-                producto.getPeso(),
-                producto.getCategoria()
-            )
+            nuevoProducto = Producto(producto)
             nuevosProductos.append(nuevoProducto)
         return nuevosProductos
 '''
