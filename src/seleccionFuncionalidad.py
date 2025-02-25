@@ -510,6 +510,7 @@ class VentanaSecundaria(tk.Tk):
              font=("Arial", 11),
              width=25,  # Aumentar ancho
              height=2).pack(side="left", padx=10)  # Aumentar altura
+        guardar_datos()
     # Funcionalidad de devoluciones:
     def devoluciones(self):
         self.limpiar_frame_interaccion()
@@ -1481,6 +1482,6 @@ class VentanaSecundaria(tk.Tk):
 
 # Ejecutar la aplicación desde una ventana principal
 if __name__ == "__main__":
-    
+    cargar_datos()
     ventanaSecundaria = VentanaSecundaria()
     ventanaSecundaria.mainloop()
