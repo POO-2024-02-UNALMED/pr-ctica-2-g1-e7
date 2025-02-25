@@ -1,6 +1,6 @@
 
 class Transporte:
-    montoEnvioGratis = 3000
+    montoEnvioGratis = 100000
     listaTransportes = []  # Lista de transportes
 
 

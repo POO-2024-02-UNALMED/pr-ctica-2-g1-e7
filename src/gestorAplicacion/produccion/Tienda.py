@@ -1,5 +1,7 @@
 import sys
 import os
+from datetime import datetime
+
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
  # Importar Fabrica al inicio
@@ -180,6 +182,8 @@ class Tienda:
     # Devuelve la factura en formato de texto.
     def enviarPedido(self, listaProductosPedidos, transporteSeleccionado, clienteSeleccionado, precioEnvio, dia):
         from gestorAplicacion.gestion.Factura import Factura
+        if not isinstance(dia, datetime):
+            raise TypeError("El argumento 'dia' debe ser una instancia de 'datetime'")
         factura = Factura(self, clienteSeleccionado, transporteSeleccionado, listaProductosPedidos, precioEnvio, dia)
         return factura
 
