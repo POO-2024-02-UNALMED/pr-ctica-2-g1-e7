@@ -75,12 +75,14 @@ class VentanaSecundaria(tk.Tk):
                                   font=("Arial", 10), fg="white", bg="#34495E")
         self.label_pie.pack(pady=5)
 
+
+
         # Mostrar la interfaz principal
         self.mostrar_menu()
 
     # 🔹 Funciones de menú
     def mostrar_info_aplicacion(self):
-        messagebox.showinfo("📘 Aplicación", "Esta aplicación gestiona procesos y consultas del sistema.")
+        messagebox.showinfo("📘 Aplicación", "Esta aplicación permite gestionar procesos dentro de una fabrica distribuidora")
 
     def mostrar_autores(self):
         messagebox.showinfo("❓ Acerca de", "Autores: Equipo de Desarrollo JJAYC\n"
@@ -97,7 +99,7 @@ class VentanaSecundaria(tk.Tk):
 
     def mostrar_menu(self):
         """Muestra el mensaje de bienvenida en la zona de interacción."""
-        self.limpiar_frame_interaccion()
+        #self.limpiar_frame_interaccion()
         self.label_interaccion.config(text="Seleccione una opción en el menú")
 
     def limpiar_frame_interaccion(self):
@@ -452,10 +454,8 @@ class VentanaSecundaria(tk.Tk):
         transporte.abastecerProducto(tienda_seleccionada, self.productosGenerados)
         tienda_seleccionada.descargarProducto(transporte)
         #METAS DE PAGO TRABAJADORES
-        """self.conductorSeleccionado.setIndiceMeta(self.conductorSeleccionado.getIndiceMeta() + self.pesoTotalProductos)
-        self.conductorSeleccionado.getCantidadTrabajo() += 1
-        Fabrica.getOperario().setIndiceMeta(Fabrica.getOperario().getIndiceMeta() + 1)
-        Fabrica.getOperario().getCantidadTrabajo() += 1"""
+        conductor.setIndiceMeta(conductor.getIndiceMeta() + self.pesoTotalProductos)
+        conductor.setCantidadTrabajo(conductor.getCantidadTrabajo() +1)
         # Mostrar resumen final unificado
         self.limpiar_frame_interaccion()
         frame_resumen = tk.Frame(self.frame_interaccion)
@@ -617,13 +617,15 @@ class VentanaSecundaria(tk.Tk):
         combobox.pack()
         listaProductos = factura.getListaProductos()
 
-        tk.Button(
+        boton=tk.Button(
             self.frame_interaccion,
             text="Seleccionar Producto",
-            command=lambda: self.seleccionarProducto(combobox, listaProductos)
-        ).pack(pady=5)
+            command=lambda: self.seleccionarProducto(combobox, listaProductos,boton)
+        )
+        boton.pack(pady=5)
 
-    def seleccionarProducto(self, combobox, lista_objetos_productos):
+    def seleccionarProducto(self, combobox, lista_objetos_productos,boton:tk.Button):
+        boton.config(state="disabled")
         indice_seleccionado = combobox.current()
         if indice_seleccionado == -1:
             messagebox.showerror("Error", "Seleccione un producto válido.")
@@ -647,13 +649,15 @@ class VentanaSecundaria(tk.Tk):
         self.comboboxMotivos = ttk.Combobox(self.frame_interaccion, values=motivos, width=50, state="readonly")
         self.comboboxMotivos.pack()
 
-        tk.Button(
+        boton2=tk.Button(
             self.frame_interaccion,
             text="Confirmar Motivo",
-            command=lambda: self.verificarMotivo(self.comboboxMotivos.get())
-        ).pack(pady=5)
+            command=lambda: self.verificarMotivo(self.comboboxMotivos.get(),boton2)
+        )
+        boton2.pack(pady=10)
 
-    def verificarMotivo(self, motivoSeleccionado):
+    def verificarMotivo(self, motivoSeleccionado,boton:tk.Button):
+        boton.config(state="disabled")
         if not motivoSeleccionado:
             messagebox.showerror("Error", "Seleccione un motivo válido.")
             return
@@ -662,7 +666,7 @@ class VentanaSecundaria(tk.Tk):
         if motivoSeleccionado.lower() == "otro motivo":
             from fieldFrame import FieldFrame
             criterios = ["Ingrese su motivo"]
-            self.fieldFrame = FieldFrame(self.frame_interaccion, "Criterio", criterios, "Valor")
+            self.fieldFrame = FieldFrame(self.frame_interaccion, "¿Por qué desea devolver?", criterios, "Motivo")
             self.fieldFrame.pack(pady=10)
             tk.Button(
                 self.frame_interaccion,
@@ -840,6 +844,7 @@ class VentanaSecundaria(tk.Tk):
 
     def finalizarCambio(self):
         # Este método se invoca si el usuario finaliza manualmente la selección
+        self.btnFinalizar.config(state="disabled")
         if self.subtotal < self.original_price:
             self.labelInfo.config(
                 text="El subtotal no supera el precio original. No se le devolverá la diferencia. ¿Desea confirmar el cambio?",
@@ -883,13 +888,34 @@ class VentanaSecundaria(tk.Tk):
     # Función para volver a la interfaz principal
     def mostrar_menu(self):
         self.limpiar_frame_interaccion()
-        tk.Label(self.frame_interaccion, text="Descripción del proceso o consulta:", font=("Arial", 12)).pack(pady=5)
+        tk.Label(self.frame_interaccion, text="Desde aquí podrá gestionar todo sobre la fábrica. Seleccione el menú procesos y consultas", font=("Arial", 12)).pack(pady=5)
+       
+            # 🔹 Frame para la imagen
+        self.frame_resultados = tk.Frame(self.frame_interaccion, relief="solid", bd=1)
+        self.frame_resultados.pack(fill="both", expand=True, padx=5, pady=5)
 
-        frame_resultados = tk.Frame(self.frame_interaccion, relief="solid", bd=1)
-        frame_resultados.pack(fill="both", expand=True, padx=5, pady=5)
+        # 🔹 Cargar imagen y guardar referencia
+        self.imagen_fabrica = tk.PhotoImage(file="./imagenes/imagenFabrica.png")  
 
-        texto_resultados = tk.Text(frame_resultados, wrap="word", height=10)
-        texto_resultados.pack(fill="both", expand=True, padx=5, pady=5)
+        # 🔹 Label para mostrar la imagen
+        self.label_imagen = tk.Label(self.frame_resultados, image=self.imagen_fabrica, bg="white")
+        self.label_imagen.place(relx=0.5, rely=0.5, anchor="center")  # Centrar imagen en el frame
+        self.label_texto = tk.Label(
+        self.frame_resultados,
+        text="Seleccione el menú procesos y consultas para acceder a las funcionalidades del sistema, archivo para conocer mas detalles de la aplicacion\n o ayuda para saber de los desarrolladores",
+        font=("Arial", 12),
+        fg="black",
+        bg="white"
+        )
+        self.label_texto.place(relx=0.5, rely=0.7, anchor="center")  # Texto centrado debajo de la imagen
+
+        # 🔹 Vincular evento de redimensionamiento para mantener alineado el contenido
+        self.frame_resultados.bind("<Configure>", self.ajustar_imagen)
+
+    def ajustar_imagen(self, event):
+        """ Ajusta la posición de la imagen y el texto sin cambiar su tamaño. """
+        self.label_imagen.place(relx=0.5, rely=0.4, anchor="center")  # Mantiene la imagen centrada arriba
+        self.label_texto.place(relx=0.5, rely=0.7, anchor="center")  # Mantiene el texto centrado debajo
 
     # Funcionalidad de Pago de Trabajadores
     def pagoTrabajadores(self):
