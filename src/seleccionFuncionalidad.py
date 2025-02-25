@@ -320,65 +320,63 @@ class VentanaSecundaria(tk.Tk):
         """Muestra los transportes disponibles según el peso total"""
         from gestorAplicacion.produccion.TipoTransporte import TipoTransporte
         self.limpiar_frame_interaccion()
-    
+        
         # Frame principal
         frame_transportes = tk.Frame(self.frame_interaccion)
         frame_transportes.pack(fill="both", expand=True, padx=10, pady=10)
-    
+        
         # Título y peso total
         tk.Label(frame_transportes,
-        text="Seleccione el tipo de transporte para enviar los productos:",
-        font=("Arial", 12, "bold")).pack(pady=10)
-    
-        # Obtener y mostrar lista de transportes según el peso
+                text="Seleccione el tipo de transporte para enviar los productos:",
+                font=("Arial", 12, "bold")).pack(pady=10)
+        
+        tk.Label(frame_transportes,
+                text=f"Peso total de productos: {self.pesoTotalProductos} kg",
+                font=("Arial", 10)).pack(pady=5)
+        
+        # Obtener lista de transportes según el peso
         listaTransportes = TipoTransporte.crearTipoTransporteSegunCarga(self.pesoTotalProductos)
-    
-        # Text widget para mostrar los transportes disponibles
-        transportes_text = tk.Text(frame_transportes, height=4, width=60)
-        transportes_text.pack(pady=5)
-        transportes_text.insert("1.0", TipoTransporte.mostrarTipoTransporteSegunCarga(listaTransportes))
-        transportes_text.config(state="disabled")
-    
+        
         # Frame para los botones de los transportes
         frame_botones_transporte = tk.Frame(frame_transportes)
         frame_botones_transporte.pack(pady=20)
-    
-        #Mostrar cada transporte como botón
+        
+        # Mostrar cada transporte como botón
         for i, transporte in enumerate(listaTransportes, 1):
             tk.Button(frame_botones_transporte,
-            text=f"{i}. {transporte.getNombre()} - Capacidad: {transporte.getCapacidadMax()} kg",
-            command=lambda t=transporte: self.seleccionar_transporte(tienda_seleccionada, t),
-            width=40).pack(pady=5)
-    
+                     text=f"{i}. {transporte.getNombre()} - Capacidad: {transporte.getCapacidadMax()} kg",
+                     command=lambda t=transporte: self.seleccionar_transporte(tienda_seleccionada, t),
+                     width=40).pack(pady=5)
+        
         # Botones de navegación
         frame_navegacion = tk.Frame(frame_transportes)
         frame_navegacion.pack(side="bottom", pady=20)
-    
+        
         tk.Button(frame_navegacion,
-             text="Volver a productos",
-             command=lambda: self.mostrar_lista_productos(tienda_seleccionada)).pack(side="left", padx=5)
-    
+                 text="Volver a productos",
+                 command=lambda: self.mostrar_lista_productos(tienda_seleccionada)).pack(side="left", padx=5)
+        
         tk.Button(frame_navegacion,
-             text="Volver al menú",
-             command=self.mostrar_abastecimiento).pack(side="left", padx=5)
+                 text="Volver al menú",
+                 command=self.mostrar_abastecimiento).pack(side="left", padx=5)
 
-def seleccionar_transporte(self, tienda_seleccionada, transporte_seleccionado):
-    """Maneja la selección del transporte y busca un conductor disponible"""
-    from gestorAplicacion.gestion.Conductor import Conductor
-    
-    # Buscar conductor con el transporte seleccionado
-    conductorSeleccionado = None
-    for conductor in Conductor.getListaConductores():
-        if conductor.getTransporte().getTipoTransporte() == transporte_seleccionado:
-            conductorSeleccionado = conductor
-            break
-    
-    if conductorSeleccionado is None:
-        messagebox.showerror("Error", "No se encontró un conductor con el transporte seleccionado.")
-        return
-    
-    # Proceder a la confirmación final
-    self.mostrar_confirmacion_final(tienda_seleccionada, transporte_seleccionado, conductorSeleccionado)
+    def seleccionar_transporte(self, tienda_seleccionada, transporte_seleccionado):
+        """Maneja la selección del transporte y busca un conductor disponible"""
+        from gestorAplicacion.gestion.Conductor import Conductor
+        
+        # Buscar conductor con el transporte seleccionado
+        conductorSeleccionado = None
+        for conductor in Conductor.getListaConductores():
+            if conductor.getTransporte().getTipoTransporte() == transporte_seleccionado:
+                conductorSeleccionado = conductor
+                break
+        
+        if conductorSeleccionado is None:
+            messagebox.showerror("Error", "No se encontró un conductor con el transporte seleccionado.")
+            return
+        
+        # Proceder a la confirmación final
+        self.mostrar_confirmacion_final(tienda_seleccionada, transporte_seleccionado, conductorSeleccionado)
 
     def mostrar_confirmacion_final(self, tienda_seleccionada, transporte_seleccionado, conductor):
         """Muestra la pantalla de confirmación final del abastecimiento"""
