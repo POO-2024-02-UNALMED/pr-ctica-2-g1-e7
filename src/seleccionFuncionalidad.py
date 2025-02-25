@@ -495,7 +495,7 @@ class VentanaSecundaria(tk.Tk):
         for widget in self.frame_interaccion.winfo_children():
             widget.destroy()
 
-        # Se obtiene la lista de productos (se asume que factura.mostrarProductosFactura() retorna un string con saltos de línea)
+        # Se obtiene la lista de productos 
         productos_str = factura.mostrarProductosFactura()
         productos = productos_str.split("\n")
 
@@ -520,8 +520,11 @@ class VentanaSecundaria(tk.Tk):
         if indice_seleccionado == -1:
             messagebox.showerror("Error", "Seleccione un producto válido.")
             return
-
         producto_seleccionado = lista_objetos_productos[indice_seleccionado]
+        if producto_seleccionado.getDevuelto()==True: 
+            messagebox.showerror("Error", "el producto ya ha sido devuelto")
+            return 
+        
         Admin.productoSeleccionado = producto_seleccionado
         self.mostrarMotivosDevolucion()
 

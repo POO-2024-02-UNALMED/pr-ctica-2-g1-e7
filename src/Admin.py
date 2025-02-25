@@ -82,10 +82,7 @@ class Admin:
     def evaluarMotivo(motivoDevolucion, frame_interaccion):
         from gestorAplicacion.produccion.Producto import Producto
         motivos = Producto.getMotivosDevolucion()
-        # Aquí se puede colocar la lógica que determine si, según el motivo, se debe procesar el reembolso
         if motivoDevolucion in (motivos[0], motivos[1], motivos[2]):
-            # En este ejemplo no se muestra la comunicación completa, ya que la interfaz se encarga
-            # de llamar a los métodos para mostrar el proceso de reembolso.
             return 0
         else: 
             return 1
