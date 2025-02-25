@@ -663,7 +663,7 @@ class VentanaSecundaria(tk.Tk):
         if motivoSeleccionado.lower() == "otro motivo":
             from fieldFrame import FieldFrame
             criterios = ["Ingrese su motivo"]
-            self.fieldFrame = FieldFrame(self.frame_interaccion, "Criterio", criterios, "Valor")
+            self.fieldFrame = FieldFrame(self.frame_interaccion, "¿Por qué desea devolver?", criterios, "Motivo")
             self.fieldFrame.pack(pady=10)
             tk.Button(
                 self.frame_interaccion,
