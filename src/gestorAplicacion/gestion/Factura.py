@@ -178,9 +178,14 @@ class Factura(IMostrarProductos):
             aumento = (facturas[i].getTotal() - facturas[i - 1].getTotal()) / facturas[i - 1].getTotal() * 100
             aumentos.append([facturas[i].getFecha(), aumento])
 
-        if aumentos == []:
+        if aumentos == [] or len(aumentos) == 1:
             return "No hay aumentos porcentuales."
-        return aumentos
+        else:
+            msg = ""
+            for i in range(1, len(aumentos) - 1):
+                msg += f"El aumento porcentual es de {aumentos[i][1]:.2f}% en la fecha {aumentos[i][0].strftime('%d/%m/%Y')}.\n"
+            return msg
+
     
     @staticmethod
     def modaProductos(fecha_min: datetime, fecha_max: datetime):

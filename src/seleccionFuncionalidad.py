@@ -598,7 +598,7 @@ class VentanaSecundaria(tk.Tk):
         for widget in self.frame_interaccion.winfo_children():
             widget.destroy()
 
-        # Se obtiene la lista de productos (se asume que factura.mostrarProductosFactura() retorna un string con saltos de línea)
+        # Se obtiene la lista de productos 
         productos_str = factura.mostrarProductosFactura()
         productos = productos_str.split("\n")
 
@@ -623,8 +623,11 @@ class VentanaSecundaria(tk.Tk):
         if indice_seleccionado == -1:
             messagebox.showerror("Error", "Seleccione un producto válido.")
             return
-
         producto_seleccionado = lista_objetos_productos[indice_seleccionado]
+        if producto_seleccionado.getDevuelto()==True: 
+            messagebox.showerror("Error", "el producto ya ha sido devuelto")
+            return 
+        
         Admin.productoSeleccionado = producto_seleccionado
         self.mostrarMotivosDevolucion()
 
@@ -870,14 +873,7 @@ class VentanaSecundaria(tk.Tk):
         ).pack(pady=10)
 
 
-    # 🔹 Funcionalidad de estadísticas (a implementar)
-    def mostrar_estadisticas(self):
-        self.limpiar_frame_interaccion()
-        tk.Label(self.frame_interaccion, text="Interfaz de Estadísticas", font=("Arial", 14)).pack()
-        tk.Label(self.frame_interaccion, text="Aquí se mostrarán las estadísticas del sistema").pack()
-
-
-    # 🔹 Función para volver a la interfaz principal
+    # Función para volver a la interfaz principal
     def mostrar_menu(self):
         self.limpiar_frame_interaccion()
         tk.Label(self.frame_interaccion, text="Descripción del proceso o consulta:", font=("Arial", 12)).pack(pady=5)
@@ -888,7 +884,7 @@ class VentanaSecundaria(tk.Tk):
         texto_resultados = tk.Text(frame_resultados, wrap="word", height=10)
         texto_resultados.pack(fill="both", expand=True, padx=5, pady=5)
 
-    # 🔹 Funcionalidad de Pago de Trabajadores
+    # Funcionalidad de Pago de Trabajadores
     def pagoTrabajadores(self):
         self.limpiar_frame_interaccion()
         self.titulo.config(text="Bienvenido al gestor del pago de sus trabajadores")
@@ -1353,7 +1349,7 @@ class VentanaSecundaria(tk.Tk):
         if len(self.frame_interaccion.winfo_children()) > 10:  # Ajustar el número según sea necesario
             self.limpiar_frame_interaccion()
 
-    # 🔹 Funcionalidad de estadísticas
+    # Funcionalidad de estadísticas
     def mostrar_estadisticas(self):
         self.limpiar_frame_interaccion()
         self.titulo.config(text="Estadísticas del Sistema")
