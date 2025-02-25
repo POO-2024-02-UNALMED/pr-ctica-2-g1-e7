@@ -1079,7 +1079,7 @@ class VentanaSecundaria(tk.Tk):
 
     def seleccionar_productos(self, indice):
         if indice >= self.cantidadProductosSeleccionados.get():
-            self.seleccionar_transporte()
+            self.seleccionar_transporte2()
             return
         
         self.verificar_espacio()
@@ -1112,7 +1112,7 @@ class VentanaSecundaria(tk.Tk):
         combobox.config(state="disabled")
         self.seleccionar_productos(indice + 1)
 
-    def seleccionar_transporte(self):
+    def seleccionar_transporte2(self):
         from gestorAplicacion.produccion.Transporte import Transporte
         from gestorAplicacion.produccion.TipoTransporte import TipoTransporte
         from gestorAplicacion.gestion.Conductor import Conductor
