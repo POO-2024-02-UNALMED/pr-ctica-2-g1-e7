@@ -1114,7 +1114,7 @@ class VentanaSecundaria(tk.Tk):
         combobox = ttk.Combobox(self.frame_interaccion, values=opciones, state="readonly", font=("Helvetica", 10))
         combobox.pack(pady=5)
         
-        self.boton_confirmar_cliente = tk.Button(self.frame_interaccion, text="Confirmar Cliente", command=lambda: self.confirmar_cliente(combobox, clientes), font=("Helvetica", 10))
+        self.boton_confirmar_cliente = ttk.Button(self.frame_interaccion, text="Confirmar Cliente", command=lambda: self.confirmar_cliente(combobox, clientes))
         self.boton_confirmar_cliente.pack(pady=10)
 
     def confirmar_cliente(self, combobox, clientes):
@@ -1138,7 +1138,7 @@ class VentanaSecundaria(tk.Tk):
         combobox = ttk.Combobox(self.frame_interaccion, values=opciones, state="readonly", font=("Helvetica", 10))
         combobox.pack(pady=5)
         
-        self.boton_confirmar_tienda = tk.Button(self.frame_interaccion, text="Confirmar Tienda", command=lambda: self.confirmar_tienda(combobox, tiendas), font=("Helvetica", 10))
+        self.boton_confirmar_tienda = ttk.Button(self.frame_interaccion, text="Confirmar Tienda", command=lambda: self.confirmar_tienda(combobox, tiendas))
         self.boton_confirmar_tienda.pack(pady=10)
 
     def confirmar_tienda(self, combobox, tiendas):
@@ -1156,11 +1156,12 @@ class VentanaSecundaria(tk.Tk):
         self.verificar_espacio()
         tk.Label(self.frame_interaccion, text="Indique la cantidad de productos que desea enviar (máximo 5):", font=("Helvetica", 12)).pack(pady=10)
         
-        self.cantidadProductosSeleccionados = tk.IntVar()
-        spinbox = tk.Spinbox(self.frame_interaccion, from_=1, to=5, textvariable=self.cantidadProductosSeleccionados, font=("Helvetica", 10))
+        self.cantidadProductosSeleccionados = tk.IntVar(value=1)
+        spinbox = tk.Spinbox(self.frame_interaccion, from_=1, to=5, textvariable=self.cantidadProductosSeleccionados, font=("Helvetica", 10), width=5, justify='center', bd=2, relief='solid')
         spinbox.pack(pady=5)
+        spinbox.update_idletasks()  # Asegurar que el widget se renderice de inmediato
         
-        self.boton_confirmar_cantidad = tk.Button(self.frame_interaccion, text="Confirmar Cantidad", command=self.confirmar_cantidad_productos, font=("Helvetica", 10))
+        self.boton_confirmar_cantidad = ttk.Button(self.frame_interaccion, text="Confirmar Cantidad", command=self.confirmar_cantidad_productos)
         self.boton_confirmar_cantidad.pack(pady=10)
 
     def confirmar_cantidad_productos(self):
@@ -1176,7 +1177,7 @@ class VentanaSecundaria(tk.Tk):
 
     def seleccionar_productos(self, indice):
         if indice >= self.cantidadProductosSeleccionados.get():
-            self.seleccionar_transporte2()
+            self.mostrar_resumen_pedido()
             return
         
         self.verificar_espacio()
@@ -1185,8 +1186,9 @@ class VentanaSecundaria(tk.Tk):
         productos = [f"{i+1}. {producto[0].getNombre()} - Cantidad: {producto[1]}" for i, producto in enumerate(self.listaProductosTienda)]
         combobox = ttk.Combobox(self.frame_interaccion, values=productos, state="readonly", font=("Helvetica", 10))
         combobox.pack(pady=5)
+        combobox.update_idletasks()  # Asegurar que el widget se renderice de inmediato
         
-        self.boton_confirmar_producto = tk.Button(self.frame_interaccion, text="Confirmar Producto", command=lambda: self.confirmar_producto(combobox, indice), font=("Helvetica", 10))
+        self.boton_confirmar_producto = ttk.Button(self.frame_interaccion, text="Confirmar Producto", command=lambda: self.confirmar_producto(combobox, indice))
         self.boton_confirmar_producto.pack(pady=10)
 
     def confirmar_producto(self, combobox, indice):
@@ -1209,6 +1211,36 @@ class VentanaSecundaria(tk.Tk):
         combobox.config(state="disabled")
         self.seleccionar_productos(indice + 1)
 
+    def mostrar_resumen_pedido(self):
+        self.limpiar_frame_interaccion()
+        tk.Label(self.frame_interaccion, text="Resumen del Pedido:", font=("Helvetica", 14, "bold")).pack(pady=10)
+        
+        resumen_text = tk.Text(self.frame_interaccion, height=10, width=50, font=("Helvetica", 10))
+        resumen_text.pack(pady=10)
+        
+        resumen = "Productos seleccionados:\n"
+        for producto in self.listaProductosPedidos:
+            resumen += f"- {producto.getNombre()} - Precio: ${producto.getPrecio()}\n"
+        
+        resumen_text.insert("1.0", resumen)
+        resumen_text.config(state="disabled")
+        
+        self.boton_confirmar_resumen = ttk.Button(self.frame_interaccion, text="Confirmar Pedido", command=self.confirmar_resumen_pedido)
+        self.boton_confirmar_resumen.pack(pady=10)
+        
+        self.boton_reingresar_productos = ttk.Button(self.frame_interaccion, text="Reingresar Productos", command=self.reingresar_productos)
+        self.boton_reingresar_productos.pack(pady=10)
+
+    def confirmar_resumen_pedido(self):
+        self.boton_confirmar_resumen.pack_forget()
+        self.boton_reingresar_productos.pack_forget()
+        self.seleccionar_transporte2()
+
+    def reingresar_productos(self):
+        self.boton_confirmar_resumen.pack_forget()
+        self.boton_reingresar_productos.pack_forget()
+        self.seleccionar_cantidad_productos()
+
     def seleccionar_transporte2(self):
         from gestorAplicacion.produccion.Transporte import Transporte
         from gestorAplicacion.produccion.TipoTransporte import TipoTransporte
@@ -1226,8 +1258,9 @@ class VentanaSecundaria(tk.Tk):
         transportes = [f"{i+1}. {transporte.getTipoTransporte().getNombre()} - Precio: {'0.0' if envioGratis else transporte.getTipoTransporte().getPrecioEnvio()}" for i, transporte in enumerate(listaTransporteFiltrada)]
         combobox = ttk.Combobox(self.frame_interaccion, values=transportes, state="readonly", font=("Helvetica", 10))
         combobox.pack(pady=5)
+        combobox.update_idletasks()  # Asegurar que el widget se renderice de inmediato
         
-        self.boton_confirmar_transporte = tk.Button(self.frame_interaccion, text="Confirmar Transporte", command=lambda: self.confirmar_transporte(combobox, listaTransporteFiltrada, envioGratis), font=("Helvetica", 10))
+        self.boton_confirmar_transporte = ttk.Button(self.frame_interaccion, text="Confirmar Transporte", command=lambda: self.confirmar_transporte(combobox, listaTransporteFiltrada, envioGratis))
         self.boton_confirmar_transporte.pack(pady=10)
 
     def confirmar_transporte(self, combobox, listaTransporteFiltrada, envioGratis):
@@ -1249,8 +1282,9 @@ class VentanaSecundaria(tk.Tk):
         self.fechaVenta = tk.StringVar()
         entry_fecha = tk.Entry(self.frame_interaccion, textvariable=self.fechaVenta, font=("Helvetica", 10))
         entry_fecha.pack(pady=5)
+        entry_fecha.update_idletasks()  # Asegurar que el widget se renderice de inmediato
         
-        self.boton_confirmar_fecha = tk.Button(self.frame_interaccion, text="Confirmar Fecha", command=self.confirmar_fecha, font=("Helvetica", 10))
+        self.boton_confirmar_fecha = ttk.Button(self.frame_interaccion, text="Confirmar Fecha", command=self.confirmar_fecha)
         self.boton_confirmar_fecha.pack(pady=10)
 
     def confirmar_fecha(self):
@@ -1263,43 +1297,59 @@ class VentanaSecundaria(tk.Tk):
         except ValueError:
             messagebox.showerror("Error", "La fecha ingresada no es válida o no cumple con el formato DD/MM/AAAA.")
             self.ingresar_fecha()
-
-    def formatear_factura(self, factura, tree):
-        totalPrecio = 0
-        totalPeso = 0
-        precioEnvio = factura.getPrecioEnvio()
-
-        # Añadir los productos al Treeview
-        for producto in factura.getListaProductos():
-            if producto is not None:
-                tree.insert("", "end", values=(producto.getNombre(), f"${producto.getPrecio():.2f}", f"{producto.getPeso():.2f}"))
-                totalPrecio += producto.getPrecio()
-                totalPeso += producto.getPeso()
-
-        # Añadir el envío y los totales al Treeview
-        tree.insert("", "end", values=("Envío", f"${precioEnvio:.2f}", "N/A"))
-        totalPrecio += precioEnvio
-        tree.insert("", "end", values=("Total", f"${totalPrecio:.2f}", f"{totalPeso:.2f}"))
-
     def generar_factura(self):
-        self.verificar_espacio()
-        tk.Label(self.frame_interaccion, text="Generando Factura...", font=("Helvetica", 12)).pack(pady=10)
-        
+        self.limpiar_frame_interaccion()
+
+        # Contenedor principal
+        contenedor = tk.Frame(self.frame_interaccion)
+        contenedor.pack(expand=True, fill="both")
+
+        # Crear Canvas y Scrollbar
+        canvas = tk.Canvas(contenedor)
+        scrollbar = tk.Scrollbar(contenedor, orient="vertical", command=canvas.yview)
+        scrollable_frame = tk.Frame(canvas)
+
+        # Configurar el frame interno dentro del Canvas
+        scrollable_frame.bind("<Configure>", lambda e: canvas.configure(scrollregion=canvas.bbox("all")))
+
+        # Crear el frame interno dentro del canvas
+        canvas_frame = canvas.create_window((0, 0), window=scrollable_frame, anchor="n")
+
+        # Ajustar ancho del canvas dinámicamente
+        def ajustar_canvas(event=None):
+            canvas.configure(scrollregion=canvas.bbox("all"))
+            canvas.itemconfig(canvas_frame, width=canvas.winfo_width())  # Ajustar el ancho
+
+        self.frame_interaccion.bind("<Configure>", ajustar_canvas)
+
+        canvas.configure(yscrollcommand=scrollbar.set)
+
+        # Empaquetar Canvas y Scrollbar
+        canvas.pack(side="left", fill="both", expand=True)
+        scrollbar.pack(side="right", fill="y")
+
+        # Ajuste inicial para centrar contenido al cargar
+        self.update_idletasks()
+        ajustar_canvas()
+
+        # Mensaje inicial
+        tk.Label(scrollable_frame, text="Generando Factura...", font=("Helvetica", 12)).pack(pady=10)
+
+        # Obtener datos de la factura
         factura = self.tiendaSeleccionada.enviarPedido(self.listaProductosPedidos, self.transporteSeleccionado, self.clienteSeleccionado, self.precioEnvio, self.fechaVenta)
-        
-        tk.Label(self.frame_interaccion, text="¡Factura creada con éxito! A continuación, se mostrará la factura:", font=("Helvetica", 12)).pack(pady=10)
-        
-        # Añadir el nombre de la tienda centrado en la parte superior
-        tk.Label(self.frame_interaccion, text=factura.getTienda().getNombre(), font=("Helvetica", 14, "bold")).pack(pady=10)
-        
-        # Crear un Treeview widget para mostrar los detalles de la factura
+
+        tk.Label(scrollable_frame, text="¡Factura creada con éxito! A continuación, se mostrará la factura:", font=("Helvetica", 12)).pack(pady=10)
+
+        # Nombre de la tienda
+        tk.Label(scrollable_frame, text=factura.getTienda().getNombre(), font=("Helvetica", 14, "bold")).pack(pady=10)
+
+        # Treeview para detalles de la factura
         columns_detalles = ("Campo", "Valor")
-        tree_detalles = ttk.Treeview(self.frame_interaccion, columns=columns_detalles, show="headings", height=5)
+        tree_detalles = ttk.Treeview(scrollable_frame, columns=columns_detalles, show="headings", height=5)
         tree_detalles.heading("Campo", text="Campo")
         tree_detalles.heading("Valor", text="Valor")
         tree_detalles.pack(pady=10)
-        
-        # Añadir detalles de la factura
+
         detalles = [
             ("Cliente", factura.getCliente().getNombre()),
             ("Cédula", factura.getCliente().getCedula()),
@@ -1308,27 +1358,29 @@ class VentanaSecundaria(tk.Tk):
         ]
         for detalle in detalles:
             tree_detalles.insert("", "end", values=detalle)
-        
-        # Crear un Treeview widget para mostrar los productos de la factura
+
+        # Treeview para productos
         columns_productos = ("Producto", "Precio", "Peso (kg)")
-        tree_productos = ttk.Treeview(self.frame_interaccion, columns=columns_productos, show="headings", height=15)
+        tree_productos = ttk.Treeview(scrollable_frame, columns=columns_productos, show="headings", height=15)
         tree_productos.heading("Producto", text="Producto")
         tree_productos.heading("Precio", text="Precio")
         tree_productos.heading("Peso (kg)", text="Peso (kg)")
         tree_productos.pack(pady=10)
-        
-        # Formatear la factura
+
         self.formatear_factura(factura, tree_productos)
-        
+
+        # Actualizar datos
         self.tiendaSeleccionada.getVendedor().aumentarCargaTrabajo()
         self.transporteSeleccionado.getConductor().aumentarCargaTrabajo()
         self.tiendaSeleccionada.getVendedor().aumentarIndiceMeta()
         self.transporteSeleccionado.getConductor().aumentarIndiceMeta(sum([producto.getPeso() for producto in self.listaProductosPedidos]))
         self.tiendaSeleccionada.eliminarProductosPorNombre(self.listaProductosPedidos)
         guardar_datos()
-        
-        tk.Button(self.frame_interaccion, text="Volver al Menú Principal", command=self.mostrar_menu, font=("Helvetica", 10)).pack(pady=10)
 
+        ttk.Button(scrollable_frame, text="Volver al Menú Principal", command=self.mostrar_menu).pack(pady=10)
+
+        # Ajuste para evitar bloqueos
+        self.frame_interaccion.update_idletasks()
     def formatear_factura(self, factura, tree):
         totalPrecio = 0
         totalPeso = 0
@@ -1345,12 +1397,11 @@ class VentanaSecundaria(tk.Tk):
         tree.insert("", "end", values=("Envío", f"${precioEnvio:.2f}", "N/A"))
         totalPrecio += precioEnvio
         tree.insert("", "end", values=("Total", f"${totalPrecio:.2f}", f"{totalPeso:.2f}"))
+
     def verificar_espacio(self):
         # Verificar si hay suficiente espacio en el frame_interaccion
         if len(self.frame_interaccion.winfo_children()) > 10:  # Ajustar el número según sea necesario
             self.limpiar_frame_interaccion()
-
-    # Funcionalidad de estadísticas
     def mostrar_estadisticas(self):
         self.limpiar_frame_interaccion()
         self.titulo.config(text="Estadísticas del Sistema")
