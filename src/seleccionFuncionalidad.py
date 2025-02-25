@@ -453,10 +453,10 @@ class VentanaSecundaria(tk.Tk):
         transporte.abastecerProducto(tienda_seleccionada, self.productosGenerados)
         tienda_seleccionada.descargarProducto(transporte)
         #METAS DE PAGO TRABAJADORES
-        self.conductorSeleccionado.setIndiceMeta(self.conductorSeleccionado.getIndiceMeta() + self.pesoTotalProductos)
+        """self.conductorSeleccionado.setIndiceMeta(self.conductorSeleccionado.getIndiceMeta() + self.pesoTotalProductos)
         self.conductorSeleccionado.getCantidadTrabajo() += 1
         Fabrica.getOperario().setIndiceMeta(Fabrica.getOperario().getIndiceMeta() + 1)
-        Fabrica.getOperario().getCantidadTrabajo() += 1
+        Fabrica.getOperario().getCantidadTrabajo() += 1"""
         # Mostrar resumen final unificado
         self.limpiar_frame_interaccion()
         frame_resumen = tk.Frame(self.frame_interaccion)
