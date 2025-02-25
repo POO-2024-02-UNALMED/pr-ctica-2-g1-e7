@@ -517,6 +517,7 @@ class VentanaSecundaria(tk.Tk):
         guardar_datos()
     # Funcionalidad de devoluciones:
     def devoluciones(self):
+        cargar_datos()
         self.limpiar_frame_interaccion()
         self.titulo.config(text="Bienvenido al gestor de devoluciones")
         tk.Label(
@@ -717,6 +718,7 @@ class VentanaSecundaria(tk.Tk):
             bg="Green",
             command=self.devoluciones
         ).pack(pady=10)
+        guardar_datos()
     
     def procesarCambio(self, producto):
         tk.Label(
@@ -876,6 +878,7 @@ class VentanaSecundaria(tk.Tk):
             text="Volver a seleccionar otra factura",
             command=self.devoluciones
         ).pack(pady=10)
+        guardar_datos()
 
 
     # Función para volver a la interfaz principal
@@ -891,6 +894,7 @@ class VentanaSecundaria(tk.Tk):
 
     # Funcionalidad de Pago de Trabajadores
     def pagoTrabajadores(self):
+        cargar_datos()
         self.limpiar_frame_interaccion()
         self.titulo.config(text="Bienvenido al gestor del pago de sus trabajadores")
         tk.Label(self.frame_interaccion, text="Desde este menú podrá gestionar el pago a todos sus trabajadores",
@@ -1093,7 +1097,9 @@ class VentanaSecundaria(tk.Tk):
     
         
         tk.Button(self.frame_interaccion, text="Volver al Menú Principal", command=self.mostrar_menu, font=("Helvetica", 10)).pack(pady=10)
+        guardar_datos()
     def EnvioPedidos(self):
+        cargar_datos()
         self.limpiar_frame_interaccion()
         self.titulo.config(text="Bienvenido Al Gestor De Envio De Pedidos")
         tk.Label(
@@ -1401,6 +1407,7 @@ class VentanaSecundaria(tk.Tk):
         tree.insert("", "end", values=("Envío", f"${precioEnvio:.2f}", "N/A"))
         totalPrecio += precioEnvio
         tree.insert("", "end", values=("Total", f"${totalPrecio:.2f}", f"{totalPeso:.2f}"))
+        guardar_datos()
 
     def verificar_espacio(self):
         # Verificar si hay suficiente espacio en el frame_interaccion
@@ -1537,6 +1544,5 @@ class VentanaSecundaria(tk.Tk):
 
 # Ejecutar la aplicación desde una ventana principal
 if __name__ == "__main__":
-    cargar_datos()
     ventanaSecundaria = VentanaSecundaria()
     ventanaSecundaria.mainloop()

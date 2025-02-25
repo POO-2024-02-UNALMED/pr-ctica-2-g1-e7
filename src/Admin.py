@@ -8,10 +8,8 @@ sys.path.insert(0, src_path)
 from Excepciones.EnteroFueraDeRango import OpcionNoValida
 from tkinter import Tk, Label,messagebox, ttk, Button, Frame
 
-from  baseDatos.Deserializarcion import cargar_datos
-from  baseDatos.Serialización import guardar_datos
 
-cargar_datos()
+
 from tkinter import messagebox
 from ventanaInicio import centrar_ventana
 
