@@ -1385,10 +1385,10 @@ class VentanaSecundaria(tk.Tk):
         self.tiendaSeleccionada.getVendedor().aumentarIndiceMeta()
         self.transporteSeleccionado.getConductor().aumentarIndiceMeta(sum([producto.getPeso() for producto in self.listaProductosPedidos]))
         self.tiendaSeleccionada.eliminarProductosPorNombre(self.listaProductosPedidos)
-        guardar_datos()
+
 
         ttk.Button(scrollable_frame, text="Volver al Menú Principal", command=self.mostrar_menu).pack(pady=10)
-
+        guardar_datos()
         # Ajuste para evitar bloqueos
         self.frame_interaccion.update_idletasks()
     def formatear_factura(self, factura, tree):
@@ -1407,7 +1407,7 @@ class VentanaSecundaria(tk.Tk):
         tree.insert("", "end", values=("Envío", f"${precioEnvio:.2f}", "N/A"))
         totalPrecio += precioEnvio
         tree.insert("", "end", values=("Total", f"${totalPrecio:.2f}", f"{totalPeso:.2f}"))
-        guardar_datos()
+
 
     def verificar_espacio(self):
         # Verificar si hay suficiente espacio en el frame_interaccion

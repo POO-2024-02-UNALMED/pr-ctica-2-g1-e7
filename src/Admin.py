@@ -9,7 +9,6 @@ from Excepciones.EnteroFueraDeRango import OpcionNoValida
 from tkinter import Tk, Label,messagebox, ttk, Button, Frame
 
 
-
 from tkinter import messagebox
 from ventanaInicio import centrar_ventana
 
